@@ -109,11 +109,42 @@
     .nav-section-header.open svg { transform: rotate(180deg); }
     .nav-section-teams { display: none; margin-top: 8px; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .nav-section-teams.open { display: flex; flex-wrap: wrap; gap: 8px; }
+    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+    .login-box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 400px; }
+    .login-title { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 8px; color: #111827; }
+    .login-subtitle { text-align: center; color: #6b7280; margin-bottom: 32px; }
+    .login-input { width: 100%; padding: 14px 18px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; margin-bottom: 16px; outline: none; transition: border-color 0.2s; }
+    .login-input:focus { border-color: #3e2fdc; }
+    .login-btn { width: 100%; padding: 16px; background: #3e2fdc; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .login-btn:hover { background: #3225b0; transform: translateY(-2px); }
+    .login-error { background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; text-align: center; }
+    .logout-btn { padding: 8px 16px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .logout-btn:hover { background: rgba(239, 68, 68, 0.2); }
+    .main-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: white; padding: 8px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .main-tab { flex: 1; padding: 12px; border: none; background: transparent; font-size: 14px; font-weight: 500; cursor: pointer; border-radius: 8px; transition: all 0.2s; color: #6b7280; }
+    .main-tab.active { background: #3e2fdc; color: white; }
+    .main-tab:hover:not(.active) { background: #f3f4f6; }
+    .year-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; padding: 16px; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); align-items: center; }
+    .year-filter-label { font-size: 14px; font-weight: 600; color: #374151; margin-right: 8px; }
+    .year-btn { padding: 8px 16px; border-radius: 8px; border: 2px solid #e5e7eb; background: white; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .year-btn:hover { border-color: #3e2fdc; }
+    .year-btn.active { border-color: #3e2fdc; background: #3e2fdc; color: white; }
+    .year-results { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .year-team-section { margin-bottom: 24px; }
+    .year-team-section:last-child { margin-bottom: 0; }
+    .year-team-title { font-size: 16px; font-weight: 600; color: #3e2fdc; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .year-player-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .year-player-card { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; background: #f9fafb; border-radius: 10px; font-size: 14px; cursor: pointer; transition: all 0.15s; border: 2px solid transparent; }
+    .year-player-card:hover { background: #f0f0ff; border-color: #3e2fdc; transform: translateY(-2px); }
+    .year-player-pos { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+    .year-count { font-size: 13px; color: #6b7280; margin-left: auto; }
     @media (max-width: 768px) {
       .table-header, .table-row { grid-template-columns: 40px 1fr 100px 40px; }
       .table-header > *:nth-child(4), .table-header > *:nth-child(5),
       .table-row > *:nth-child(4), .table-row > *:nth-child(5) { display: none; }
       .header-content { flex-direction: column; align-items: flex-start; }
+      .main-tabs { flex-wrap: wrap; }
+      .main-tab { flex: 1 1 45%; }
     }
   </style>
 </head>
@@ -524,13 +555,122 @@
       }
     };
 
+    const USERS = { "Pacojor": "Sergio1999", "SergioRguez": "sergitoferrari22" };
+
     const ACCENT = '#3e2fdc';
+    const getBasePosition = (pos) => {
+      if (pos === "Portero") return "Portero";
+      if (["Lateral Derecho", "Central Diestro", "Central Zurdo", "Lateral Izquierdo", "Defensa"].includes(pos)) return "Defensa";
+      if (["Mediocentro", "Interior Defensivo", "Interior Ofensivo", "Centrocampista"].includes(pos)) return "Centrocampista";
+      if (["Extremo Derecho", "Extremo Izquierdo", "Delantero Centro", "Delantero"].includes(pos)) return "Delantero";
+      return pos;
+    };
     const getPositionStyle = (pos) => {
+      const base = getBasePosition(pos);
       const s = { "Portero": { bg: "#fef3c7", text: "#92400e", dot: "#f59e0b" }, "Defensa": { bg: "#d1fae5", text: "#065f46", dot: "#10b981" }, "Centrocampista": { bg: "#ede9fe", text: "#5b21b6", dot: ACCENT }, "Delantero": { bg: "#fee2e2", text: "#991b1b", dot: "#ef4444" } };
-      return s[pos] || { bg: "#f3f4f6", text: "#374151", dot: "#6b7280" };
+      return s[base] || { bg: "#f3f4f6", text: "#374151", dot: "#6b7280" };
     };
 
+    function LoginScreen({ onLogin }) {
+      const [username, setUsername] = useState("");
+      const [password, setPassword] = useState("");
+      const [error, setError] = useState("");
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (USERS[username] && USERS[username] === password) {
+          localStorage.setItem("lafabrica_user", username);
+          onLogin(username);
+        } else {
+          setError("Usuario o contraseña incorrectos");
+        }
+      };
+      return (
+        <div className="login-container">
+          <div className="login-box">
+            <div style={{textAlign: 'center', marginBottom: 24}}><span style={{fontSize: 64}}>⚽</span></div>
+            <h1 className="login-title">La Fábrica 25/26</h1>
+            <p className="login-subtitle">Cantera Real Madrid</p>
+            {error && <div className="login-error">{error}</div>}
+            <form onSubmit={handleSubmit}>
+              <input type="text" className="login-input" placeholder="Usuario" value={username} onChange={e => setUsername(e.target.value)} />
+              <input type="password" className="login-input" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} />
+              <button type="submit" className="login-btn">Entrar</button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    function YearFilter({ onSelectPlayer }) {
+      const [selectedYear, setSelectedYear] = useState(null);
+      const years = [];
+      Object.values(canteraData).forEach(team => {
+        team.jugadores.forEach(p => {
+          const year = p.fechaNacimiento.split('/')[2];
+          if (year && !years.includes(year)) years.push(year);
+        });
+      });
+      years.sort((a, b) => b - a);
+
+      const playersByYear = useMemo(() => {
+        if (!selectedYear) return {};
+        const result = {};
+        Object.entries(canteraData).forEach(([teamName, team]) => {
+          const players = team.jugadores.filter(p => p.fechaNacimiento.split('/')[2] === selectedYear);
+          if (players.length > 0) result[teamName] = players;
+        });
+        return result;
+      }, [selectedYear]);
+
+      const totalCount = Object.values(playersByYear).reduce((sum, arr) => sum + arr.length, 0);
+
+      return (
+        <div>
+          <div className="year-filter">
+            <span className="year-filter-label">📅 Generación:</span>
+            {years.map(year => (
+              <button key={year} onClick={() => setSelectedYear(selectedYear === year ? null : year)} className={`year-btn ${selectedYear === year ? 'active' : ''}`}>{year}</button>
+            ))}
+          </div>
+          {selectedYear && (
+            <div className="year-results">
+              <div style={{marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <h3 style={{fontSize: 18, fontWeight: 600}}>Generación {selectedYear}</h3>
+                <span className="year-count">{totalCount} jugadores</span>
+              </div>
+              {Object.entries(playersByYear).map(([teamName, players]) => (
+                <div key={teamName} className="year-team-section">
+                  <div className="year-team-title">
+                    <span>⚽</span> {teamName} <span style={{fontSize: 12, color: '#9ca3af'}}>({players.length})</span>
+                  </div>
+                  <div className="year-player-grid">
+                    {players.map((p, i) => {
+                      const style = getPositionStyle(p.posicion);
+                      return (
+                        <div key={i} className="year-player-card" onClick={() => onSelectPlayer && onSelectPlayer(teamName, p)}>
+                          <span className="year-player-pos" style={{background: style.bg, color: style.text}}>{p.posicion.substring(0, 3)}</span>
+                          <span style={{fontWeight: 600}}>{p.apodo}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {!selectedYear && (
+            <div className="year-results" style={{textAlign: 'center', padding: 40, color: '#9ca3af'}}>
+              <div style={{fontSize: 48, marginBottom: 16}}>📅</div>
+              <p>Selecciona un año para ver todos los jugadores de esa generación</p>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     function App() {
+      const [user, setUser] = useState(localStorage.getItem("lafabrica_user"));
+      const [mainTab, setMainTab] = useState("equipos");
       const [selectedTeam, setSelectedTeam] = useState(null);
       const [expandedPlayer, setExpandedPlayer] = useState(null);
       const [searchTerm, setSearchTerm] = useState("");
@@ -539,6 +679,11 @@
       const [filtersOpen, setFiltersOpen] = useState(false);
       const [navSection, setNavSection] = useState(null);
       const [searchOpen, setSearchOpen] = useState(false);
+
+      const handleLogout = () => { localStorage.removeItem("lafabrica_user"); setUser(null); };
+      const handleYearPlayerSelect = (teamName, player) => { setSelectedTeam(teamName); setMainTab("equipos"); setExpandedPlayer(player.nombre); };
+
+      if (!user) return <LoginScreen onLogin={setUser} />;
 
       const teams = Object.keys(canteraData);
       const currentTeam = selectedTeam ? canteraData[selectedTeam] : null;
@@ -554,7 +699,7 @@
         Object.entries(canteraData).forEach(([team, data]) => {
           data.jugadores.forEach(p => {
             const match = p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || p.apodo.toLowerCase().includes(searchTerm.toLowerCase()) || (p.lugarNacimiento && p.lugarNacimiento.toLowerCase().includes(searchTerm.toLowerCase()));
-            const posMatch = positionFilter === "Todas" || p.posicion === positionFilter;
+            const posMatch = positionFilter === "Todas" || getBasePosition(p.posicion) === positionFilter;
             const teamMatch = teamFilter === "Todos" || team === teamFilter;
             if (match && posMatch && teamMatch) r.push({ ...p, equipo: team });
           });
@@ -562,12 +707,12 @@
         return r.slice(0, 25);
       }, [searchTerm, positionFilter, teamFilter, isSearching]);
 
-      const filteredPlayers = useMemo(() => currentTeam ? currentTeam.jugadores.filter(p => positionFilter === "Todas" || p.posicion === positionFilter) : [], [currentTeam, positionFilter]);
+      const filteredPlayers = useMemo(() => currentTeam ? currentTeam.jugadores.filter(p => positionFilter === "Todas" || getBasePosition(p.posicion) === positionFilter) : [], [currentTeam, positionFilter]);
 
       const stats = useMemo(() => {
         if (!currentTeam) return { total: 0, por: 0, def: 0, med: 0, del: 0, intl: 0 };
         const p = currentTeam.jugadores;
-        return { total: p.length, por: p.filter(x => x.posicion === "Portero").length, def: p.filter(x => x.posicion === "Defensa").length, med: p.filter(x => x.posicion === "Centrocampista").length, del: p.filter(x => x.posicion === "Delantero").length, intl: p.filter(x => x.seleccion).length };
+        return { total: p.length, por: p.filter(x => getBasePosition(x.posicion) === "Portero").length, def: p.filter(x => getBasePosition(x.posicion) === "Defensa").length, med: p.filter(x => getBasePosition(x.posicion) === "Centrocampista").length, del: p.filter(x => getBasePosition(x.posicion) === "Delantero").length, intl: p.filter(x => x.seleccion).length };
       }, [currentTeam]);
 
       const totalPlayers = useMemo(() => Object.values(canteraData).reduce((a, t) => a + t.jugadores.length, 0), []);
@@ -576,10 +721,22 @@
         <div style={{minHeight: '100vh', background: '#f9fafb'}}>
           <header className="header"><div className="container"><div className="header-content">
             <div><h1 className="title">⚽ La Fábrica 25/26</h1><p className="subtitle">Cantera Real Madrid · {teams.length} equipos · {totalPlayers} jugadores</p></div>
-            {!isSearching && stats.intl > 0 && <div className="badge">🏆 {stats.intl} internacionales</div>}
+            <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+              {!isSearching && stats.intl > 0 && <div className="badge">🏆 {stats.intl} internacionales</div>}
+              <button className="logout-btn" onClick={handleLogout}>Salir ({user})</button>
+            </div>
           </div></div></header>
 
           <main className="container" style={{paddingTop: 24, paddingBottom: 24}}>
+            <div className="main-tabs">
+              <button className={`main-tab ${mainTab === 'equipos' ? 'active' : ''}`} onClick={() => setMainTab('equipos')}>⚽ Equipos</button>
+              <button className={`main-tab ${mainTab === 'generaciones' ? 'active' : ''}`} onClick={() => setMainTab('generaciones')}>📅 Generaciones</button>
+            </div>
+
+            {mainTab === 'generaciones' ? (
+              <YearFilter onSelectPlayer={handleYearPlayerSelect} />
+            ) : (
+            <>
             <button className={`search-toggle ${searchOpen ? 'open' : ''}`} onClick={() => setSearchOpen(!searchOpen)}>
               🔍 Buscar jugador
             </button>
@@ -702,6 +859,8 @@
               </div>
               <div className="results-count">Mostrando {filteredPlayers.length} de {currentTeam.jugadores.length} en {selectedTeam}</div>
             </>}
+            </>
+            )}
           </main>
           <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos</p></footer>
         </div>
