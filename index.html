@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Fábrica 25/26 - Cantera Real Madrid</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif; background: #f9fafb; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    .header { background: white; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 50; }
+    .header-content { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; flex-wrap: wrap; gap: 12px; }
+    .title { font-size: 28px; font-weight: 600; color: #111827; }
+    .subtitle { font-size: 14px; color: #6b7280; margin-top: 4px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 9999px; background: rgba(62, 47, 220, 0.1); color: #3e2fdc; font-size: 14px; font-weight: 500; }
+    .search-section { background: white; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .search-title { font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 12px; }
+    .search-box { position: relative; margin-bottom: 12px; }
+    .search-input { width: 100%; padding: 14px 14px 14px 44px; border-radius: 12px; border: 2px solid #e5e7eb; font-size: 15px; outline: none; transition: border-color 0.2s; }
+    .search-input:focus { border-color: #3e2fdc; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 18px; }
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn { padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; border: none; cursor: pointer; transition: all 0.2s; }
+    .filter-btn.active { background: rgba(62, 47, 220, 0.15); color: #3e2fdc; }
+    .filter-btn:not(.active) { background: #f3f4f6; color: #6b7280; }
+    .search-results { margin-top: 16px; max-height: 400px; overflow-y: auto; }
+    .search-results-title { font-size: 13px; color: #6b7280; margin-bottom: 12px; font-weight: 500; }
+    .search-result-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #f9fafb; border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
+    .search-result-item:hover { background: #f0f0ff; transform: translateX(4px); }
+    .result-info { display: flex; align-items: center; gap: 12px; }
+    .result-name { font-weight: 600; color: #111827; font-size: 15px; }
+    .result-fullname { font-size: 12px; color: #6b7280; }
+    .result-team { font-size: 12px; color: #3e2fdc; background: rgba(62, 47, 220, 0.1); padding: 4px 10px; border-radius: 6px; font-weight: 500; }
+    .teams-nav { display: flex; gap: 8px; padding: 20px 0; overflow-x: auto; flex-wrap: wrap; }
+    .team-btn { padding: 10px 18px; border-radius: 9999px; font-size: 14px; font-weight: 500; border: none; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .team-btn.active { background: #3e2fdc; color: white; box-shadow: 0 4px 12px rgba(62, 47, 220, 0.4); }
+    .team-btn:not(.active) { background: white; color: #374151; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .team-name { font-size: 22px; font-weight: 600; color: #111827; }
+    .team-cat { font-size: 14px; color: #6b7280; margin-top: 4px; }
+    .stats-row { display: flex; gap: 24px; }
+    .stat { text-align: center; }
+    .stat-value { font-size: 24px; font-weight: 600; }
+    .stat-label { font-size: 11px; color: #9ca3af; text-transform: uppercase; }
+    .position-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+    .position-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .table-container { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .table-header { display: grid; grid-template-columns: 50px 1fr 130px 110px 180px 40px; gap: 12px; padding: 14px 20px; background: #f9fafb; border-bottom: 1px solid #f3f4f6; font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; }
+    .table-row { display: grid; grid-template-columns: 50px 1fr 130px 110px 180px 40px; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #f9fafb; align-items: center; cursor: pointer; transition: background 0.15s; }
+    .table-row:hover { background: #fafafa; }
+    .row-num { color: #9ca3af; font-size: 14px; font-weight: 500; }
+    .player-name { font-size: 15px; font-weight: 600; color: #111827; }
+    .player-fullname { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    .birth-date { font-size: 13px; color: #374151; }
+    .birth-place { font-size: 13px; color: #6b7280; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .chevron { color: #9ca3af; transition: transform 0.2s; font-size: 12px; }
+    .chevron.open { transform: rotate(90deg); }
+    .expanded-content { padding: 20px; background: #f9fafb; border-bottom: 1px solid #f3f4f6; }
+    .expanded-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .info-card { background: white; border-radius: 12px; padding: 18px; }
+    .info-title { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; margin-bottom: 14px; }
+    .info-item { margin-bottom: 12px; }
+    .info-label { font-size: 11px; color: #9ca3af; }
+    .info-value { font-size: 14px; color: #111827; margin-top: 2px; }
+    .info-value.accent { color: #3e2fdc; font-weight: 500; }
+    .empty-state { padding: 48px 20px; text-align: center; color: #9ca3af; }
+    .footer { border-top: 1px solid #e5e7eb; margin-top: 48px; padding: 24px; text-align: center; }
+    .footer-text { font-size: 12px; color: #9ca3af; }
+    .results-count { margin-top: 16px; text-align: center; font-size: 13px; color: #9ca3af; }
+    .filter-toggle { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 10px; border: 2px solid #e5e7eb; background: white; font-size: 14px; font-weight: 500; color: #374151; cursor: pointer; transition: all 0.2s; }
+    .filter-toggle:hover { border-color: #3e2fdc; }
+    .filter-toggle.active { border-color: #3e2fdc; background: rgba(62, 47, 220, 0.05); }
+    .filter-toggle svg { transition: transform 0.2s; }
+    .filter-toggle.open svg { transform: rotate(180deg); }
+    .filter-panel { display: none; margin-top: 12px; padding: 16px; background: #f9fafb; border-radius: 12px; }
+    .filter-panel.open { display: block; }
+    .filter-group { margin-bottom: 16px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-group-title { font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 8px; text-transform: uppercase; }
+    .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .search-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .search-box-wrapper { flex: 1; min-width: 200px; }
+    .active-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .active-filter-tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(62, 47, 220, 0.1); color: #3e2fdc; border-radius: 6px; font-size: 12px; font-weight: 500; }
+    .active-filter-tag button { background: none; border: none; color: #3e2fdc; cursor: pointer; font-size: 14px; line-height: 1; padding: 0; margin-left: 2px; }
+    .search-toggle { display: flex; align-items: center; gap: 8px; padding: 14px 20px; border-radius: 12px; border: none; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 15px; font-weight: 500; color: #374151; cursor: pointer; transition: all 0.2s; width: 100%; justify-content: center; }
+    .search-toggle:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    .search-toggle.open { background: #3e2fdc; color: white; }
+    .search-panel { display: none; margin-top: 12px; }
+    .search-panel.open { display: block; }
+    .search-input-wrapper { position: relative; }
+    .search-clear { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: #e5e7eb; border: none; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; font-size: 14px; color: #6b7280; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .search-clear:hover { background: #d1d5db; color: #374151; }
+    .welcome-message { text-align: center; padding: 60px 20px; }
+    .welcome-icon { font-size: 64px; margin-bottom: 16px; }
+    .welcome-title { font-size: 24px; font-weight: 600; color: #111827; margin-bottom: 8px; }
+    .welcome-subtitle { font-size: 15px; color: #6b7280; }
+    .nav-sections { display: flex; gap: 12px; padding: 20px 0; }
+    .nav-section { flex: 1; }
+    .nav-section-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; border-radius: 12px; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.2s; }
+    .nav-section-header:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    .nav-section-header.active { background: #3e2fdc; color: white; box-shadow: 0 4px 12px rgba(62, 47, 220, 0.4); }
+    .nav-section-title { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .nav-section-header svg { transition: transform 0.2s; }
+    .nav-section-header.open svg { transform: rotate(180deg); }
+    .nav-section-teams { display: none; margin-top: 8px; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .nav-section-teams.open { display: flex; flex-wrap: wrap; gap: 8px; }
+    @media (max-width: 768px) {
+      .table-header, .table-row { grid-template-columns: 40px 1fr 100px 40px; }
+      .table-header > *:nth-child(4), .table-header > *:nth-child(5),
+      .table-row > *:nth-child(4), .table-row > *:nth-child(5) { display: none; }
+      .header-content { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const canteraData = {
+      "Castilla": {
+        categoria: "1ª RFEF", jugadores: [
+          { nombre: "Francisco Javier González Pérez", apodo: "Fran González", posicion: "Portero", fechaNacimiento: "24/06/2005", lugarNacimiento: "León", seleccion: "Sub-21 España", dorsal: 1, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/francisco-javier-gonzalez-perez" },
+          { nombre: "Guillermo Súnico Alonso", apodo: "Súnico", posicion: "Portero", fechaNacimiento: "09/01/2004", lugarNacimiento: "Las Rozas (Madrid)", dorsal: 13, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/guillermo-sunico-alonso" },
+          { nombre: "Sergio Mestre Sánchez", apodo: "Mestre", posicion: "Portero", fechaNacimiento: "13/02/2005", lugarNacimiento: "Boadilla del Monte", dorsal: 25, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/sergio-mestre-sanchez" },
+          { nombre: "David Jiménez Corredor", apodo: "D. Jiménez", posicion: "Defensa", fechaNacimiento: "14/03/2004", lugarNacimiento: "Madrid", seleccion: "Sub-19 España", dorsal: 2, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/david-jimenez-corredor" },
+          { nombre: "Víctor Valdepeñas Talavera", apodo: "Valdepeñas", posicion: "Defensa", fechaNacimiento: "20/10/2006", lugarNacimiento: "Madrid", seleccion: "Sub-19 España", dorsal: 3, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/victor-valdepenas-talavera" },
+          { nombre: "Mario Rivas Lagos", apodo: "Mario Rivas", posicion: "Defensa", fechaNacimiento: "16/03/2007", lugarNacimiento: "Sevilla", seleccion: "Sub-18 España", dorsal: 4, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/mario-rivas-lagos" },
+          { nombre: "Manuel Serrano Salazar", apodo: "Manu Serrano", posicion: "Defensa", fechaNacimiento: "20/03/2004", lugarNacimiento: "Pinto (Madrid)", dorsal: 5, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/manuel-serrano-salazar" },
+          { nombre: "Joan Martínez Lozano", apodo: "Joan Martínez", posicion: "Defensa", fechaNacimiento: "20/08/2007", lugarNacimiento: "Valencia", seleccion: "Sub-17 España", dorsal: 15, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/joan-martinez-lozano" },
+          { nombre: "Jesús Fortea Tejedo", apodo: "Fortea", posicion: "Defensa", fechaNacimiento: "26/03/2007", lugarNacimiento: "Valencia", seleccion: "Sub-20 España", dorsal: 17, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/jesus-fortea-tejedo" },
+          { nombre: "Diego Aguado Facio", apodo: "Diego Aguado", posicion: "Defensa", fechaNacimiento: "07/02/2007", lugarNacimiento: "Madrid", seleccion: "Sub-20 España", dorsal: 21, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/diego-aguado-facio" },
+          { nombre: "Lamini Domingos Fati João", apodo: "Lamini", posicion: "Defensa", fechaNacimiento: "21/04/2006", lugarNacimiento: "Madrid", dorsal: 23, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/lamini-domingos-fati-joao" },
+          { nombre: "Cristian David Perea Cajiao", apodo: "Cristian David", posicion: "Centrocampista", fechaNacimiento: "17/08/2005", lugarNacimiento: "Lleida", seleccion: "Sub-20 España", dorsal: 6, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/cristian-david-perea-cajiao" },
+          { nombre: "Manuel Ángel Morán Ibáñez", apodo: "Manuel Ángel", posicion: "Centrocampista", fechaNacimiento: "15/03/2004", lugarNacimiento: "Sevilla", seleccion: "Sub-19 España", dorsal: 8, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/manuel-angel-moran-ibanez" },
+          { nombre: "César Palacios Pérez", apodo: "Palacios", posicion: "Centrocampista", fechaNacimiento: "11/11/2004", lugarNacimiento: "Soria", seleccion: "Sub-19 España", dorsal: 10, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/cesar-palacios-perez" },
+          { nombre: "Bruno Iglesias Lois", apodo: "Bruno", posicion: "Centrocampista", fechaNacimiento: "01/05/2003", lugarNacimiento: "Salamanca", dorsal: 11, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/bruno-iglesias-lois" },
+          { nombre: "Jorge Cestero Sancho", apodo: "Cestero", posicion: "Centrocampista", fechaNacimiento: "24/03/2006", lugarNacimiento: "Zaragoza", dorsal: 14, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/jorge-cestero-sancho" },
+          { nombre: "Pol Fortuny Albareda", apodo: "Pol Fortuny", posicion: "Centrocampista", fechaNacimiento: "11/03/2005", lugarNacimiento: "Tarragona", seleccion: "Sub-20 España", dorsal: 20, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/pol-fortuny-albareda" },
+          { nombre: "Hugo de Llanos García", apodo: "De Llanos", posicion: "Centrocampista", fechaNacimiento: "18/03/2005", lugarNacimiento: "Madrid", dorsal: 22, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/hugo-de-llanos-garcia" },
+          { nombre: "Daniel Yáñez Barla", apodo: "Yáñez", posicion: "Delantero", fechaNacimiento: "28/03/2007", lugarNacimiento: "Cádiz", seleccion: "Sub-19 España", dorsal: 7, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/daniel-yanez-barla" },
+          { nombre: "Lorenzo Zúñiga Owono", apodo: "Loren Zúñiga", posicion: "Delantero", fechaNacimiento: "18/01/2003", lugarNacimiento: "Fuerteventura", seleccion: "Guinea Ecuatorial", dorsal: 9, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/lorenzo-zuniga-owono" },
+          { nombre: "Rachad Fettal Dhimi", apodo: "Rachad", posicion: "Delantero", fechaNacimiento: "16/01/2005", lugarNacimiento: "Murcia", seleccion: "Sub-20 España", dorsal: 18, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/rachad-fettal-dhimi" }
+        ]
+      },
+      "Real Madrid C": {
+        categoria: "2ª RFEF", jugadores: [
+          { nombre: "Ferran Quetglas Lorente", apodo: "F. Quetglas", posicion: "Portero", fechaNacimiento: "06/06/2005", lugarNacimiento: "Mallorca", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/ferran-quetglas-lorente" },
+          { nombre: "Diego Arroyo Sánchez", apodo: "D. Arroyo", posicion: "Portero", fechaNacimiento: "24/01/2006", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/diego-arroyo-sanchez" },
+          { nombre: "Hugo Mantecón Gil", apodo: "Hugo Mantecón", posicion: "Portero", fechaNacimiento: "28/01/2005", lugarNacimiento: "Pinto", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/hugo-mantecon-gil" },
+          { nombre: "Álvaro González Pozo", apodo: "Álvaro", posicion: "Portero", fechaNacimiento: "09/04/2007", lugarNacimiento: "Madrid", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/alvaro-gonzalez-pozo" },
+          { nombre: "Alejandro Moya Grediaga", apodo: "A. Moya", posicion: "Defensa", fechaNacimiento: "04/08/2005", lugarNacimiento: "Guadalajara", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/alejandro-moya-grediaga" },
+          { nombre: "Alfredo Sotres Acosta", apodo: "Sotres", posicion: "Defensa", fechaNacimiento: "12/03/2004", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/alfredo-sotres-acosta" },
+          { nombre: "Jaime Calleja Sánchez", apodo: "Calleja", posicion: "Defensa", fechaNacimiento: "02/01/2003", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/jaime-calleja-sanchez" },
+          { nombre: "Alejandro Pérez Jiménez", apodo: "Álex Pérez", posicion: "Defensa", fechaNacimiento: "15/06/2005", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/alejandro-perez-jimenez" },
+          { nombre: "Óscar Mesa Pérez", apodo: "Óscar Mesa", posicion: "Defensa", fechaNacimiento: "03/07/2006", lugarNacimiento: "Tenerife", seleccion: "Sub-19 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/oscar-mesa-perez" },
+          { nombre: "Eric Gómez Alcón", apodo: "Eric Gómez", posicion: "Defensa", fechaNacimiento: "24/02/2004", lugarNacimiento: "Alcorcón", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/eric-gomez-alcon" },
+          { nombre: "Emanuel Benjamín De Santana Balbinot", apodo: "Benjamín", posicion: "Defensa", fechaNacimiento: "14/07/2007", lugarNacimiento: "Brasil", seleccion: "Sub-20 Italia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/emanuel-benjamin-de-santana-balbinot" },
+          { nombre: "Carlos Rodríguez Moreno", apodo: "Carlos", posicion: "Centrocampista", fechaNacimiento: "18/05/2004", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/carlos-rodriguez-moreno" },
+          { nombre: "Izan Regueira Novoa", apodo: "Izan", posicion: "Centrocampista", fechaNacimiento: "08/02/2006", lugarNacimiento: "Ourense", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/izan-regueira-novoa" },
+          { nombre: "Joan Mascaró Amer", apodo: "Joan", posicion: "Centrocampista", fechaNacimiento: "26/08/2005", lugarNacimiento: "Manacor", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/joan-mascaro-amer" },
+          { nombre: "Daniel Mesonero Miguel", apodo: "Mesonero", posicion: "Centrocampista", fechaNacimiento: "03/09/2005", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/daniel-mesonero-miguel" },
+          { nombre: "Alejandro Sánchez Mantecón", apodo: "Álex Sánchez", posicion: "Centrocampista", fechaNacimiento: "05/03/2006", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/alejandro-sanchez-mantecon" },
+          { nombre: "Yeray Lancha Pérez", apodo: "Yeray", posicion: "Centrocampista", fechaNacimiento: "16/03/2004", lugarNacimiento: "Huelva", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/yeray-lancha-perez" },
+          { nombre: "Álvaro Leiva Alemany", apodo: "Á. Leiva", posicion: "Centrocampista", fechaNacimiento: "28/12/2004", lugarNacimiento: "Cádiz", seleccion: "Sub-19 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/alvaro-leiva-alemany" },
+          { nombre: "Aimar Santiago González", apodo: "Aimar", posicion: "Centrocampista", fechaNacimiento: "08/06/2006", lugarNacimiento: "Gran Canaria", seleccion: "Sub-18 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/aimar-santiago-gonzalez" },
+          { nombre: "Roberto Martín Uruel", apodo: "Roberto", posicion: "Centrocampista", fechaNacimiento: "12/08/2006", lugarNacimiento: "Huesca", seleccion: "Sub-19 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/roberto-martin-uruel" },
+          { nombre: "Álvaro Ginés Hernández Sánchez", apodo: "Álvaro Ginés", posicion: "Delantero", fechaNacimiento: "15/03/2005", lugarNacimiento: "Murcia", seleccion: "Sub-18 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/alvaro-gines-hernandez-sanchez" },
+          { nombre: "Jacobo Ortega Conde", apodo: "Jacobo", posicion: "Delantero", fechaNacimiento: "29/05/2006", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/jacobo-ortega-conde" },
+          { nombre: "Enrique Herrero García", apodo: "Enrique", posicion: "Delantero", fechaNacimiento: "28/01/2005", lugarNacimiento: "Murcia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/enrique-herrero-garcia" },
+          { nombre: "Iker Gil López", apodo: "Iker Gil", posicion: "Delantero", fechaNacimiento: "15/03/2005", lugarNacimiento: "Zaragoza", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/iker-gil-lopez" },
+          { nombre: "Gabriel Castrelo Suárez", apodo: "G. Castrelo", posicion: "Delantero", fechaNacimiento: "04/08/2006", lugarNacimiento: "Gijón", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/gabriel-castrelo-suarez" }
+        ]
+      },
+      "Juvenil A": {
+        categoria: "Juvenil - División de Honor Juvenil", jugadores: [
+          { nombre: "Javier Navarro Jiménez", apodo: "Javi Navarro", posicion: "Portero", fechaNacimiento: "15/01/2007", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/javier-navarro-jimenez" },
+          { nombre: "Aarón Gómez Villar", apodo: "Aarón", posicion: "Portero", fechaNacimiento: "08/02/2007", lugarNacimiento: "Murcia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/aaron-gomez-villar" },
+          { nombre: "Thiago Pitarch Pinar", apodo: "Thiago", posicion: "Centrocampista", fechaNacimiento: "14/09/2007", lugarNacimiento: "Valencia", seleccion: "Sub-18 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/thiago-pitarch-pinar" },
+          { nombre: "Illia Voloshyn", apodo: "Illia", posicion: "Defensa", fechaNacimiento: "23/03/2007", lugarNacimiento: "Ucrania", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/illia-voloshyn" },
+          { nombre: "Francisco Javier Bailón Álvarez", apodo: "Bailón", posicion: "Defensa", fechaNacimiento: "12/05/2007", lugarNacimiento: "Sevilla", seleccion: "Sub-18 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/francisco-javier-bailon-alvarez" },
+          { nombre: "Paulo de Almeida Hernández", apodo: "Paulo", posicion: "Defensa", fechaNacimiento: "04/09/2007", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/paulo-de-almeida-hernandez" },
+          { nombre: "Álvaro Lezcano Muñoz", apodo: "Lezcano", posicion: "Defensa", fechaNacimiento: "18/06/2007", lugarNacimiento: "Zaragoza", seleccion: "Sub-18 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/alvaro-lezcano-munoz" },
+          { nombre: "Javier Mena Cabero", apodo: "Mena", posicion: "Defensa", fechaNacimiento: "22/04/2008", lugarNacimiento: "Madrid", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/javier-mena-cabero" },
+          { nombre: "Liberto Raúl Navascués Vicente", apodo: "Liberto", posicion: "Defensa", fechaNacimiento: "09/07/2008", lugarNacimiento: "Zaragoza", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/liberto-raul-navascues-vicente" },
+          { nombre: "Ariel Nkoghe Ncara", apodo: "Ariel", posicion: "Defensa", fechaNacimiento: "15/11/2007", lugarNacimiento: "Guinea Ecuatorial", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/ariel-nkoghe-ncara" },
+          { nombre: "Joel Pleguezuelos Estor", apodo: "Joel", posicion: "Defensa", fechaNacimiento: "28/02/2008", lugarNacimiento: "Barcelona", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/joel-pleguezuelos-estor" },
+          { nombre: "Ferran Seco Fons", apodo: "Ferran", posicion: "Defensa", fechaNacimiento: "03/10/2007", lugarNacimiento: "Mallorca", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/ferran-seco-fons" },
+          { nombre: "Melvin Ukpeigbe Eraze", apodo: "Melvin", posicion: "Defensa", fechaNacimiento: "20/08/2007", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/melvin-ukpeigbe-eraze" },
+          { nombre: "Carlos Javier Diez Pagonessa", apodo: "Carlos", posicion: "Centrocampista", fechaNacimiento: "11/01/2007", lugarNacimiento: "Argentina", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/carlos-javier-diez-pagonessa" },
+          { nombre: "Pol Durán Sarmiento", apodo: "Pol Durán", posicion: "Centrocampista", fechaNacimiento: "25/06/2008", lugarNacimiento: "Barcelona", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/pol-duran-sarmiento" },
+          { nombre: "Bruno Galassi", apodo: "Bruno", posicion: "Centrocampista", fechaNacimiento: "19/04/2007", lugarNacimiento: "Argentina", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/bruno-galassi" },
+          { nombre: "Ignacio Gascón Beobide", apodo: "Gascón", posicion: "Centrocampista", fechaNacimiento: "07/08/2007", lugarNacimiento: "San Sebastián", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/ignacio-gascon-beobide" },
+          { nombre: "Diego Martínez Pérez", apodo: "Diego", posicion: "Centrocampista", fechaNacimiento: "30/01/2007", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/diego-martinez-perez" },
+          { nombre: "Rubén Martínez Sánchez", apodo: "Rubén", posicion: "Centrocampista", fechaNacimiento: "05/03/2008", lugarNacimiento: "Madrid", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/ruben-martinez-sanchez" },
+          { nombre: "Adrián Pérez Muñoz", apodo: "Adrián", posicion: "Delantero", fechaNacimiento: "16/12/2007", lugarNacimiento: "Madrid", seleccion: "Sub-18 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/adrian-perez-munoz" },
+          { nombre: "Gabriel Valero Carretero", apodo: "Gabi", posicion: "Delantero", fechaNacimiento: "21/07/2007", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/gabriel-valero-carretero" },
+          { nombre: "Marcos Viega Vadillo", apodo: "Marcos", posicion: "Delantero", fechaNacimiento: "13/05/2007", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/marcos-viega-vadillo" },
+          { nombre: "Jaime Barroso Porteros", apodo: "Jaime", posicion: "Delantero", fechaNacimiento: "02/11/2007", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/jaime-barroso-porteros" },
+          { nombre: "José Antonio Reyes López", apodo: "Reyes", posicion: "Delantero", fechaNacimiento: "10/06/2007", lugarNacimiento: "Utrera (Sevilla)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/jose-antonio-reyes-lopez" },
+          { nombre: "Alfonso Romero Sanz", apodo: "Alfonso", posicion: "Delantero", fechaNacimiento: "29/09/2007", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/alfonso-romero-sanz" }
+        ]
+      },
+      "Juvenil B": {
+        categoria: "Juvenil - Liga Nacional", jugadores: [
+          { nombre: "Guillermo Ponce López", apodo: "Guille", posicion: "Portero", fechaNacimiento: "10/03/2009", lugarNacimiento: "Madrid", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/guillermo-ponce-lopez" },
+          { nombre: "Fernando Vega Martín", apodo: "Fernando", posicion: "Portero", fechaNacimiento: "18/12/2008", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/fernando-vega-martin" },
+          { nombre: "Ares Capatana García-Abad", apodo: "Ares", posicion: "Defensa", fechaNacimiento: "26/01/2009", lugarNacimiento: "Alcalá de Henares", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/ares-capatana-garcia-abad" },
+          { nombre: "Luis Paulo Quevedo", apodo: "Luis", posicion: "Defensa", fechaNacimiento: "18/02/2008", lugarNacimiento: "Castellón", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/luis-paulo-quevedo" },
+          { nombre: "Juan Casado López", apodo: "Juan Casado", posicion: "Defensa", fechaNacimiento: "26/02/2008", lugarNacimiento: "Guadalajara", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/juan-casado-lopez" },
+          { nombre: "Mateo Garrido Calderón", apodo: "Mateo Garrido", posicion: "Defensa", fechaNacimiento: "22/05/2009", lugarNacimiento: "Valladolid", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/mateo-garrido-calderon" },
+          { nombre: "Carlos Lardín Díaz", apodo: "Carlos", posicion: "Defensa", fechaNacimiento: "23/03/2008", lugarNacimiento: "Murcia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/carlos-lardin-diaz" },
+          { nombre: "Leo Lemaitre Lezcano", apodo: "Leo", posicion: "Defensa", fechaNacimiento: "20/03/2009", lugarNacimiento: "Zaragoza", seleccion: "Sub-17 Francia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/leo-lemaitre-lezcano" },
+          { nombre: "Nicolás San Pío Galán", apodo: "Nico", posicion: "Defensa", fechaNacimiento: "30/04/2008", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/nicolas-san-pio-galan" },
+          { nombre: "Diego Lacosta Villalba", apodo: "Lacosta", posicion: "Centrocampista", fechaNacimiento: "16/02/2008", lugarNacimiento: "Zaragoza", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/diego-lacosta-villalba" },
+          { nombre: "Bryan Bugarín Gonçalves", apodo: "Bryan", posicion: "Centrocampista", fechaNacimiento: "17/03/2009", lugarNacimiento: "Vigo", seleccion: "Sub-15 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/bryan-bugarin-goncalves" },
+          { nombre: "Marco David Company García", apodo: "Marco", posicion: "Centrocampista", fechaNacimiento: "24/01/2009", lugarNacimiento: "Valencia", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/marco-david-company-garcia" },
+          { nombre: "Andrés Corcoba Martínez", apodo: "Andrés", posicion: "Centrocampista", fechaNacimiento: "25/03/2008", lugarNacimiento: "León", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/andres-corcoba-martinez" },
+          { nombre: "Santiago Del Pino Nogales", apodo: "Del Pino", posicion: "Centrocampista", fechaNacimiento: "06/06/2009", lugarNacimiento: "Madrid", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/santiago-del-pino-nogales" },
+          { nombre: "Rubén López Domínguez", apodo: "Rubén López", posicion: "Centrocampista", fechaNacimiento: "26/03/2008", lugarNacimiento: "Madrid", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/ruben-lopez-dominguez" },
+          { nombre: "Pelayo Palomo Cidón", apodo: "Pelayo", posicion: "Centrocampista", fechaNacimiento: "29/02/2008", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/pelayo-palomo-cidon" },
+          { nombre: "Joel Pérez Muñoz", apodo: "Joel", posicion: "Centrocampista", fechaNacimiento: "17/02/2008", lugarNacimiento: "Tarragona", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/joel-perez-munoz" },
+          { nombre: "Raúl Andrei Pertea", apodo: "Raúl Andrei", posicion: "Centrocampista", fechaNacimiento: "05/10/2009", lugarNacimiento: "Toledo", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/raul-andrei-pertea" },
+          { nombre: "José Luis Sáez Espinosa", apodo: "Espinosa", posicion: "Centrocampista", fechaNacimiento: "06/05/2008", lugarNacimiento: "Sevilla", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/jose-luis-saez-espinosa" },
+          { nombre: "Rafael Sales Olmo", apodo: "Rafa Sales", posicion: "Centrocampista", fechaNacimiento: "25/11/2008", lugarNacimiento: "Córdoba", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/rafael-sales-olmo" },
+          { nombre: "Rodrigo Velasco Sánchez", apodo: "Rodrigo", posicion: "Centrocampista", fechaNacimiento: "14/03/2008", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/rodrigo-velasco-sanchez" },
+          { nombre: "Enzo Alves Vieira", apodo: "Enzo", posicion: "Delantero", fechaNacimiento: "16/09/2009", lugarNacimiento: "Madrid", seleccion: "Sub-15 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/enzo-alves-vieira" },
+          { nombre: "Alejandro Manuel Mora González", apodo: "Álex Mora", posicion: "Delantero", fechaNacimiento: "29/01/2008", lugarNacimiento: "Ceuta", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/alejandro-manuel-mora-gonzalez" },
+          { nombre: "Yeremaiah Ramos Obiang", apodo: "Yeremaiah", posicion: "Delantero", fechaNacimiento: "02/03/2009", lugarNacimiento: "Guadalajara", seleccion: "Sub-15 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/yeremaiah-ramos-obiang" }
+        ]
+      },
+      "Juvenil C": {
+        categoria: "Juvenil - Autonómica Juvenil", jugadores: [
+          { nombre: "José Alberto Castelau de Roa", apodo: "Castelau", posicion: "Portero", fechaNacimiento: "13/01/2009", lugarNacimiento: "Getafe", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/jose-alberto-castelau-de-roa" },
+          { nombre: "Héctor Martínez Sánchez", apodo: "Héctor", posicion: "Portero", fechaNacimiento: "05/02/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/hector-martinez-sanchez" },
+          { nombre: "Víctor Rivas Lagos", apodo: "Víctor Rivas", posicion: "Portero", fechaNacimiento: "12/04/2009", lugarNacimiento: "Sevilla", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/victor-rivas-lagos" },
+          { nombre: "Alejandro Castaño Villastrigo", apodo: "Castaño", posicion: "Defensa", fechaNacimiento: "11/04/2009", lugarNacimiento: "Asturias", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/alejandro-castano-villastrigo" },
+          { nombre: "Eduardo Valentín Corlat", apodo: "Edu", posicion: "Defensa", fechaNacimiento: "17/02/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/eduardo-valentin-corlat" },
+          { nombre: "Rubén Díaz Villaverde", apodo: "Rubén", posicion: "Defensa", fechaNacimiento: "18/01/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/ruben-diaz-villaverde" },
+          { nombre: "Guillermo Díaz-Maroto Alcañiz", apodo: "Guille", posicion: "Defensa", fechaNacimiento: "09/06/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/guillermo-diaz-maroto-alcaniz" },
+          { nombre: "Jesús Palacios Paya", apodo: "Palacios", posicion: "Defensa", fechaNacimiento: "23/08/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/jesus-palacios-paya" },
+          { nombre: "Manuel Romero Santiago", apodo: "Manu", posicion: "Defensa", fechaNacimiento: "06/04/2009", lugarNacimiento: "USA", seleccion: "Sub-15 USA", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/manuel-romero-santiago" },
+          { nombre: "Hugo Sarmiento Albillo", apodo: "Hugo", posicion: "Defensa", fechaNacimiento: "14/07/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/hugo-sarmiento-albillo" },
+          { nombre: "Diego Sánchez Hernando", apodo: "Diego", posicion: "Defensa", fechaNacimiento: "30/04/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/diego-sanchez-hernando" },
+          { nombre: "Mateo Pozo Arias", apodo: "Mateo Pozo", posicion: "Centrocampista", fechaNacimiento: "25/03/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/mateo-pozo-arias" },
+          { nombre: "Jenry Hernández Hernández", apodo: "Jenry", posicion: "Centrocampista", fechaNacimiento: "14/01/2009", lugarNacimiento: "Cuba", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/jenry-hernandez-hernandez" },
+          { nombre: "Matías Martín Casado", apodo: "Matías", posicion: "Centrocampista", fechaNacimiento: "27/09/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/matias-martin-casado" },
+          { nombre: "Izan Mesa Piqueras", apodo: "Izan Mesa", posicion: "Centrocampista", fechaNacimiento: "17/02/2009", lugarNacimiento: "Móstoles", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/izan-mesa-piqueras" },
+          { nombre: "Jairo Morilla Orce", apodo: "Jairo", posicion: "Centrocampista", fechaNacimiento: "07/02/2009", lugarNacimiento: "Sevilla", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/jairo-morilla-orce" },
+          { nombre: "Mario Bullón López", apodo: "Mario", posicion: "Centrocampista", fechaNacimiento: "03/05/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/mario-bullon-lopez" },
+          { nombre: "Beltrán Capote Aceituno", apodo: "Beltrán", posicion: "Centrocampista", fechaNacimiento: "18/11/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/beltran-capote-aceituno" },
+          { nombre: "Omar Chaoui Ousrih", apodo: "Omar", posicion: "Centrocampista", fechaNacimiento: "22/03/2009", lugarNacimiento: "Marruecos", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/omar-chaoui-ousrih" },
+          { nombre: "Nils Leon Westin Bryhn", apodo: "Leon", posicion: "Centrocampista", fechaNacimiento: "15/08/2009", lugarNacimiento: "Suecia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/nils-leon-westin-bryhn" },
+          { nombre: "Moctar Cherif Acacio Fofana Mesie Eyegue", apodo: "Cherif", posicion: "Centrocampista", fechaNacimiento: "01/12/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/moctar-cherif-acacio-fofana-mesie-eyegue" },
+          { nombre: "Álvaro Rivera Pizarro", apodo: "Álvaro", posicion: "Centrocampista", fechaNacimiento: "19/10/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/alvaro-rivera-pizarro" },
+          { nombre: "Guillermo López Zueco", apodo: "Guille López", posicion: "Delantero", fechaNacimiento: "28/06/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/guillermo-lopez-zueco" },
+          { nombre: "Pablo Martínez Mena", apodo: "Pablo", posicion: "Delantero", fechaNacimiento: "12/03/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/pablo-martinez-mena" },
+          { nombre: "Pablo Ibáñez Hernández", apodo: "Pablo Ibáñez", posicion: "Delantero", fechaNacimiento: "16/01/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/pablo-ibanez-hernandez" }
+        ]
+      },
+      "Cadete A": {
+        categoria: "Cadete - Superliga", jugadores: [
+          { nombre: "Izan Ramírez Pérez", apodo: "Izan", posicion: "Portero", fechaNacimiento: "15/02/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/izan-ramirez-perez" },
+          { nombre: "Iván Vázquez Rech", apodo: "Iván", posicion: "Portero", fechaNacimiento: "08/07/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/ivan-vazquez-rech" },
+          { nombre: "David Kravets", apodo: "David", posicion: "Defensa", fechaNacimiento: "22/04/2010", lugarNacimiento: "Ucrania", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/david-kravets" },
+          { nombre: "Adrián Morales Díaz", apodo: "Adrián", posicion: "Defensa", fechaNacimiento: "03/09/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/adrian-morales-diaz" },
+          { nombre: "Fernando Pereira Villares", apodo: "Fernando", posicion: "Defensa", fechaNacimiento: "11/06/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/fernando-pereira-villares" },
+          { nombre: "Iker Diepa Díaz", apodo: "Iker", posicion: "Defensa", fechaNacimiento: "28/01/2010", lugarNacimiento: "Las Palmas", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/iker-diepa-diaz" },
+          { nombre: "Francisco Asier Sánchez Urtaran", apodo: "Asier", posicion: "Defensa", fechaNacimiento: "17/05/2010", lugarNacimiento: "Vitoria", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/francisco-asier-sanchez-urtaran" },
+          { nombre: "Aitor Gandía Angulo", apodo: "Aitor", posicion: "Defensa", fechaNacimiento: "09/03/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/aitor-gandia-angulo" },
+          { nombre: "Daniel González Sedeño", apodo: "Dani", posicion: "Defensa", fechaNacimiento: "14/08/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/daniel-gonzalez-sedeno" },
+          { nombre: "Joel Palle Parrot", apodo: "Joel", posicion: "Defensa", fechaNacimiento: "21/11/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/joel-palle-parrot" },
+          { nombre: "Hugo Medina Campos", apodo: "Hugo Medina", posicion: "Centrocampista", fechaNacimiento: "06/04/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/hugo-medina-campos" },
+          { nombre: "Álvaro Barral García", apodo: "Álvaro Barral", posicion: "Centrocampista", fechaNacimiento: "19/02/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/alvaro-barral-garcia" },
+          { nombre: "Asier Santoyo Sánchez", apodo: "Santoyo", posicion: "Centrocampista", fechaNacimiento: "25/07/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/asier-santoyo-sanchez" },
+          { nombre: "Hugo Torresano Hernández", apodo: "Torresano", posicion: "Centrocampista", fechaNacimiento: "12/10/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/hugo-torresano-hernandez" },
+          { nombre: "Ignacio Alameda Delgado", apodo: "Nacho", posicion: "Centrocampista", fechaNacimiento: "07/12/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/ignacio-alameda-delgado" },
+          { nombre: "Hugo Moreno Moral", apodo: "Hugo Moreno", posicion: "Centrocampista", fechaNacimiento: "30/05/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/hugo-moreno-moral" },
+          { nombre: "Martín Espuela Hurtado", apodo: "Martín", posicion: "Centrocampista", fechaNacimiento: "16/09/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/martin-espuela-hurtado" },
+          { nombre: "Álvaro Vega García", apodo: "Álvaro Vega", posicion: "Centrocampista", fechaNacimiento: "23/01/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/alvaro-vega-garcia" },
+          { nombre: "Víctor Manuel Plazas Hidalgo", apodo: "Víctor", posicion: "Centrocampista", fechaNacimiento: "04/11/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/victor-manuel-plazas-hidalgo" },
+          { nombre: "Adrián Talavera Contreras", apodo: "Talavera", posicion: "Delantero", fechaNacimiento: "08/06/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/adrian-talavera-contreras" },
+          { nombre: "Gorka Abascal Martínez", apodo: "Gorka", posicion: "Delantero", fechaNacimiento: "27/03/2010", lugarNacimiento: "Bilbao", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/gorka-abascal-martinez" },
+          { nombre: "Héctor Montero Rodríguez", apodo: "Héctor", posicion: "Delantero", fechaNacimiento: "13/08/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/hector-montero-rodriguez" },
+          { nombre: "Aitor Torondel García", apodo: "Torondel", posicion: "Delantero", fechaNacimiento: "02/07/2010", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/aitor-torondel-garcia" },
+          { nombre: "Carlos Sánchez Romero", apodo: "Carlos", posicion: "Delantero", fechaNacimiento: "20/04/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/carlos-sanchez-romero" },
+          { nombre: "Unai Ordóñez Carretero", apodo: "Unai", posicion: "Delantero", fechaNacimiento: "29/10/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/unai-ordonez-carretero" }
+        ]
+      },
+      "Cadete B": {
+        categoria: "Cadete - División de Honor", jugadores: [
+          { nombre: "Mauro Del Castillo Mustafa", apodo: "Mauro", posicion: "Portero", fechaNacimiento: "18/03/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/mauro-del-castillo-mustafa" },
+          { nombre: "Izan Santamaría Lominchar", apodo: "Izan", posicion: "Portero", fechaNacimiento: "24/09/2011", lugarNacimiento: "Toledo", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/izan-santamaria-lominchar" },
+          { nombre: "Rubén Lebrero Pérez", apodo: "Rubén", posicion: "Defensa", fechaNacimiento: "07/01/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/ruben-lebrero-perez" },
+          { nombre: "Hugo Fernández Gallardo", apodo: "Hugo", posicion: "Defensa", fechaNacimiento: "15/06/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/hugo-fernandez-gallardo" },
+          { nombre: "Marcos Carrasco Cristóbal", apodo: "Marcos", posicion: "Defensa", fechaNacimiento: "22/04/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/marcos-carrasco-cristobal" },
+          { nombre: "Marco Poyatos Castelló", apodo: "Marco", posicion: "Defensa", fechaNacimiento: "11/08/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/marco-poyatos-castello" },
+          { nombre: "Noah Corona Martínez", apodo: "Noah", posicion: "Defensa", fechaNacimiento: "03/12/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/noah-corona-martinez" },
+          { nombre: "Dani Manzano Jaca", apodo: "Dani", posicion: "Defensa", fechaNacimiento: "29/05/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/dani-manzano-jaca" },
+          { nombre: "Luis Molina Paredes", apodo: "Luis", posicion: "Defensa", fechaNacimiento: "16/02/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/luis-molina-paredes" },
+          { nombre: "Adrián Velasco González", apodo: "Adrián", posicion: "Centrocampista", fechaNacimiento: "08/10/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/adrian-velasco-gonzalez" },
+          { nombre: "Beltrán Guillén Pérez de Tudela", apodo: "Beltrán", posicion: "Centrocampista", fechaNacimiento: "25/07/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/beltran-guillen-perez-de-tudela" },
+          { nombre: "Thiago Muñoz Heredia", apodo: "Thiago", posicion: "Centrocampista", fechaNacimiento: "14/01/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/thiago-munoz-heredia" },
+          { nombre: "David García Martín", apodo: "David", posicion: "Centrocampista", fechaNacimiento: "06/11/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/david-garcia-martin" },
+          { nombre: "Adrián García Gómez", apodo: "Adrián García", posicion: "Centrocampista", fechaNacimiento: "19/03/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/adrian-garcia-gomez" },
+          { nombre: "Alonso Moreno Lara", apodo: "Alonso", posicion: "Centrocampista", fechaNacimiento: "02/09/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/alonso-moreno-lara" },
+          { nombre: "Juan Mairata Hernández", apodo: "Juan", posicion: "Centrocampista", fechaNacimiento: "28/06/2011", lugarNacimiento: "Mallorca", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/juan-mairata-hernandez" },
+          { nombre: "Bame Tom Miller Morovia", apodo: "Bame", posicion: "Centrocampista", fechaNacimiento: "13/04/2011", lugarNacimiento: "Liberia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/bame-tom-miller-morovia" },
+          { nombre: "Marc Stefan Lorente Kayumba", apodo: "Marc", posicion: "Centrocampista", fechaNacimiento: "21/12/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/marc-stefan-lorente-kayumba" },
+          { nombre: "Darío Reina Muriel", apodo: "Darío", posicion: "Delantero", fechaNacimiento: "09/08/2011", lugarNacimiento: "Málaga", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/dario-reina-muriel" },
+          { nombre: "Mikel López Anderez", apodo: "Mikel", posicion: "Delantero", fechaNacimiento: "17/05/2011", lugarNacimiento: "San Sebastián", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/mikel-lopez-anderez" },
+          { nombre: "Alberto Ruiz Santa Quiteria Intillaque", apodo: "Alberto", posicion: "Delantero", fechaNacimiento: "04/02/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/alberto-ruiz-santa-quiteria-intillaque" },
+          { nombre: "Iker Álvarez Alba", apodo: "Iker", posicion: "Delantero", fechaNacimiento: "30/10/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/iker-alvarez-alba" },
+          { nombre: "Hugo Álvarez Alba", apodo: "Hugo Álvarez", posicion: "Delantero", fechaNacimiento: "30/10/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/hugo-alvarez-alba" },
+          { nombre: "Thiago Iván Montes de Oca Méndez", apodo: "Thiago Montes", posicion: "Delantero", fechaNacimiento: "12/07/2011", lugarNacimiento: "Tenerife", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/thiago-ivan-montes-de-oca-mendez" },
+          { nombre: "Alfred Mbella Kotto Quadesma Christ", apodo: "Alfred", posicion: "Delantero", fechaNacimiento: "26/01/2011", lugarNacimiento: "Camerún", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/alfred-mbella-kotto-quadesma-christ" }
+        ]
+      },
+      "Infantil A": {
+        categoria: "Infantil - Superliga", jugadores: [
+          { nombre: "Lucas Gómez Saldaña", apodo: "Lucas", posicion: "Portero", fechaNacimiento: "12/03/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/lucas-gomez-saldana" },
+          { nombre: "Gonzalo Martínez Alcaine", apodo: "Gonzalo", posicion: "Portero", fechaNacimiento: "28/07/2012", lugarNacimiento: "Zaragoza", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/gonzalo-martinez-alcaine" },
+          { nombre: "Mateo Soria Bravo", apodo: "Mateo", posicion: "Defensa", fechaNacimiento: "05/01/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/mateo-soria-bravo" },
+          { nombre: "Daniel Díaz Romero", apodo: "Dani", posicion: "Defensa", fechaNacimiento: "19/09/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/daniel-diaz-romero" },
+          { nombre: "Víctor Martín Martín", apodo: "Víctor", posicion: "Defensa", fechaNacimiento: "14/04/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/victor-martin-martin" },
+          { nombre: "Íñigo Fresco García", apodo: "Íñigo", posicion: "Defensa", fechaNacimiento: "23/11/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/inigo-fresco-garcia" },
+          { nombre: "Mauro Miralles Escolano", apodo: "Mauro", posicion: "Defensa", fechaNacimiento: "08/06/2012", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/mauro-miralles-escolano" },
+          { nombre: "Anderson Jesús Amador Pérez", apodo: "Anderson", posicion: "Defensa", fechaNacimiento: "16/02/2012", lugarNacimiento: "Rep. Dominicana", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/anderson-jesus-amador-perez" },
+          { nombre: "Fernando Gómez Muñoz", apodo: "Fernando", posicion: "Centrocampista", fechaNacimiento: "27/08/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/fernando-gomez-munoz" },
+          { nombre: "Jorge Martí Cañada", apodo: "Jorge", posicion: "Centrocampista", fechaNacimiento: "03/05/2012", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/jorge-marti-canada" },
+          { nombre: "Pablo García López", apodo: "Pablo", posicion: "Centrocampista", fechaNacimiento: "11/10/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/pablo-garcia-lopez" },
+          { nombre: "Rubén Martín Martín", apodo: "Rubén", posicion: "Centrocampista", fechaNacimiento: "14/04/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/ruben-martin-martin" },
+          { nombre: "Samuel Aceves Vidal", apodo: "Samuel", posicion: "Centrocampista", fechaNacimiento: "22/12/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/samuel-aceves-vidal" },
+          { nombre: "Guillermo Collado Picazo", apodo: "Guille", posicion: "Centrocampista", fechaNacimiento: "30/03/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/guillermo-collado-picazo" },
+          { nombre: "Aliaksei Mayorau", apodo: "Aliaksei", posicion: "Centrocampista", fechaNacimiento: "07/07/2012", lugarNacimiento: "Bielorrusia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/aliaksei-mayorau" },
+          { nombre: "Saúl Aranda Ostio", apodo: "Saúl", posicion: "Centrocampista", fechaNacimiento: "18/01/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/saul-aranda-ostio" },
+          { nombre: "Aleksandar Chobanov Chobanov", apodo: "Aleks", posicion: "Centrocampista", fechaNacimiento: "25/09/2012", lugarNacimiento: "Bulgaria", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/aleksandar-chobanov-chobanov" },
+          { nombre: "Adrián Guerra Santana", apodo: "Adrián", posicion: "Delantero", fechaNacimiento: "09/06/2012", lugarNacimiento: "Las Palmas", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/adrian-guerra-santana" },
+          { nombre: "Carlos Colley Clemente", apodo: "Carlos", posicion: "Delantero", fechaNacimiento: "02/11/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/carlos-colley-clemente" },
+          { nombre: "Pablo Martínez Fernández", apodo: "Pablo Martínez", posicion: "Delantero", fechaNacimiento: "15/04/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/pablo-martinez-fernandez" },
+          { nombre: "Olivier Telus Ovalle", apodo: "Olivier", posicion: "Delantero", fechaNacimiento: "21/08/2012", lugarNacimiento: "Haití", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/olivier-telus-ovalle" },
+          { nombre: "Pablo Maciá Méndez", apodo: "Pablo Maciá", posicion: "Delantero", fechaNacimiento: "06/02/2012", lugarNacimiento: "Alicante", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/pablo-macia-mendez" },
+          { nombre: "Manuel Francisco Duarte Moreno", apodo: "Manu", posicion: "Delantero", fechaNacimiento: "13/07/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/manuel-francisco-duarte-moreno" },
+          { nombre: "Severo Simón Ondo Obama Eyang", apodo: "Severo", posicion: "Delantero", fechaNacimiento: "29/10/2012", lugarNacimiento: "Guinea Ecuatorial", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/severo-simon-ondo-obama-eyang" }
+        ]
+      },
+      "Infantil B": {
+        categoria: "Infantil - División de Honor", jugadores: [
+          { nombre: "Enzo Martínez García", apodo: "Enzo", posicion: "Portero", fechaNacimiento: "17/04/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/enzo-martinez-garcia" },
+          { nombre: "Yago Núñez López", apodo: "Yago", posicion: "Portero", fechaNacimiento: "08/09/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/yago-nunez-lopez" },
+          { nombre: "Andrés Estaire Ballvé", apodo: "Andrés", posicion: "Defensa", fechaNacimiento: "22/01/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/andres-estaire-ballve" },
+          { nombre: "Álvaro Cuervo Cuesta", apodo: "Álvaro", posicion: "Defensa", fechaNacimiento: "11/06/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/alvaro-cuervo-cuesta" },
+          { nombre: "Álvaro Montoro Briones", apodo: "Montoro", posicion: "Defensa", fechaNacimiento: "03/03/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/alvaro-montoro-briones" },
+          { nombre: "Daniel Del Pino Sánchez", apodo: "Dani", posicion: "Defensa", fechaNacimiento: "28/08/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/daniel-del-pino-sanchez" },
+          { nombre: "Aarón Cristian Krall", apodo: "Aarón", posicion: "Defensa", fechaNacimiento: "15/12/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/aaron-cristian-krall" },
+          { nombre: "Hugo Navarro Albert", apodo: "Hugo", posicion: "Defensa", fechaNacimiento: "19/05/2013", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/hugo-navarro-albert" },
+          { nombre: "Alexis Salado Serrano", apodo: "Alexis", posicion: "Defensa", fechaNacimiento: "06/10/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/alexis-salado-serrano" },
+          { nombre: "Hugo Mora Sánchez-Urán", apodo: "Hugo Mora", posicion: "Centrocampista", fechaNacimiento: "24/02/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/hugo-mora-sanchez-uran" },
+          { nombre: "Hugo Fernández Martín", apodo: "Hugo Fernández", posicion: "Centrocampista", fechaNacimiento: "13/07/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/hugo-fernandez-martin" },
+          { nombre: "Izan García Girón", apodo: "Izan", posicion: "Centrocampista", fechaNacimiento: "01/04/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/izan-garcia-giron" },
+          { nombre: "Alejandro Del Pino González", apodo: "Alejandro", posicion: "Centrocampista", fechaNacimiento: "20/11/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/alejandro-del-pino-gonzalez" },
+          { nombre: "Adrián Rodríguez López", apodo: "Adrián", posicion: "Centrocampista", fechaNacimiento: "09/01/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/adrian-rodriguez-lopez" },
+          { nombre: "Daniel Buiza Beneyto", apodo: "Dani Buiza", posicion: "Centrocampista", fechaNacimiento: "16/06/2013", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/daniel-buiza-beneyto" },
+          { nombre: "Adrián Marrero Martín", apodo: "Marrero", posicion: "Centrocampista", fechaNacimiento: "27/09/2013", lugarNacimiento: "Tenerife", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/adrian-marrero-martin" },
+          { nombre: "Pedro Adrián Alarcón Pérez", apodo: "Pedro", posicion: "Centrocampista", fechaNacimiento: "04/03/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/pedro-adrian-alarcon-perez" },
+          { nombre: "Hugo Álvarez Cabellos", apodo: "Hugo Álvarez", posicion: "Delantero", fechaNacimiento: "12/08/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/hugo-alvarez-cabellos" },
+          { nombre: "Eduardo Malo Erezuma", apodo: "Edu", posicion: "Delantero", fechaNacimiento: "30/05/2013", lugarNacimiento: "Bilbao", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/eduardo-malo-erezuma" },
+          { nombre: "Luis García Merino", apodo: "Luis", posicion: "Delantero", fechaNacimiento: "18/10/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/luis-garcia-merino" },
+          { nombre: "Diego González González", apodo: "Diego", posicion: "Delantero", fechaNacimiento: "07/02/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/diego-gonzalez-gonzalez" },
+          { nombre: "Pablo de la Pedraja Rico", apodo: "Pablo", posicion: "Delantero", fechaNacimiento: "23/12/2013", lugarNacimiento: "Santander", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/pablo-de-la-pedraja-rico" },
+          { nombre: "Ignacio Villanueva Vázquez", apodo: "Nacho", posicion: "Delantero", fechaNacimiento: "14/04/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/ignacio-villanueva-vazquez" },
+          { nombre: "Alejandro Martínez García", apodo: "Álex", posicion: "Delantero", fechaNacimiento: "05/11/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/alejandro-martinez-garcia" }
+        ]
+      },
+      "Alevín A": {
+        categoria: "Alevín - Superliga", jugadores: [
+          { nombre: "Martín Casillas Carbonero", apodo: "Martín", posicion: "Portero", fechaNacimiento: "03/01/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/martin-carbonero" },
+          { nombre: "Marco Pérez Martino", apodo: "Marco", posicion: "Portero", fechaNacimiento: "29/12/2014", lugarNacimiento: "Valladolid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/marco-perez-martino" },
+          { nombre: "Daniel Havrylyak", apodo: "Dani", posicion: "Defensa", fechaNacimiento: "07/03/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/daniel-havrylyak" },
+          { nombre: "Daniel De Ibar Nafría", apodo: "De Ibar", posicion: "Defensa", fechaNacimiento: "03/02/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/daniel-de-ibar-nafria" },
+          { nombre: "Hugo Grande Asensio", apodo: "Hugo Grande", posicion: "Defensa", fechaNacimiento: "06/01/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/hugo-grande-asensio" },
+          { nombre: "Daniel Osayamen Idowu", apodo: "Osayamen", posicion: "Defensa", fechaNacimiento: "27/06/2014", lugarNacimiento: "Guadalajara", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/daniel-osayamen-idowu" },
+          { nombre: "Diego Fernández Rodríguez", apodo: "Diego", posicion: "Defensa", fechaNacimiento: "26/02/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/diego-fernandez-rodriguez" },
+          { nombre: "Manuel Morilla Orce", apodo: "Manuel", posicion: "Defensa", fechaNacimiento: "13/08/2014", lugarNacimiento: "Sevilla", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/manuel-morilla-orce" },
+          { nombre: "Mario Abad Jiménez", apodo: "Mario Abad", posicion: "Defensa", fechaNacimiento: "17/01/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/mario-abad-jimenez" },
+          { nombre: "Dídac Gómez Orero", apodo: "Dídac", posicion: "Defensa", fechaNacimiento: "23/02/2014", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/didac-gomez-orero" },
+          { nombre: "Joel Mateo Canorea", apodo: "Joel", posicion: "Centrocampista", fechaNacimiento: "25/01/2014", lugarNacimiento: "Alcalá de Henares", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/joel-mateo-canorea" },
+          { nombre: "David Sánchez Miralles", apodo: "David", posicion: "Centrocampista", fechaNacimiento: "07/05/2014", lugarNacimiento: "Alicante", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/david-sanchez-miralles" },
+          { nombre: "Nicolás Moreno Cano", apodo: "Nico", posicion: "Centrocampista", fechaNacimiento: "05/12/2014", lugarNacimiento: "Majadahonda", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/nicolas-moreno-cano" },
+          { nombre: "Roberto Jiménez Barrio", apodo: "Roberto", posicion: "Centrocampista", fechaNacimiento: "23/04/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/roberto-jimenez-barrio" },
+          { nombre: "Ignacio Aguilar Cruz", apodo: "Aguilar", posicion: "Centrocampista", fechaNacimiento: "03/01/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/ignacio-aguilar-cruz" },
+          { nombre: "Antonio Gómez Sánchez", apodo: "Antonio", posicion: "Centrocampista", fechaNacimiento: "13/03/2014", lugarNacimiento: "Toledo", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/antonio-gomez-sanchez" },
+          { nombre: "Mario de Andrés Sánchez", apodo: "Mario", posicion: "Centrocampista", fechaNacimiento: "21/03/2014", lugarNacimiento: "Torrejón", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/mario-de-andres-sanchez" },
+          { nombre: "Pablo Morilla Mira", apodo: "Pablo", posicion: "Centrocampista", fechaNacimiento: "01/03/2014", lugarNacimiento: "Alicante", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/pablo-morilla-mira" },
+          { nombre: "Ethan Balboa Rodríguez", apodo: "Balboa", posicion: "Delantero", fechaNacimiento: "06/04/2014", lugarNacimiento: "Jerez", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/ethan-balboa-rodriguez" },
+          { nombre: "Hugo Mateo Canorea", apodo: "Hugo Mateo", posicion: "Delantero", fechaNacimiento: "25/01/2014", lugarNacimiento: "Alcalá de Henares", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/hugo-mateo-canorea" },
+          { nombre: "Carlos Calvo Cuesta", apodo: "Carlos", posicion: "Delantero", fechaNacimiento: "13/02/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/carlos-calvo-cuesta" },
+          { nombre: "Guillermo Soriano Gavela", apodo: "Guille", posicion: "Delantero", fechaNacimiento: "21/07/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/guillermo-soriano-gavela" }
+        ]
+      },
+      "Alevín B": {
+        categoria: "Alevín - División de Honor F7", jugadores: [
+          { nombre: "Adrián Badás Moreno", apodo: "Badás", posicion: "Portero", fechaNacimiento: "20/03/2015", lugarNacimiento: "Parla", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/adrian-badas-moreno" },
+          { nombre: "Eduard Andrei Ocheanu", apodo: "Eduard", posicion: "Portero", fechaNacimiento: "26/03/2015", lugarNacimiento: "Coslada", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/eduard-eduard-andrei-ocheanu" },
+          { nombre: "Diego Alonso Guerrero", apodo: "Diego", posicion: "Defensa", fechaNacimiento: "02/01/2015", lugarNacimiento: "Aranjuez", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/diego-alonso-guerrero" },
+          { nombre: "Adrián Camacho Martos", apodo: "Camacho", posicion: "Defensa", fechaNacimiento: "28/03/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/adrian-camacho-martos" },
+          { nombre: "Adrián Balsera Guerra", apodo: "Balsera", posicion: "Defensa", fechaNacimiento: "29/10/2015", lugarNacimiento: "Parla", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/adrian-balsera-guerra" },
+          { nombre: "Liam Román Ordejón", apodo: "Liam Román", posicion: "Centrocampista", fechaNacimiento: "24/02/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/liam-roman-ordejon" },
+          { nombre: "Jaime Alameda Delgado", apodo: "Jaime", posicion: "Centrocampista", fechaNacimiento: "24/01/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/jaime-alameda-delgado" },
+          { nombre: "Liam Alves Vieira", apodo: "Liam Alves", posicion: "Centrocampista", fechaNacimiento: "01/09/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/liam-alves-vieira" },
+          { nombre: "Yago Carmona Díaz", apodo: "Yago", posicion: "Centrocampista", fechaNacimiento: "28/09/2015", lugarNacimiento: "Navalcarnero", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/yago-carmona-diaz" },
+          { nombre: "Teo Galán Nieto", apodo: "Teo", posicion: "Delantero", fechaNacimiento: "06/03/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/teo-galan-nieto" },
+          { nombre: "Hugo Herrero Hierrezuelo", apodo: "Hugo", posicion: "Delantero", fechaNacimiento: "28/01/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/hugo-herrero-hierrezuelo" },
+          { nombre: "Javier Martínez Mendoza", apodo: "Javi", posicion: "Delantero", fechaNacimiento: "13/06/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/javier-martinez-mendoza" }
+        ]
+      },
+      "Alevín C": {
+        categoria: "Alevín - División de Honor F7", jugadores: [
+          { nombre: "Samuel Rodríguez Palmero", apodo: "Samuel", posicion: "Portero", fechaNacimiento: "15/05/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/samuel-rodriguez-palmero" },
+          { nombre: "Eitan Levinstein Vieyra", apodo: "Eitan", posicion: "Portero", fechaNacimiento: "22/08/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/eitan-levinstein-vieyra" },
+          { nombre: "Marcos Gómez Hernández", apodo: "Marcos", posicion: "Defensa", fechaNacimiento: "09/02/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/marcos-gomez-hernandez" },
+          { nombre: "Gonzalo Paz Duronto", apodo: "Gonzalo", posicion: "Defensa", fechaNacimiento: "18/11/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/gonzalo-paz-duronto" },
+          { nombre: "Joaquín Alejandro Cordido Castillo", apodo: "Joaquín", posicion: "Defensa", fechaNacimiento: "04/07/2015", lugarNacimiento: "Venezuela", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/joaquin-alejandro-cordido-castillo" },
+          { nombre: "Ignacio García de Ussía", apodo: "Nacho", posicion: "Centrocampista", fechaNacimiento: "27/03/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/ignacio-garcia-de-ussia" },
+          { nombre: "Bruno Serrano González", apodo: "Bruno", posicion: "Centrocampista", fechaNacimiento: "11/10/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/bruno-serrano-gonzalez" },
+          { nombre: "Álvaro González Rojo", apodo: "Álvaro", posicion: "Centrocampista", fechaNacimiento: "30/06/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/alvaro-gonzalez-rojo" },
+          { nombre: "Héctor Lorenzo Arraz", apodo: "Héctor Lorenzo", posicion: "Centrocampista", fechaNacimiento: "16/01/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/hector-lorenzo-arraz" },
+          { nombre: "Daniel Martínez-Carrasco Leónidas", apodo: "Dani", posicion: "Centrocampista", fechaNacimiento: "23/09/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/daniel-martinez-carrasco-leonidas" },
+          { nombre: "Héctor Solías Martínez", apodo: "Héctor Solís", posicion: "Centrocampista", fechaNacimiento: "08/04/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/hector-solias-martinez" },
+          { nombre: "Hugo Boch Ríos", apodo: "Hugo", posicion: "Delantero", fechaNacimiento: "12/12/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/hugo-boch-rios" },
+          { nombre: "Joel Herráez Luengo", apodo: "Joel", posicion: "Delantero", fechaNacimiento: "05/06/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/joel-herraez-luengo" },
+          { nombre: "Marco Álvarez Gómez", apodo: "Marco", posicion: "Delantero", fechaNacimiento: "26/04/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/marco-alvarez-gomez" }
+        ]
+      },
+      "Benjamín A": {
+        categoria: "Benjamín - Superliga F7", jugadores: [
+          { nombre: "Lucas Carbonero", apodo: "Lucas", posicion: "Portero", fechaNacimiento: "08/03/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/lucas-carbonero" },
+          { nombre: "Hugo Fernández Fernández", apodo: "Hugo", posicion: "Portero", fechaNacimiento: "21/09/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/hugo-fernandez-fernandez" },
+          { nombre: "Diego Ruiz Guerra", apodo: "Diego", posicion: "Defensa", fechaNacimiento: "14/01/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/diego-ruiz-guerra" },
+          { nombre: "Amin El Madkouri Ramli", apodo: "Amin", posicion: "Defensa", fechaNacimiento: "06/07/2016", lugarNacimiento: "Marruecos", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/amin-el-madkouri-ramli" },
+          { nombre: "Gabriel Chamorro Torquemada", apodo: "Gabi", posicion: "Defensa", fechaNacimiento: "29/04/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/gabriel-chamorro-torquemada" },
+          { nombre: "Alfonso Martínez Fernández", apodo: "Alfonso", posicion: "Centrocampista", fechaNacimiento: "17/11/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/alfonso-martinez-fernandez" },
+          { nombre: "Hugo Zazo Sanz", apodo: "Hugo Zazo", posicion: "Centrocampista", fechaNacimiento: "03/06/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/hugo-zazo-sanz" },
+          { nombre: "Noel González Díaz", apodo: "Noel", posicion: "Centrocampista", fechaNacimiento: "25/08/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/noel-gonzalez-diaz" },
+          { nombre: "Alejandro Herrera Cordero", apodo: "Alejandro", posicion: "Centrocampista", fechaNacimiento: "12/02/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/alejandro-herrera-cordero" },
+          { nombre: "Manuel Abad Delgado", apodo: "Manu", posicion: "Centrocampista", fechaNacimiento: "19/10/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/manuel-abad-delgado" },
+          { nombre: "Antonio Garnes Marín", apodo: "Antonio", posicion: "Delantero", fechaNacimiento: "07/05/2016", lugarNacimiento: "Murcia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/antonio-garnes-marin" },
+          { nombre: "Aarón Adiju Wathlanafa Amos", apodo: "Aarón", posicion: "Delantero", fechaNacimiento: "30/12/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/aaron-adiju-wathlanafa-amos" },
+          { nombre: "Andrés Cárdenas Martín", apodo: "Andrés", posicion: "Delantero", fechaNacimiento: "23/03/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/andres-cardenas-martin" },
+          { nombre: "Daniel González Ortega", apodo: "Dani", posicion: "Delantero", fechaNacimiento: "11/09/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/daniel-gonzalez-ortega" }
+        ]
+      },
+      "Benjamín B": {
+        categoria: "Benjamín - División de Honor F7", jugadores: [
+          { nombre: "Alberto Arellano Aragoneses", apodo: "Alberto", posicion: "Portero", fechaNacimiento: "02/01/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/alberto-arellano-aragoneses" },
+          { nombre: "Jaime Acosta Carrillo", apodo: "Jaime", posicion: "Portero", fechaNacimiento: "19/01/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/jaime-acosta-carrillo" },
+          { nombre: "Marco de la Rosa Sánchez", apodo: "Marco de la Rosa", posicion: "Defensa", fechaNacimiento: "22/07/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/marco-de-la-rosa-sanchez" },
+          { nombre: "Marco Moreno Higueras", apodo: "Marco Moreno", posicion: "Defensa", fechaNacimiento: "15/04/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/marco-moreno-higueras" },
+          { nombre: "Yonatan Juravski", apodo: "Yonatan", posicion: "Defensa", fechaNacimiento: "08/11/2017", lugarNacimiento: "Israel", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/yonatan-juravski" },
+          { nombre: "Rafael Fisac Arrebola", apodo: "Rafa", posicion: "Defensa", fechaNacimiento: "27/06/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/rafael-fisac-arrebola" },
+          { nombre: "Luca Muñoz Heredia", apodo: "Luca", posicion: "Centrocampista", fechaNacimiento: "13/03/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/luca-munoz-heredia" },
+          { nombre: "Enzo González Díaz", apodo: "Enzo", posicion: "Centrocampista", fechaNacimiento: "04/09/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/enzo-gonzalez-diaz" },
+          { nombre: "Jared Ibrahim Denyaro Strong", apodo: "Jared", posicion: "Centrocampista", fechaNacimiento: "21/05/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/jared-ibrahim-denyaro-strong" },
+          { nombre: "Neyzan Peláez Almendro", apodo: "Neyzan", posicion: "Delantero", fechaNacimiento: "16/12/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/neyzan-pelaez-almendro" },
+          { nombre: "Nicolás Courtois Domínguez", apodo: "Nicolás", posicion: "Delantero", fechaNacimiento: "02/05/2017", lugarNacimiento: "Boadilla del Monte", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/nicolas-courtois-dominguez" },
+          { nombre: "Gonzalo Blanco González", apodo: "Gonzalo", posicion: "Delantero", fechaNacimiento: "28/05/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/gonzalo-blanco-gonzalez" },
+          { nombre: "Mateo Pinto Ledesma", apodo: "Mateo", posicion: "Delantero", fechaNacimiento: "09/08/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/mateo-pinto-ledesma" },
+          { nombre: "Dylan Salamero Aguado", apodo: "Dylan", posicion: "Delantero", fechaNacimiento: "01/02/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/dylan-salamero-aguado" }
+        ]
+      },
+      "Prebenjamín A": {
+        categoria: "Prebenjamín - 1ª Autonómica", jugadores: [
+          { nombre: "Guillermo Millán Arias", apodo: "Guille", posicion: "Portero", fechaNacimiento: "15/05/2018", lugarNacimiento: "Madrid", dorsal: "1", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/guillermo-millan-arias" },
+          { nombre: "Alejandro Curto Olmos", apodo: "Curto", posicion: "Portero", fechaNacimiento: "28/09/2018", lugarNacimiento: "Madrid", dorsal: "13", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/alejandro-curto-olmos" },
+          { nombre: "Lucas Yagüe Murillo", apodo: "Yagüe", posicion: "Defensa", fechaNacimiento: "07/02/2018", lugarNacimiento: "Madrid", dorsal: "5", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/lucas-yague-murillo" },
+          { nombre: "Paolo Escudé Ruiz", apodo: "Paolo", posicion: "Defensa", fechaNacimiento: "19/06/2018", lugarNacimiento: "Madrid", dorsal: "4", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/paolo-escude-ruiz" },
+          { nombre: "Noeh Arkine Hernández", apodo: "Noeh", posicion: "Defensa", fechaNacimiento: "02/04/2018", lugarNacimiento: "Madrid", dorsal: "8", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/noeh-arkine-hernandez" },
+          { nombre: "Óliver Martínez Fernández", apodo: "Óliver", posicion: "Defensa", fechaNacimiento: "24/11/2018", lugarNacimiento: "Madrid", dorsal: "7", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/oliver-martinez-fernandez" },
+          { nombre: "Enzo Muñoz Herráiz", apodo: "Enzo", posicion: "Centrocampista", fechaNacimiento: "11/03/2018", lugarNacimiento: "Madrid", dorsal: "10", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/enzo-munoz-herraiz" },
+          { nombre: "Rubén Ramos López", apodo: "Rubén", posicion: "Centrocampista", fechaNacimiento: "03/08/2018", lugarNacimiento: "Madrid", dorsal: "11", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/ruben-ramos-lopez" },
+          { nombre: "Uziel Benoit Ndom Payano", apodo: "Uziel", posicion: "Centrocampista", fechaNacimiento: "16/01/2018", lugarNacimiento: "Madrid", dorsal: "16", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/uziel-benoit-ndom-payano" },
+          { nombre: "Miguel Arizmendi Castillo", apodo: "Arizmendi", posicion: "Centrocampista", fechaNacimiento: "29/10/2018", lugarNacimiento: "Madrid", dorsal: "6", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/miguel-arizmendi-castillo" },
+          { nombre: "Nicolás Carrasco Alonso", apodo: "Nico", posicion: "Delantero", fechaNacimiento: "13/01/2018", lugarNacimiento: "Toledo", dorsal: "9", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/nicolas-carrasco-alonso" },
+          { nombre: "Alejandro Brihuega Barrios", apodo: "Alejandro", posicion: "Delantero", fechaNacimiento: "05/07/2018", lugarNacimiento: "Madrid", dorsal: "2", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/alejandro-brihuega-barrios" },
+          { nombre: "Luca Porlán Bennett", apodo: "Luca", posicion: "Delantero", fechaNacimiento: "08/07/2018", lugarNacimiento: "USA", dorsal: "12", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/luca-porlan-bennett" },
+          { nombre: "Dylan Cuevas López", apodo: "Dylan", posicion: "Delantero", fechaNacimiento: "21/12/2018", lugarNacimiento: "Madrid", dorsal: "3", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/dylan-cuevas-lopez" }
+        ]
+      },
+      "Prebenjamín B": {
+        categoria: "Prebenjamín - 1ª Autonómica", jugadores: [
+          { nombre: "Bruno Jiménez Gómez", apodo: "Bruno", posicion: "Portero", fechaNacimiento: "12/04/2019", lugarNacimiento: "Madrid", dorsal: "13", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/bruno-jimenez-gomez" },
+          { nombre: "Jaime Crespo Larraz", apodo: "Jaime", posicion: "Portero", fechaNacimiento: "25/08/2019", lugarNacimiento: "Madrid", dorsal: "1", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/jaime-crespo-larraz" },
+          { nombre: "Marcos Blasco Donoso", apodo: "Marcos", posicion: "Portero", fechaNacimiento: "06/01/2019", lugarNacimiento: "Madrid", dorsal: "13 BIS", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/marcos-blasco-donoso" },
+          { nombre: "Mateo Praja", apodo: "Mateo", posicion: "Defensa", fechaNacimiento: "18/06/2019", lugarNacimiento: "Madrid", dorsal: "5", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/mateo-praja" },
+          { nombre: "Elías Peña González", apodo: "Elías", posicion: "Defensa", fechaNacimiento: "30/03/2019", lugarNacimiento: "Madrid", dorsal: "3", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/elias-pena-gonzalez" },
+          { nombre: "Pablo Martín Teresa", apodo: "Martín", posicion: "Delantero", fechaNacimiento: "14/10/2019", lugarNacimiento: "Madrid", dorsal: "14", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/pablo-martin-teresa" },
+          { nombre: "Daniel Rodríguez Pérez", apodo: "Dani", posicion: "Defensa", fechaNacimiento: "22/02/2019", lugarNacimiento: "Madrid", dorsal: "2", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/daniel-rodriguez-perez" },
+          { nombre: "Jorge Pérez Santiago", apodo: "Jorge", posicion: "Centrocampista", fechaNacimiento: "09/07/2019", lugarNacimiento: "Madrid", dorsal: "6", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/jorge-perez-santiago" },
+          { nombre: "Daniel Montoya Bajo", apodo: "Montoya", posicion: "Centrocampista", fechaNacimiento: "01/11/2019", lugarNacimiento: "Madrid", dorsal: "8", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/daniel-montoya-bajo" },
+          { nombre: "Pablo García Martorell", apodo: "García", posicion: "Centrocampista", fechaNacimiento: "17/05/2019", lugarNacimiento: "Madrid", dorsal: "4", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/pablo-garcia-martorell" },
+          { nombre: "Mauro Urrutia de Francisco", apodo: "Mauro", posicion: "Delantero", fechaNacimiento: "03/09/2019", lugarNacimiento: "Madrid", dorsal: "10", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/mauro-urrutia-de-francisco" },
+          { nombre: "Marco Medina Gutiérrez", apodo: "Marco", posicion: "Delantero", fechaNacimiento: "26/12/2018", lugarNacimiento: "Madrid", dorsal: "7", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/marco-medina-gutierrez" },
+          { nombre: "Alberto Gómez de Benito", apodo: "Alberto", posicion: "Delantero", fechaNacimiento: "11/04/2019", lugarNacimiento: "Madrid", dorsal: "11", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/alberto-gomez-de-benito" },
+          { nombre: "Víctor Rosado Martín", apodo: "Víctor", posicion: "Delantero", fechaNacimiento: "28/01/2019", lugarNacimiento: "Madrid", dorsal: "15", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/victor-rosado-martin" },
+          { nombre: "Enzo Guijosa Moreno", apodo: "Enzo", posicion: "Delantero", fechaNacimiento: "15/06/2019", lugarNacimiento: "Móstoles (Madrid)", dorsal: "12", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/enzo-guijosa-moreno" },
+          { nombre: "Hugo Terrón Núñez", apodo: "Hugo", posicion: "Delantero", fechaNacimiento: "08/08/2019", lugarNacimiento: "Madrid", dorsal: "9", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/hugo-terron-nunez" }
+        ]
+      },
+      "Debutante": {
+        categoria: "Debutante - Prebenjamín 1er Año", jugadores: [
+          { nombre: "Aritz Díaz Maestro", apodo: "Aritz", posicion: "Portero", fechaNacimiento: "22/03/2020", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/aritz-diaz-maestro" },
+          { nombre: "Luca Díaz Pizarro", apodo: "Luca", posicion: "Defensa", fechaNacimiento: "14/07/2020", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/luca-diaz-pizarro" },
+          { nombre: "Héctor Miguel Rovira", apodo: "Héctor", posicion: "Defensa", fechaNacimiento: "05/01/2020", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/hector-miguel-rovira" },
+          { nombre: "Ángel Baltasar Esteban", apodo: "Ángel", posicion: "Centrocampista", fechaNacimiento: "18/09/2020", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/angel-baltasar-esteban" },
+          { nombre: "Nicolás Arizmendi Castillo", apodo: "Nico", posicion: "Centrocampista", fechaNacimiento: "29/10/2020", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/nicolas-arizmendi-castillo" },
+          { nombre: "Christian Salido Páramo", apodo: "Christian", posicion: "Delantero", fechaNacimiento: "11/04/2020", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/christian-salido-paramo" },
+          { nombre: "Fernando Maíllo Sanz", apodo: "Fernando", posicion: "Delantero", fechaNacimiento: "26/06/2020", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/fernando-maillo-sanz" }
+        ]
+      }
+    };
+
+    const ACCENT = '#3e2fdc';
+    const getPositionStyle = (pos) => {
+      const s = { "Portero": { bg: "#fef3c7", text: "#92400e", dot: "#f59e0b" }, "Defensa": { bg: "#d1fae5", text: "#065f46", dot: "#10b981" }, "Centrocampista": { bg: "#ede9fe", text: "#5b21b6", dot: ACCENT }, "Delantero": { bg: "#fee2e2", text: "#991b1b", dot: "#ef4444" } };
+      return s[pos] || { bg: "#f3f4f6", text: "#374151", dot: "#6b7280" };
+    };
+
+    function App() {
+      const [selectedTeam, setSelectedTeam] = useState(null);
+      const [expandedPlayer, setExpandedPlayer] = useState(null);
+      const [searchTerm, setSearchTerm] = useState("");
+      const [positionFilter, setPositionFilter] = useState("Todas");
+      const [teamFilter, setTeamFilter] = useState("Todos");
+      const [filtersOpen, setFiltersOpen] = useState(false);
+      const [navSection, setNavSection] = useState(null);
+      const [searchOpen, setSearchOpen] = useState(false);
+
+      const teams = Object.keys(canteraData);
+      const currentTeam = selectedTeam ? canteraData[selectedTeam] : null;
+      const positions = ["Todas", "Portero", "Defensa", "Centrocampista", "Delantero"];
+      const teamsF11 = ["Castilla", "Real Madrid C", "Juvenil A", "Juvenil B", "Juvenil C", "Cadete A", "Cadete B", "Infantil A", "Infantil B", "Alevín A"];
+      const teamsF7 = ["Alevín B", "Alevín C", "Benjamín A", "Benjamín B", "Prebenjamín A", "Prebenjamín B", "Debutante"];
+      const isSearching = searchTerm.length >= 2;
+      const hasActiveFilters = positionFilter !== "Todas" || teamFilter !== "Todos";
+
+      const globalResults = useMemo(() => {
+        if (!isSearching) return [];
+        const r = [];
+        Object.entries(canteraData).forEach(([team, data]) => {
+          data.jugadores.forEach(p => {
+            const match = p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || p.apodo.toLowerCase().includes(searchTerm.toLowerCase()) || (p.lugarNacimiento && p.lugarNacimiento.toLowerCase().includes(searchTerm.toLowerCase()));
+            const posMatch = positionFilter === "Todas" || p.posicion === positionFilter;
+            const teamMatch = teamFilter === "Todos" || team === teamFilter;
+            if (match && posMatch && teamMatch) r.push({ ...p, equipo: team });
+          });
+        });
+        return r.slice(0, 25);
+      }, [searchTerm, positionFilter, teamFilter, isSearching]);
+
+      const filteredPlayers = useMemo(() => currentTeam ? currentTeam.jugadores.filter(p => positionFilter === "Todas" || p.posicion === positionFilter) : [], [currentTeam, positionFilter]);
+
+      const stats = useMemo(() => {
+        if (!currentTeam) return { total: 0, por: 0, def: 0, med: 0, del: 0, intl: 0 };
+        const p = currentTeam.jugadores;
+        return { total: p.length, por: p.filter(x => x.posicion === "Portero").length, def: p.filter(x => x.posicion === "Defensa").length, med: p.filter(x => x.posicion === "Centrocampista").length, del: p.filter(x => x.posicion === "Delantero").length, intl: p.filter(x => x.seleccion).length };
+      }, [currentTeam]);
+
+      const totalPlayers = useMemo(() => Object.values(canteraData).reduce((a, t) => a + t.jugadores.length, 0), []);
+
+      return (
+        <div style={{minHeight: '100vh', background: '#f9fafb'}}>
+          <header className="header"><div className="container"><div className="header-content">
+            <div><h1 className="title">⚽ La Fábrica 25/26</h1><p className="subtitle">Cantera Real Madrid · {teams.length} equipos · {totalPlayers} jugadores</p></div>
+            {!isSearching && stats.intl > 0 && <div className="badge">🏆 {stats.intl} internacionales</div>}
+          </div></div></header>
+
+          <main className="container" style={{paddingTop: 24, paddingBottom: 24}}>
+            <button className={`search-toggle ${searchOpen ? 'open' : ''}`} onClick={() => setSearchOpen(!searchOpen)}>
+              🔍 Buscar jugador
+            </button>
+            <div className={`search-panel ${searchOpen ? 'open' : ''}`}>
+              <div className="search-section" style={{marginTop: 0}}>
+                <div className="search-header">
+                  <div className="search-box-wrapper">
+                    <div className="search-input-wrapper">
+                      <span className="search-icon">🔍</span>
+                      <input type="text" className="search-input" style={{paddingRight: 44}} placeholder="Nombre, apodo o lugar de nacimiento..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                      {searchTerm && <button className="search-clear" onClick={() => setSearchTerm("")}>×</button>}
+                    </div>
+                  </div>
+                  <button className={`filter-toggle ${filtersOpen ? 'open' : ''} ${hasActiveFilters ? 'active' : ''}`} onClick={() => setFiltersOpen(!filtersOpen)}>
+                    <span>⚙️ Filtros{hasActiveFilters ? ` (${(positionFilter !== "Todas" ? 1 : 0) + (teamFilter !== "Todos" ? 1 : 0)})` : ''}</span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                  </button>
+                </div>
+                {hasActiveFilters && !filtersOpen && (
+                  <div className="active-filters">
+                    {positionFilter !== "Todas" && <span className="active-filter-tag">{positionFilter}<button onClick={() => setPositionFilter("Todas")}>×</button></span>}
+                    {teamFilter !== "Todos" && <span className="active-filter-tag">{teamFilter}<button onClick={() => setTeamFilter("Todos")}>×</button></span>}
+                  </div>
+                )}
+                <div className={`filter-panel ${filtersOpen ? 'open' : ''}`}>
+                  <div className="filter-group">
+                    <div className="filter-group-title">Posición</div>
+                    <div className="filter-chips">{positions.map(pos => <button key={pos} onClick={() => setPositionFilter(pos)} className={`filter-btn ${positionFilter === pos ? 'active' : ''}`}>{pos}</button>)}</div>
+                  </div>
+                  <div className="filter-group">
+                    <div className="filter-group-title">Equipo</div>
+                    <div className="filter-chips"><button onClick={() => setTeamFilter("Todos")} className={`filter-btn ${teamFilter === "Todos" ? 'active' : ''}`}>Todos</button></div>
+                    <div style={{marginTop: 10, marginBottom: 6, fontSize: 11, color: '#9ca3af', fontWeight: 500}}>⚽ Fútbol 11</div>
+                    <div className="filter-chips">{teamsF11.map(team => <button key={team} onClick={() => setTeamFilter(team)} className={`filter-btn ${teamFilter === team ? 'active' : ''}`}>{team}</button>)}</div>
+                    <div style={{marginTop: 10, marginBottom: 6, fontSize: 11, color: '#9ca3af', fontWeight: 500}}>⚽ Fútbol 7</div>
+                    <div className="filter-chips">{teamsF7.map(team => <button key={team} onClick={() => setTeamFilter(team)} className={`filter-btn ${teamFilter === team ? 'active' : ''}`}>{team}</button>)}</div>
+                  </div>
+                </div>
+                {isSearching && globalResults.length > 0 && (
+                  <div className="search-results">
+                    <div className="search-results-title">{globalResults.length} resultado{globalResults.length !== 1 ? 's' : ''}</div>
+                    {globalResults.map((p, i) => { const ps = getPositionStyle(p.posicion); return (
+                      <div key={i} className="search-result-item" onClick={() => { setSelectedTeam(p.equipo); setSearchTerm(""); setSearchOpen(false); setNavSection(teamsF11.includes(p.equipo) ? "F11" : "F7"); }}>
+                        <div className="result-info"><span className="position-badge" style={{background: ps.bg, color: ps.text}}><span className="position-dot" style={{background: ps.dot}}></span>{p.posicion.substring(0,3).toUpperCase()}</span><div><div className="result-name">{p.apodo}</div><div className="result-fullname">{p.nombre}</div></div></div>
+                        <div className="result-team">{p.equipo}</div>
+                      </div>
+                    ); })}
+                  </div>
+                )}
+                {isSearching && globalResults.length === 0 && <div className="empty-state">No se encontraron jugadores</div>}
+              </div>
+            </div>
+
+            <div className="nav-sections">
+              <div className="nav-section">
+                <div className={`nav-section-header ${navSection === "F11" ? 'open' : ''} ${teamsF11.includes(selectedTeam) ? 'active' : ''}`} onClick={() => setNavSection(navSection === "F11" ? null : "F11")}>
+                  <span className="nav-section-title">⚽ Fútbol 11</span>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                </div>
+                <div className={`nav-section-teams ${navSection === "F11" ? 'open' : ''}`}>
+                  {teamsF11.map(team => <button key={team} onClick={() => { setSelectedTeam(team); setExpandedPlayer(null); }} className={`team-btn ${selectedTeam === team ? 'active' : ''}`}>{team}</button>)}
+                </div>
+              </div>
+              <div className="nav-section">
+                <div className={`nav-section-header ${navSection === "F7" ? 'open' : ''} ${teamsF7.includes(selectedTeam) ? 'active' : ''}`} onClick={() => setNavSection(navSection === "F7" ? null : "F7")}>
+                  <span className="nav-section-title">⚽ Fútbol 7</span>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                </div>
+                <div className={`nav-section-teams ${navSection === "F7" ? 'open' : ''}`}>
+                  {teamsF7.map(team => <button key={team} onClick={() => { setSelectedTeam(team); setExpandedPlayer(null); }} className={`team-btn ${selectedTeam === team ? 'active' : ''}`}>{team}</button>)}
+                </div>
+              </div>
+            </div>
+
+            {!selectedTeam && (
+              <div className="welcome-message">
+                <div className="welcome-icon">⚽</div>
+                <div className="welcome-title">Bienvenido a La Fábrica</div>
+                <div className="welcome-subtitle">Selecciona un equipo de Fútbol 11 o Fútbol 7 para ver sus jugadores</div>
+              </div>
+            )}
+
+            {selectedTeam && <>
+              <div className="card"><div className="card-header"><div><h2 className="team-name">{selectedTeam}</h2><p className="team-cat">{currentTeam.categoria}</p></div><div className="stats-row">
+                <div className="stat"><div className="stat-value" style={{color:'#f59e0b'}}>{stats.por}</div><div className="stat-label">POR</div></div>
+                <div className="stat"><div className="stat-value" style={{color:'#10b981'}}>{stats.def}</div><div className="stat-label">DEF</div></div>
+                <div className="stat"><div className="stat-value" style={{color:ACCENT}}>{stats.med}</div><div className="stat-label">MED</div></div>
+                <div className="stat"><div className="stat-value" style={{color:'#ef4444'}}>{stats.del}</div><div className="stat-label">DEL</div></div>
+              </div></div></div>
+
+              <div className="table-container">
+                <div className="table-header"><div>#</div><div>Jugador</div><div>Posición</div><div>Nacimiento</div><div>Origen</div><div></div></div>
+                {filteredPlayers.map((p, i) => { const ps = getPositionStyle(p.posicion); const exp = expandedPlayer === i; return (
+                  <div key={i}>
+                    <div className={`table-row ${exp ? 'expanded' : ''}`} onClick={() => setExpandedPlayer(exp ? null : i)}>
+                      <div className="row-num">{p.dorsal || '-'}</div>
+                      <div><div className="player-name">{p.apodo}</div><div className="player-fullname">{p.nombre}</div></div>
+                      <div><span className="position-badge" style={{background: ps.bg, color: ps.text}}><span className="position-dot" style={{background: ps.dot}}></span>{p.posicion}</span></div>
+                      <div className="birth-date">{p.fechaNacimiento || '-'}</div>
+                      <div className="birth-place">{p.lugarNacimiento || '-'}</div>
+                      <div className={`chevron ${exp ? 'open' : ''}`}>▶</div>
+                    </div>
+                    {exp && <div className="expanded-content"><div className="expanded-grid">
+                      <div className="info-card"><h4 className="info-title">Información Personal</h4>
+                        <div className="info-item"><div className="info-label">Nombre completo</div><div className="info-value">{p.nombre}</div></div>
+                        <div className="info-item"><div className="info-label">Fecha nacimiento</div><div className="info-value">{p.fechaNacimiento || '-'}</div></div>
+                        <div className="info-item"><div className="info-label">Lugar nacimiento</div><div className="info-value">{p.lugarNacimiento || '-'}</div></div>
+                      </div>
+                      <div className="info-card"><h4 className="info-title">Información Deportiva</h4>
+                        {p.dorsal && <div className="info-item"><div className="info-label">Dorsal</div><div className="info-value accent">#{p.dorsal}</div></div>}
+                        <div className="info-item"><div className="info-label">Posición</div><div className="info-value">{p.posicion}</div></div>
+                        <div className="info-item"><div className="info-label">Equipo</div><div className="info-value">{selectedTeam}</div></div>
+                        {p.seleccion && <div className="info-item"><div className="info-label">Selección</div><div className="info-value accent">🏆 {p.seleccion}</div></div>}
+                        {p.url && <div className="info-item"><div className="info-label">Perfil Oficial</div><div className="info-value"><a href={p.url} target="_blank" rel="noopener noreferrer" style={{color: '#3e2fdc', textDecoration: 'none'}}>🔗 Ver en realmadrid.com</a></div></div>}
+                      </div>
+                    </div></div>}
+                  </div>
+                ); })}
+                {filteredPlayers.length === 0 && <div className="empty-state">No hay jugadores con esa posición</div>}
+              </div>
+              <div className="results-count">Mostrando {filteredPlayers.length} de {currentTeam.jugadores.length} en {selectedTeam}</div>
+            </>}
+          </main>
+          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos</p></footer>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
