@@ -138,6 +138,61 @@
     .year-player-card:hover { background: #f0f0ff; border-color: #3e2fdc; transform: translateY(-2px); }
     .year-player-pos { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
     .year-count { font-size: 13px; color: #6b7280; margin-left: auto; }
+    /* Vista Campo FC26 */
+    .view-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+    .view-btn { padding: 10px 20px; border-radius: 10px; border: 2px solid #e5e7eb; background: white; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .view-btn:hover { border-color: #3e2fdc; }
+    .view-btn.active { border-color: #3e2fdc; background: rgba(62, 47, 220, 0.1); color: #3e2fdc; }
+    .field-wrapper { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
+    .field-container { background: linear-gradient(180deg, #1a472a 0%, #2d5a3f 50%, #1a472a 100%); border-radius: 16px; padding: 20px; position: relative; aspect-ratio: 1.5; min-height: 450px; box-shadow: inset 0 0 60px rgba(0,0,0,0.3); overflow: hidden; }
+    .field-pattern { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 60px); }
+    .field-lines { position: absolute; inset: 25px; border: 3px solid rgba(255,255,255,0.7); border-radius: 4px; }
+    .field-center-line { position: absolute; left: 50%; top: 25px; bottom: 25px; width: 3px; background: rgba(255,255,255,0.7); }
+    .field-center-circle { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; border: 3px solid rgba(255,255,255,0.7); border-radius: 50%; }
+    .field-center-dot { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: rgba(255,255,255,0.7); border-radius: 50%; }
+    .field-area { position: absolute; width: 100px; height: 180px; border: 3px solid rgba(255,255,255,0.7); top: 50%; transform: translateY(-50%); }
+    .field-area.left { left: 25px; border-left: none; border-radius: 0 4px 4px 0; }
+    .field-area.right { right: 25px; border-right: none; border-radius: 4px 0 0 4px; }
+    .field-goal-area { position: absolute; width: 45px; height: 90px; border: 3px solid rgba(255,255,255,0.7); top: 50%; transform: translateY(-50%); }
+    .field-goal-area.left { left: 25px; border-left: none; }
+    .field-goal-area.right { right: 25px; border-right: none; }
+    .field-slot { position: absolute; width: 60px; height: 70px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+    .field-slot:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
+    .field-slot.occupied { border: none; background: none; }
+    .field-slot-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
+    .field-card { position: absolute; transform: translate(-50%, -50%); cursor: pointer; transition: all 0.2s; z-index: 10; }
+    .field-card:hover { transform: translate(-50%, -50%) scale(1.08); z-index: 20; }
+    .player-card { width: 60px; background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%); border-radius: 8px; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 2px solid #3e2fdc; position: relative; overflow: hidden; }
+    .player-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(180deg, rgba(62,47,220,0.3) 0%, transparent 100%); }
+    .player-card-rating { position: absolute; top: 4px; left: 4px; background: #3e2fdc; color: white; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 4px; z-index: 1; }
+    .player-card-pos { position: absolute; top: 4px; right: 4px; font-size: 8px; font-weight: 600; padding: 2px 4px; border-radius: 3px; z-index: 1; }
+    .player-card-avatar { width: 48px; height: 48px; margin: 8px auto 4px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: white; position: relative; z-index: 1; }
+    .player-card-name { font-size: 9px; font-weight: 600; color: white; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; position: relative; z-index: 1; }
+    .player-card-remove { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: #ef4444; border: 2px solid white; border-radius: 50%; color: white; font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; line-height: 1; }
+    .field-card:hover .player-card-remove { display: flex; }
+    .bench-panel { background: white; border-radius: 16px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-height: 500px; overflow-y: auto; }
+    .bench-title { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .bench-subtitle { font-size: 11px; color: #9ca3af; margin-bottom: 12px; }
+    .bench-section { margin-bottom: 16px; }
+    .bench-section-title { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .bench-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .bench-card { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 10px; padding: 10px; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .bench-card:hover { border-color: #3e2fdc; background: #f0f0ff; transform: translateY(-2px); }
+    .bench-card.used { opacity: 0.4; pointer-events: none; }
+    .bench-card-pos { font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
+    .bench-card-name { font-size: 12px; font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bench-card-dorsal { font-size: 10px; color: #6b7280; }
+    .field-empty-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: rgba(255,255,255,0.5); }
+    .field-empty-msg span { font-size: 48px; display: block; margin-bottom: 8px; }
+    .field-empty-msg p { font-size: 14px; }
+    .field-formation { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.5); color: white; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 5; }
+    .clear-field-btn { margin-top: 12px; width: 100%; padding: 10px; background: rgba(239,68,68,0.1); color: #ef4444; border: none; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .clear-field-btn:hover { background: rgba(239,68,68,0.2); }
+    @media (max-width: 900px) {
+      .field-wrapper { grid-template-columns: 1fr; }
+      .bench-panel { max-height: 300px; }
+      .bench-grid { grid-template-columns: repeat(3, 1fr); }
+    }
     @media (max-width: 768px) {
       .table-header, .table-row { grid-template-columns: 40px 1fr 100px 40px; }
       .table-header > *:nth-child(4), .table-header > *:nth-child(5),
@@ -668,6 +723,232 @@
       );
     }
 
+    // Posiciones en el campo (porcentajes)
+    const FIELD_POSITIONS_11 = {
+      "POR": { left: "8%", top: "50%", label: "POR" },
+      "LD": { left: "22%", top: "15%", label: "LD" },
+      "DFC1": { left: "18%", top: "38%", label: "DFC" },
+      "DFC2": { left: "18%", top: "62%", label: "DFC" },
+      "LI": { left: "22%", top: "85%", label: "LI" },
+      "MCD": { left: "38%", top: "50%", label: "MCD" },
+      "MC1": { left: "52%", top: "35%", label: "MC" },
+      "MC2": { left: "52%", top: "65%", label: "MC" },
+      "ED": { left: "75%", top: "20%", label: "EXT" },
+      "DC": { left: "85%", top: "50%", label: "DC" },
+      "EI": { left: "75%", top: "80%", label: "EXT" }
+    };
+
+    const FIELD_POSITIONS_7 = {
+      "POR": { left: "10%", top: "50%", label: "POR" },
+      "DEF1": { left: "30%", top: "30%", label: "DEF" },
+      "DEF2": { left: "30%", top: "70%", label: "DEF" },
+      "MC1": { left: "50%", top: "25%", label: "MC" },
+      "MC2": { left: "50%", top: "50%", label: "MC" },
+      "MC3": { left: "50%", top: "75%", label: "MC" },
+      "DEL": { left: "80%", top: "50%", label: "DEL" }
+    };
+
+    function FieldView({ players, teamName, isF7 }) {
+      const [fieldPlayers, setFieldPlayers] = useState({});
+      const [selectedSlot, setSelectedSlot] = useState(null);
+      const positions = isF7 ? FIELD_POSITIONS_7 : FIELD_POSITIONS_11;
+      const maxPlayers = isF7 ? 7 : 11;
+
+      const usedPlayerIds = Object.values(fieldPlayers).map(p => p?.nombre);
+      const availablePlayers = players.filter(p => !usedPlayerIds.includes(p.nombre));
+      const onFieldCount = Object.values(fieldPlayers).filter(Boolean).length;
+
+      const groupedPlayers = useMemo(() => {
+        const groups = { Portero: [], Defensa: [], Centrocampista: [], Delantero: [] };
+        availablePlayers.forEach(p => {
+          const base = getBasePosition(p.posicion);
+          if (groups[base]) groups[base].push(p);
+        });
+        return groups;
+      }, [availablePlayers]);
+
+      const handleSlotClick = (slotId) => {
+        if (fieldPlayers[slotId]) {
+          // Si hay jugador, quitarlo
+          const newField = { ...fieldPlayers };
+          delete newField[slotId];
+          setFieldPlayers(newField);
+        } else {
+          // Si no hay jugador, marcar slot para añadir
+          setSelectedSlot(slotId);
+        }
+      };
+
+      const handlePlayerSelect = (player) => {
+        if (selectedSlot) {
+          setFieldPlayers({ ...fieldPlayers, [selectedSlot]: player });
+          setSelectedSlot(null);
+        } else if (onFieldCount < maxPlayers) {
+          // Auto-asignar al primer slot vacío apropiado
+          const basePos = getBasePosition(player.posicion);
+          let targetSlot = null;
+          
+          if (isF7) {
+            if (basePos === "Portero" && !fieldPlayers["POR"]) targetSlot = "POR";
+            else if (basePos === "Defensa") {
+              if (!fieldPlayers["DEF1"]) targetSlot = "DEF1";
+              else if (!fieldPlayers["DEF2"]) targetSlot = "DEF2";
+            }
+            else if (basePos === "Centrocampista") {
+              if (!fieldPlayers["MC1"]) targetSlot = "MC1";
+              else if (!fieldPlayers["MC2"]) targetSlot = "MC2";
+              else if (!fieldPlayers["MC3"]) targetSlot = "MC3";
+            }
+            else if (basePos === "Delantero" && !fieldPlayers["DEL"]) targetSlot = "DEL";
+          } else {
+            if (basePos === "Portero" && !fieldPlayers["POR"]) targetSlot = "POR";
+            else if (basePos === "Defensa") {
+              if (player.posicion.includes("Derecho") && !fieldPlayers["LD"]) targetSlot = "LD";
+              else if (player.posicion.includes("Izquierdo") && !fieldPlayers["LI"]) targetSlot = "LI";
+              else if (!fieldPlayers["DFC1"]) targetSlot = "DFC1";
+              else if (!fieldPlayers["DFC2"]) targetSlot = "DFC2";
+              else if (!fieldPlayers["LD"]) targetSlot = "LD";
+              else if (!fieldPlayers["LI"]) targetSlot = "LI";
+            }
+            else if (basePos === "Centrocampista") {
+              if (player.posicion.includes("Defensivo") && !fieldPlayers["MCD"]) targetSlot = "MCD";
+              else if (!fieldPlayers["MC1"]) targetSlot = "MC1";
+              else if (!fieldPlayers["MC2"]) targetSlot = "MC2";
+              else if (!fieldPlayers["MCD"]) targetSlot = "MCD";
+            }
+            else if (basePos === "Delantero") {
+              if (player.posicion.includes("Derecho") && !fieldPlayers["ED"]) targetSlot = "ED";
+              else if (player.posicion.includes("Izquierdo") && !fieldPlayers["EI"]) targetSlot = "EI";
+              else if (!fieldPlayers["DC"]) targetSlot = "DC";
+              else if (!fieldPlayers["ED"]) targetSlot = "ED";
+              else if (!fieldPlayers["EI"]) targetSlot = "EI";
+            }
+          }
+          
+          // Si no encontró slot por posición, buscar cualquier slot vacío
+          if (!targetSlot) {
+            targetSlot = Object.keys(positions).find(k => !fieldPlayers[k]);
+          }
+          
+          if (targetSlot) {
+            setFieldPlayers({ ...fieldPlayers, [targetSlot]: player });
+          }
+        }
+      };
+
+      const clearField = () => {
+        setFieldPlayers({});
+        setSelectedSlot(null);
+      };
+
+      const getInitials = (name) => {
+        return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      };
+
+      return (
+        <div className="field-wrapper">
+          <div className="field-container">
+            <div className="field-pattern"></div>
+            <div className="field-lines"></div>
+            <div className="field-center-line"></div>
+            <div className="field-center-circle"></div>
+            <div className="field-center-dot"></div>
+            <div className="field-area left"></div>
+            <div className="field-area right"></div>
+            <div className="field-goal-area left"></div>
+            <div className="field-goal-area right"></div>
+            
+            <div className="field-formation">{onFieldCount}/{maxPlayers} jugadores</div>
+            
+            {Object.entries(positions).map(([slotId, pos]) => {
+              const player = fieldPlayers[slotId];
+              const isSelected = selectedSlot === slotId;
+              
+              if (player) {
+                const style = getPositionStyle(player.posicion);
+                return (
+                  <div key={slotId} className="field-card" style={{ left: pos.left, top: pos.top }}>
+                    <div className="player-card">
+                      <div className="player-card-rating">{player.dorsal || "-"}</div>
+                      <div className="player-card-pos" style={{ background: style.bg, color: style.text }}>
+                        {player.posicion.substring(0, 3)}
+                      </div>
+                      <div className="player-card-avatar">{getInitials(player.apodo)}</div>
+                      <div className="player-card-name">{player.apodo}</div>
+                      <div className="player-card-remove" onClick={(e) => { e.stopPropagation(); handleSlotClick(slotId); }}>×</div>
+                    </div>
+                  </div>
+                );
+              }
+              
+              return (
+                <div 
+                  key={slotId} 
+                  className={`field-slot ${isSelected ? 'selected' : ''}`}
+                  style={{ 
+                    left: pos.left, 
+                    top: pos.top,
+                    borderColor: isSelected ? '#3e2fdc' : undefined,
+                    background: isSelected ? 'rgba(62,47,220,0.3)' : undefined
+                  }}
+                  onClick={() => setSelectedSlot(isSelected ? null : slotId)}
+                >
+                  <span className="field-slot-label">{pos.label}</span>
+                </div>
+              );
+            })}
+            
+            {onFieldCount === 0 && (
+              <div className="field-empty-msg">
+                <span>👆</span>
+                <p>Haz clic en los jugadores del banquillo para añadirlos</p>
+              </div>
+            )}
+          </div>
+          
+          <div className="bench-panel">
+            <div className="bench-title">🪑 Banquillo</div>
+            <div className="bench-subtitle">
+              {selectedSlot ? `Selecciona jugador para ${positions[selectedSlot].label}` : "Haz clic para añadir al campo"}
+            </div>
+            
+            {Object.entries(groupedPlayers).map(([posName, posPlayers]) => {
+              if (posPlayers.length === 0) return null;
+              const style = getPositionStyle(posName);
+              return (
+                <div key={posName} className="bench-section">
+                  <div className="bench-section-title">
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: style.dot }}></span>
+                    {posName}s ({posPlayers.length})
+                  </div>
+                  <div className="bench-grid">
+                    {posPlayers.map((p, i) => {
+                      const ps = getPositionStyle(p.posicion);
+                      return (
+                        <div key={i} className="bench-card" onClick={() => handlePlayerSelect(p)}>
+                          <span className="bench-card-pos" style={{ background: ps.bg, color: ps.text }}>
+                            {p.posicion.length > 10 ? p.posicion.substring(0, 8) + "." : p.posicion}
+                          </span>
+                          <div className="bench-card-name">{p.apodo}</div>
+                          {p.dorsal && <div className="bench-card-dorsal">#{p.dorsal}</div>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+            
+            {onFieldCount > 0 && (
+              <button className="clear-field-btn" onClick={clearField}>
+                🗑️ Limpiar campo
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
     function App() {
       const [user, setUser] = useState(localStorage.getItem("lafabrica_user"));
       const [mainTab, setMainTab] = useState("equipos");
@@ -679,6 +960,7 @@
       const [filtersOpen, setFiltersOpen] = useState(false);
       const [navSection, setNavSection] = useState(null);
       const [searchOpen, setSearchOpen] = useState(false);
+      const [viewMode, setViewMode] = useState("list");
 
       const handleLogout = () => { localStorage.removeItem("lafabrica_user"); setUser(null); };
       const handleYearPlayerSelect = (teamName, player) => { setSelectedTeam(teamName); setMainTab("equipos"); setExpandedPlayer(player.nombre); };
@@ -827,6 +1109,19 @@
                 <div className="stat"><div className="stat-value" style={{color:'#ef4444'}}>{stats.del}</div><div className="stat-label">DEL</div></div>
               </div></div></div>
 
+              <div className="view-toggle">
+                <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>📋 Lista</button>
+                <button className={`view-btn ${viewMode === 'field' ? 'active' : ''}`} onClick={() => setViewMode('field')}>🏟️ Campo</button>
+              </div>
+
+              {viewMode === 'field' ? (
+                <FieldView 
+                  players={currentTeam.jugadores} 
+                  teamName={selectedTeam}
+                  isF7={teamsF7.includes(selectedTeam)}
+                />
+              ) : (
+              <>
               <div className="table-container">
                 <div className="table-header"><div>#</div><div>Jugador</div><div>Posición</div><div>Nacimiento</div><div>Origen</div><div></div></div>
                 {filteredPlayers.map((p, i) => { const ps = getPositionStyle(p.posicion); const exp = expandedPlayer === i; return (
@@ -858,6 +1153,8 @@
                 {filteredPlayers.length === 0 && <div className="empty-state">No hay jugadores con esa posición</div>}
               </div>
               <div className="results-count">Mostrando {filteredPlayers.length} de {currentTeam.jugadores.length} en {selectedTeam}</div>
+              </>
+              )}
             </>}
             </>
             )}
