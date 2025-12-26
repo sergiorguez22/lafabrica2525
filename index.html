@@ -162,19 +162,19 @@
     .field-slot-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
     .field-card { position: absolute; transform: translate(-50%, -50%); cursor: pointer; transition: all 0.2s; z-index: 10; }
     .field-card:hover { transform: translate(-50%, -50%) scale(1.12); z-index: 20; }
-    .player-card { width: 65px; height: 90px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 5px; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); }
+    .player-card { width: 65px; height: 90px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 5px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); }
     .player-card::before { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(0,0,0,0.15); border-radius: 3px; pointer-events: none; }
-    .player-card-inner { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; }
-    .player-card-rating { font-size: 28px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); }
-    .player-card-pos { font-size: 11px; font-weight: 700; color: #1a1a1a; margin-top: 2px; letter-spacing: 1px; }
-    .player-card-divider { width: 30px; height: 1px; background: rgba(0,0,0,0.2); margin: 6px 0; }
-    .player-card-name { font-size: 8px; font-weight: 700; color: #1a1a1a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55px; letter-spacing: 0.5px; }
-    .player-card-club { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; }
+    .player-card-inner { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; overflow: hidden; border-radius: 5px; }
+    .player-card-rating { font-size: 28px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); position: relative; z-index: 2; }
+    .player-card-pos { font-size: 11px; font-weight: 700; color: #1a1a1a; margin-top: 2px; letter-spacing: 1px; position: relative; z-index: 2; }
+    .player-card-divider { width: 30px; height: 1px; background: rgba(0,0,0,0.2); margin: 6px 0; position: relative; z-index: 2; }
+    .player-card-name { font-size: 8px; font-weight: 700; color: #1a1a1a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55px; letter-spacing: 0.5px; position: relative; z-index: 2; }
+    .player-card-club { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; z-index: 2; }
     .player-card-club-badge { width: 12px; height: 12px; background: linear-gradient(135deg, #3e2fdc, #1a1a6e); border-radius: 2px; }
-    .player-card-flag { font-size: 10px; line-height: 1; }
-    .player-card-remove { position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; background: #ef4444; border: 2px solid white; border-radius: 50%; color: white; font-size: 14px; font-weight: 700; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; line-height: 1; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+    .player-card-flag { font-size: 12px; line-height: 1; }
+    .player-card-remove { position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; background: #ef4444; border: 2px solid white; border-radius: 50%; color: white; font-size: 14px; font-weight: 700; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; line-height: 1; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
     .field-card:hover .player-card-remove { display: flex; }
-    .player-card-shine { position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); transition: left 0.5s; pointer-events: none; }
+    .player-card-shine { position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); transition: left 0.5s; pointer-events: none; z-index: 1; }
     .field-card:hover .player-card-shine { left: 150%; }
     .bench-panel { background: white; border-radius: 16px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-height: 500px; overflow-y: auto; }
     .bench-title { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
@@ -637,23 +637,32 @@
       const abbrs = { "Portero": "POR", "Lateral Derecho": "LD", "Lateral Izquierdo": "LI", "Central Diestro": "DFC", "Central Zurdo": "DFC", "Defensa": "DEF", "Mediocentro": "MC", "Interior Defensivo": "MCD", "Interior Ofensivo": "MCO", "Centrocampista": "MC", "Extremo Derecho": "ED", "Extremo Izquierdo": "EI", "Delantero Centro": "DC", "Delantero": "DEL" };
       return abbrs[pos] || pos.substring(0, 3).toUpperCase();
     };
-    const getFlag = (lugar) => {
-      if (!lugar) return "🇪🇸";
-      const pais = lugar.toLowerCase();
-      if (pais.includes("portugal") || pais.includes("oporto")) return "🇵🇹";
-      if (pais.includes("brasil")) return "🇧🇷";
-      if (pais.includes("paraguay")) return "🇵🇾";
-      if (pais.includes("usa") || pais.includes("estados unidos")) return "🇺🇸";
-      if (pais.includes("ucrania")) return "🇺🇦";
-      if (pais.includes("guinea ecuatorial")) return "🇬🇶";
-      if (pais.includes("marruecos")) return "🇲🇦";
-      if (pais.includes("cuba")) return "🇨🇺";
-      if (pais.includes("suecia")) return "🇸🇪";
-      if (pais.includes("camerún") || pais.includes("camerun")) return "🇨🇲";
-      if (pais.includes("liberia")) return "🇱🇷";
-      if (pais.includes("bulgaria")) return "🇧🇬";
-      if (pais.includes("venezuela")) return "🇻🇪";
-      if (pais.includes("república dominicana") || pais.includes("dominicana")) return "🇩🇴";
+    const getFlag = (lugar, seleccion) => {
+      const texto = ((lugar || "") + " " + (seleccion || "")).toLowerCase();
+      if (texto.includes("portugal") || texto.includes("oporto") || texto.includes("luso")) return "🇵🇹";
+      if (texto.includes("brasil") || texto.includes("brasileñ")) return "🇧🇷";
+      if (texto.includes("paraguay") || texto.includes("paraguayo")) return "🇵🇾";
+      if (texto.includes("usa") || texto.includes("estados unidos") || texto.includes("americano")) return "🇺🇸";
+      if (texto.includes("ucrania") || texto.includes("ucraniano")) return "🇺🇦";
+      if (texto.includes("guinea ecuatorial") || texto.includes("ecuatoguineano")) return "🇬🇶";
+      if (texto.includes("marruecos") || texto.includes("marroquí") || texto.includes("marroqui")) return "🇲🇦";
+      if (texto.includes("cuba") || texto.includes("cubano")) return "🇨🇺";
+      if (texto.includes("suecia") || texto.includes("sueco")) return "🇸🇪";
+      if (texto.includes("camerún") || texto.includes("camerun") || texto.includes("camerunés")) return "🇨🇲";
+      if (texto.includes("liberia") || texto.includes("liberiano")) return "🇱🇷";
+      if (texto.includes("bulgaria") || texto.includes("búlgaro")) return "🇧🇬";
+      if (texto.includes("venezuela") || texto.includes("venezolano")) return "🇻🇪";
+      if (texto.includes("república dominicana") || texto.includes("dominicana") || texto.includes("dominicano")) return "🇩🇴";
+      if (texto.includes("argentina") || texto.includes("argentino")) return "🇦🇷";
+      if (texto.includes("francia") || texto.includes("francés") || texto.includes("frances")) return "🇫🇷";
+      if (texto.includes("alemania") || texto.includes("alemán") || texto.includes("aleman")) return "🇩🇪";
+      if (texto.includes("italia") || texto.includes("italiano")) return "🇮🇹";
+      if (texto.includes("inglaterra") || texto.includes("inglés") || texto.includes("ingles")) return "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
+      if (texto.includes("colombia") || texto.includes("colombiano")) return "🇨🇴";
+      if (texto.includes("méxico") || texto.includes("mexico") || texto.includes("mexicano")) return "🇲🇽";
+      if (texto.includes("senegal") || texto.includes("senegalés")) return "🇸🇳";
+      if (texto.includes("nigeria") || texto.includes("nigeriano")) return "🇳🇬";
+      if (texto.includes("ghana") || texto.includes("ghanés")) return "🇬🇭";
       return "🇪🇸";
     };
 
@@ -895,15 +904,15 @@
                 return (
                   <div key={slotId} className="field-card" style={{ left: pos.left, top: pos.top }}>
                     <div className="player-card">
-                      <div className="player-card-shine"></div>
                       <div className="player-card-inner">
+                        <div className="player-card-shine"></div>
                         <div className="player-card-rating">{player.dorsal || "-"}</div>
                         <div className="player-card-pos">{getPosAbbr(player.posicion)}</div>
                         <div className="player-card-divider"></div>
                         <div className="player-card-name">{player.apodo}</div>
                         <div className="player-card-club">
                           <div className="player-card-club-badge"></div>
-                          <span className="player-card-flag">{getFlag(player.lugarNacimiento)}</span>
+                          <span className="player-card-flag">{getFlag(player.lugarNacimiento, player.seleccion)}</span>
                         </div>
                       </div>
                       <div className="player-card-remove" onClick={(e) => { e.stopPropagation(); handleSlotClick(slotId); }}>×</div>
