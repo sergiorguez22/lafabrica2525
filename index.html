@@ -161,27 +161,35 @@
     .field-slot.occupied { border: none; background: none; }
     .field-slot-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
     .field-card { position: absolute; transform: translate(-50%, -50%); cursor: pointer; transition: all 0.2s; z-index: 10; }
-    .field-card:hover { transform: translate(-50%, -50%) scale(1.08); z-index: 20; }
-    .player-card { width: 60px; background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%); border-radius: 8px; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 2px solid #3e2fdc; position: relative; overflow: hidden; }
-    .player-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(180deg, rgba(62,47,220,0.3) 0%, transparent 100%); }
-    .player-card-rating { position: absolute; top: 4px; left: 4px; background: #3e2fdc; color: white; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 4px; z-index: 1; }
-    .player-card-pos { position: absolute; top: 4px; right: 4px; font-size: 8px; font-weight: 600; padding: 2px 4px; border-radius: 3px; z-index: 1; }
-    .player-card-avatar { width: 48px; height: 48px; margin: 8px auto 4px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: white; position: relative; z-index: 1; }
-    .player-card-name { font-size: 9px; font-weight: 600; color: white; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; position: relative; z-index: 1; }
-    .player-card-remove { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: #ef4444; border: 2px solid white; border-radius: 50%; color: white; font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; line-height: 1; }
+    .field-card:hover { transform: translate(-50%, -50%) scale(1.12); z-index: 20; }
+    .player-card { width: 65px; height: 90px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 5px; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); }
+    .player-card::before { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(0,0,0,0.15); border-radius: 3px; pointer-events: none; }
+    .player-card-inner { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; }
+    .player-card-rating { font-size: 28px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); }
+    .player-card-pos { font-size: 11px; font-weight: 700; color: #1a1a1a; margin-top: 2px; letter-spacing: 1px; }
+    .player-card-divider { width: 30px; height: 1px; background: rgba(0,0,0,0.2); margin: 6px 0; }
+    .player-card-name { font-size: 8px; font-weight: 700; color: #1a1a1a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55px; letter-spacing: 0.5px; }
+    .player-card-club { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 3px; }
+    .player-card-club-badge { width: 10px; height: 10px; background: linear-gradient(135deg, #3e2fdc, #1a1a6e); border-radius: 2px; }
+    .player-card-flag { width: 12px; height: 8px; background: linear-gradient(180deg, #c60b1e 33%, #ffc400 33%, #ffc400 66%, #c60b1e 66%); border-radius: 1px; }
+    .player-card-remove { position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; background: #ef4444; border: 2px solid white; border-radius: 50%; color: white; font-size: 14px; font-weight: 700; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; line-height: 1; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
     .field-card:hover .player-card-remove { display: flex; }
+    .player-card-shine { position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); transition: left 0.5s; pointer-events: none; }
+    .field-card:hover .player-card-shine { left: 150%; }
     .bench-panel { background: white; border-radius: 16px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-height: 500px; overflow-y: auto; }
     .bench-title { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .bench-subtitle { font-size: 11px; color: #9ca3af; margin-bottom: 12px; }
     .bench-section { margin-bottom: 16px; }
     .bench-section-title { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
     .bench-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .bench-card { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 10px; padding: 10px; cursor: pointer; transition: all 0.2s; text-align: center; }
-    .bench-card:hover { border-color: #3e2fdc; background: #f0f0ff; transform: translateY(-2px); }
-    .bench-card.used { opacity: 0.4; pointer-events: none; }
-    .bench-card-pos { font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
-    .bench-card-name { font-size: 12px; font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .bench-card-dorsal { font-size: 10px; color: #6b7280; }
+    .bench-card { background: linear-gradient(165deg, #c9a227 0%, #e8d282 25%, #c9a227 50%, #a67c00 100%); border: none; border-radius: 8px; padding: 10px 8px; cursor: pointer; transition: all 0.2s; text-align: center; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .bench-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); transition: left 0.4s; }
+    .bench-card:hover::before { left: 150%; }
+    .bench-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+    .bench-card.used { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
+    .bench-card-pos { font-size: 10px; font-weight: 700; color: #1a1a1a; display: inline-block; margin-bottom: 4px; background: rgba(0,0,0,0.1); padding: 2px 8px; border-radius: 4px; }
+    .bench-card-name { font-size: 11px; font-weight: 700; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; letter-spacing: 0.3px; }
+    .bench-card-dorsal { font-size: 10px; color: #4a4a00; font-weight: 600; margin-top: 2px; }
     .field-empty-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: rgba(255,255,255,0.5); }
     .field-empty-msg span { font-size: 48px; display: block; margin-bottom: 8px; }
     .field-empty-msg p { font-size: 14px; }
@@ -610,7 +618,7 @@
       }
     };
 
-    const USERS = { "Pacojor": "Sergio1999", "SergioRguez": "sergitoferrari22" };
+    const USERS = { "Pacojor": "Sergio1999", "SergioRguez": "sergitoferrari22", "Pabli": "realmadrid", "RaúlRubia": "prebenjaminb" };
 
     const ACCENT = '#3e2fdc';
     const getBasePosition = (pos) => {
@@ -624,6 +632,10 @@
       const base = getBasePosition(pos);
       const s = { "Portero": { bg: "#fef3c7", text: "#92400e", dot: "#f59e0b" }, "Defensa": { bg: "#d1fae5", text: "#065f46", dot: "#10b981" }, "Centrocampista": { bg: "#ede9fe", text: "#5b21b6", dot: ACCENT }, "Delantero": { bg: "#fee2e2", text: "#991b1b", dot: "#ef4444" } };
       return s[base] || { bg: "#f3f4f6", text: "#374151", dot: "#6b7280" };
+    };
+    const getPosAbbr = (pos) => {
+      const abbrs = { "Portero": "POR", "Lateral Derecho": "LD", "Lateral Izquierdo": "LI", "Central Diestro": "DFC", "Central Zurdo": "DFC", "Defensa": "DEF", "Mediocentro": "MC", "Interior Defensivo": "MCD", "Interior Ofensivo": "MCO", "Centrocampista": "MC", "Extremo Derecho": "ED", "Extremo Izquierdo": "EI", "Delantero Centro": "DC", "Delantero": "DEL" };
+      return abbrs[pos] || pos.substring(0, 3).toUpperCase();
     };
 
     function LoginScreen({ onLogin }) {
@@ -841,10 +853,6 @@
         setSelectedSlot(null);
       };
 
-      const getInitials = (name) => {
-        return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-      };
-
       return (
         <div className="field-wrapper">
           <div className="field-container">
@@ -865,16 +873,20 @@
               const isSelected = selectedSlot === slotId;
               
               if (player) {
-                const style = getPositionStyle(player.posicion);
                 return (
                   <div key={slotId} className="field-card" style={{ left: pos.left, top: pos.top }}>
                     <div className="player-card">
-                      <div className="player-card-rating">{player.dorsal || "-"}</div>
-                      <div className="player-card-pos" style={{ background: style.bg, color: style.text }}>
-                        {player.posicion.substring(0, 3)}
+                      <div className="player-card-shine"></div>
+                      <div className="player-card-inner">
+                        <div className="player-card-rating">{player.dorsal || "-"}</div>
+                        <div className="player-card-pos">{getPosAbbr(player.posicion)}</div>
+                        <div className="player-card-divider"></div>
+                        <div className="player-card-name">{player.apodo}</div>
+                        <div className="player-card-club">
+                          <div className="player-card-club-badge"></div>
+                          <div className="player-card-flag"></div>
+                        </div>
                       </div>
-                      <div className="player-card-avatar">{getInitials(player.apodo)}</div>
-                      <div className="player-card-name">{player.apodo}</div>
                       <div className="player-card-remove" onClick={(e) => { e.stopPropagation(); handleSlotClick(slotId); }}>×</div>
                     </div>
                   </div>
@@ -923,11 +935,10 @@
                   </div>
                   <div className="bench-grid">
                     {posPlayers.map((p, i) => {
-                      const ps = getPositionStyle(p.posicion);
                       return (
                         <div key={i} className="bench-card" onClick={() => handlePlayerSelect(p)}>
-                          <span className="bench-card-pos" style={{ background: ps.bg, color: ps.text }}>
-                            {p.posicion.length > 10 ? p.posicion.substring(0, 8) + "." : p.posicion}
+                          <span className="bench-card-pos">
+                            {getPosAbbr(p.posicion)}
                           </span>
                           <div className="bench-card-name">{p.apodo}</div>
                           {p.dorsal && <div className="bench-card-dorsal">#{p.dorsal}</div>}
