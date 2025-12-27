@@ -853,14 +853,30 @@
 
     function FieldView({ players, teamName, isF7, user, isCombined }) {
       const storageKey = isCombined ? `lafabrica_mi11_${user}` : `lafabrica_11_${user}_${teamName}`;
-      const [fieldPlayers, setFieldPlayers] = useState(() => {
+      const playerNames = players.map(p => p.nombre);
+      
+      const loadSavedPlayers = () => {
         try {
           const saved = localStorage.getItem(storageKey);
-          return saved ? JSON.parse(saved) : {};
+          if (!saved) return {};
+          const parsed = JSON.parse(saved);
+          // Si NO es combinado, filtrar solo jugadores que pertenecen a este equipo
+          if (!isCombined) {
+            const filtered = {};
+            Object.entries(parsed).forEach(([slot, player]) => {
+              if (player && playerNames.includes(player.nombre)) {
+                filtered[slot] = player;
+              }
+            });
+            return filtered;
+          }
+          return parsed;
         } catch { return {}; }
-      });
+      };
+      
+      const [fieldPlayers, setFieldPlayers] = useState(loadSavedPlayers);
       const [selectedSlot, setSelectedSlot] = useState(null);
-      const [saveStatus, setSaveStatus] = useState(null); // null, 'saving', 'saved'
+      const [saveStatus, setSaveStatus] = useState(null);
       const positions = isF7 ? FIELD_POSITIONS_7 : FIELD_POSITIONS_11;
       const maxPlayers = isF7 ? 7 : 11;
 
@@ -870,18 +886,6 @@
           localStorage.setItem(storageKey, JSON.stringify(fieldPlayers));
         }
       }, [fieldPlayers, storageKey, isCombined]);
-
-      // Para equipos individuales: cargar alineación guardada cuando cambia el equipo
-      React.useEffect(() => {
-        if (!isCombined) {
-          try {
-            const saved = localStorage.getItem(storageKey);
-            setFieldPlayers(saved ? JSON.parse(saved) : {});
-            setSelectedSlot(null);
-            setSaveStatus(null);
-          } catch { setFieldPlayers({}); }
-        }
-      }, [storageKey, isCombined]);
 
       const handleSave = () => {
         setSaveStatus('saving');
@@ -1078,31 +1082,31 @@
             })}
             
             {onFieldCount > 0 && (
-              <div style={{display: 'flex', gap: 8, flexDirection: 'column'}}>
-                {!isCombined && (
-                  <button 
-                    className="save-field-btn" 
-                    onClick={handleSave}
-                    style={{
-                      width: '100%',
-                      padding: '12px 20px',
-                      borderRadius: 10,
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontWeight: 600,
-                      fontSize: 14,
-                      transition: 'all 0.2s',
-                      background: saveStatus === 'saved' ? '#10b981' : '#3e2fdc',
-                      color: 'white'
-                    }}
-                  >
-                    {saveStatus === 'saving' ? '⏳ Guardando...' : saveStatus === 'saved' ? '✅ ¡Guardado!' : '💾 Guardar alineación'}
-                  </button>
-                )}
-                <button className="clear-field-btn" onClick={clearField}>
-                  🗑️ Limpiar campo
-                </button>
-              </div>
+              <button className="clear-field-btn" onClick={clearField}>
+                🗑️ Limpiar campo
+              </button>
+            )}
+            
+            {!isCombined && (
+              <button 
+                className="save-field-btn" 
+                onClick={handleSave}
+                style={{
+                  width: '100%',
+                  padding: '12px 20px',
+                  borderRadius: 10,
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  fontSize: 14,
+                  transition: 'all 0.2s',
+                  marginTop: 8,
+                  background: saveStatus === 'saved' ? '#10b981' : '#3e2fdc',
+                  color: 'white'
+                }}
+              >
+                {saveStatus === 'saving' ? '⏳ Guardando...' : saveStatus === 'saved' ? '✅ ¡Guardado!' : '💾 Guardar alineación'}
+              </button>
             )}
           </div>
         </div>
