@@ -58,7 +58,7 @@
     .player-detail-badges { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; }
     .player-detail-badge { width: 32px; height: 38px; }
     .player-detail-badge img { width: 100%; height: 100%; object-fit: contain; }
-    .player-detail-flag { font-size: 28px; }
+    .player-detail-flag { display: flex; align-items: center; }
     .player-detail-info { display: grid; gap: 16px; }
     .player-detail-section { background: #f9fafb; border-radius: 12px; padding: 16px; }
     .player-detail-section-title { font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
@@ -189,18 +189,17 @@
     .field-slot-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
     .field-card { position: absolute; transform: translate(-50%, -50%); cursor: pointer; transition: all 0.2s; z-index: 10; }
     .field-card:hover { transform: translate(-50%, -50%) scale(1.12); z-index: 20; }
-    .player-card { width: 75px; height: 105px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 6px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-    .player-card-inner { position: relative; height: 100%; padding: 6px; overflow: hidden; border-radius: 6px; }
-    .player-card-left { position: absolute; top: 8px; left: 8px; text-align: center; z-index: 2; }
-    .player-card-rating { font-size: 24px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); }
-    .player-card-pos { font-size: 10px; font-weight: 700; color: #1a1a1a; margin-top: 2px; letter-spacing: 0.5px; }
-    .player-card-center { position: absolute; top: 38px; left: 0; right: 0; text-align: center; }
-    .player-card-apodo { font-size: 10px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; }
-    .player-card-apellido { font-size: 10px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
-    .player-card-footer { position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 8px; }
-    .player-card-badge { width: 18px; height: 22px; }
+    .player-card { width: 70px; height: 95px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 6px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    .player-card-inner { position: relative; height: 100%; padding: 6px; overflow: hidden; border-radius: 6px; display: flex; flex-direction: column; }
+    .player-card-pos { font-size: 11px; font-weight: 700; color: #1a1a1a; letter-spacing: 0.5px; }
+    .player-card-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .player-card-apodo { font-size: 10px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.3px; text-align: center; }
+    .player-card-apellido { font-size: 10px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; text-align: center; }
+    .player-card-footer { display: flex; justify-content: center; align-items: center; gap: 6px; padding-top: 4px; }
+    .player-card-badge { width: 16px; height: 20px; }
     .player-card-badge img { width: 100%; height: 100%; object-fit: contain; }
-    .player-card-flag { font-size: 14px; line-height: 1; }
+    .player-card-flag { width: 16px; height: 12px; }
+    .player-card-flag img { width: 100%; height: 100%; object-fit: contain; border-radius: 1px; }
     .player-card-remove { position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; background: #ef4444; border: 2px solid white; border-radius: 50%; color: white; font-size: 14px; font-weight: 700; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; line-height: 1; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
     .field-card:hover .player-card-remove { display: flex; }
     .player-card-shine { position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); transition: left 0.5s; pointer-events: none; z-index: 1; }
@@ -669,31 +668,18 @@
     };
     const getFlag = (lugar, seleccion) => {
       const texto = ((lugar || "") + " " + (seleccion || "")).toLowerCase();
-      if (texto.includes("portugal") || texto.includes("oporto") || texto.includes("luso")) return "🇵🇹";
-      if (texto.includes("brasil") || texto.includes("brasileñ")) return "🇧🇷";
-      if (texto.includes("paraguay") || texto.includes("paraguayo")) return "🇵🇾";
-      if (texto.includes("usa") || texto.includes("estados unidos") || texto.includes("americano")) return "🇺🇸";
-      if (texto.includes("ucrania") || texto.includes("ucraniano")) return "🇺🇦";
-      if (texto.includes("guinea ecuatorial") || texto.includes("ecuatoguineano")) return "🇬🇶";
-      if (texto.includes("marruecos") || texto.includes("marroquí") || texto.includes("marroqui")) return "🇲🇦";
-      if (texto.includes("cuba") || texto.includes("cubano")) return "🇨🇺";
-      if (texto.includes("suecia") || texto.includes("sueco")) return "🇸🇪";
-      if (texto.includes("camerún") || texto.includes("camerun") || texto.includes("camerunés")) return "🇨🇲";
-      if (texto.includes("liberia") || texto.includes("liberiano")) return "🇱🇷";
-      if (texto.includes("bulgaria") || texto.includes("búlgaro")) return "🇧🇬";
-      if (texto.includes("venezuela") || texto.includes("venezolano")) return "🇻🇪";
-      if (texto.includes("república dominicana") || texto.includes("dominicana") || texto.includes("dominicano")) return "🇩🇴";
-      if (texto.includes("argentina") || texto.includes("argentino")) return "🇦🇷";
-      if (texto.includes("francia") || texto.includes("francés") || texto.includes("frances")) return "🇫🇷";
-      if (texto.includes("alemania") || texto.includes("alemán") || texto.includes("aleman")) return "🇩🇪";
-      if (texto.includes("italia") || texto.includes("italiano")) return "🇮🇹";
-      if (texto.includes("inglaterra") || texto.includes("inglés") || texto.includes("ingles")) return "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
-      if (texto.includes("colombia") || texto.includes("colombiano")) return "🇨🇴";
-      if (texto.includes("méxico") || texto.includes("mexico") || texto.includes("mexicano")) return "🇲🇽";
-      if (texto.includes("senegal") || texto.includes("senegalés")) return "🇸🇳";
-      if (texto.includes("nigeria") || texto.includes("nigeriano")) return "🇳🇬";
-      if (texto.includes("ghana") || texto.includes("ghanés")) return "🇬🇭";
-      return "🇪🇸";
+      // Solo mostramos bandera si es español (nacido en España)
+      const esEspanol = !texto.includes("portugal") && !texto.includes("brasil") && !texto.includes("paraguay") && 
+                        !texto.includes("usa") && !texto.includes("estados unidos") && !texto.includes("ucrania") && 
+                        !texto.includes("guinea ecuatorial") && !texto.includes("marruecos") && !texto.includes("cuba") && 
+                        !texto.includes("suecia") && !texto.includes("camerún") && !texto.includes("camerun") && 
+                        !texto.includes("liberia") && !texto.includes("bulgaria") && !texto.includes("venezuela") && 
+                        !texto.includes("dominicana") && !texto.includes("argentina") && !texto.includes("francia") && 
+                        !texto.includes("alemania") && !texto.includes("italia") && !texto.includes("inglaterra") && 
+                        !texto.includes("colombia") && !texto.includes("méxico") && !texto.includes("mexico") && 
+                        !texto.includes("senegal") && !texto.includes("nigeria") && !texto.includes("ghana");
+      if (esEspanol) return "https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg";
+      return null;
     };
     const getInitials = (nombre) => {
       if (!nombre) return "??";
@@ -821,7 +807,7 @@
     const FIELD_POSITIONS_7 = {
       "POR": { left: "10%", top: "50%", label: "POR" },
       "LI": { left: "32%", top: "20%", label: "LI" },
-      "DFC": { left: "18%", top: "50%", label: "DFC" },
+      "DFC": { left: "24%", top: "50%", label: "DFC" },
       "LD": { left: "32%", top: "80%", label: "LD" },
       "MC": { left: "55%", top: "50%", label: "MC" },
       "DC1": { left: "80%", top: "38%", label: "DC" },
@@ -951,21 +937,19 @@
               const isSelected = selectedSlot === slotId;
               
               if (player) {
+                const flagUrl = getFlag(player.lugarNacimiento, player.seleccion);
                 return (
                   <div key={slotId} className="field-card" style={{ left: pos.left, top: pos.top }}>
                     <div className="player-card">
                       <div className="player-card-inner">
-                        <div className="player-card-left">
-                          <div className="player-card-rating">{player.dorsal || "-"}</div>
-                          <div className="player-card-pos">{getPosAbbr(player.posicion)}</div>
-                        </div>
+                        <div className="player-card-pos">{getPosAbbr(player.posicion)}</div>
                         <div className="player-card-center">
                           <div className="player-card-apodo">{player.apodo}</div>
                           <div className="player-card-apellido">{getApellidos(player.nombre)}</div>
                         </div>
                         <div className="player-card-footer">
-                          <img className="player-card-badge" src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="RM" />
-                          <span className="player-card-flag">{getFlag(player.lugarNacimiento, player.seleccion)}</span>
+                          <div className="player-card-badge"><img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="RM" /></div>
+                          {flagUrl && <div className="player-card-flag"><img src={flagUrl} alt="ES" /></div>}
                         </div>
                       </div>
                       <div className="player-card-remove" onClick={(e) => { e.stopPropagation(); handleSlotClick(slotId); }}>×</div>
@@ -1117,7 +1101,7 @@
                   <div className="player-detail-fullname">{playerDetail.nombre}</div>
                   <div className="player-detail-badges">
                     <div className="player-detail-badge"><img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="RM" /></div>
-                    <span className="player-detail-flag">{getFlag(playerDetail.lugarNacimiento, playerDetail.seleccion)}</span>
+                    {getFlag(playerDetail.lugarNacimiento, playerDetail.seleccion) && <div className="player-detail-flag"><img src={getFlag(playerDetail.lugarNacimiento, playerDetail.seleccion)} alt="Bandera" style={{width: '32px', height: '24px', objectFit: 'contain'}} /></div>}
                   </div>
                 </div>
                 <div className="player-detail-info">
