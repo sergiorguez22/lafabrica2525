@@ -7,6 +7,7 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif; background: #f9fafb; }
@@ -47,9 +48,9 @@
     /* Vista detalle jugador */
     .player-detail { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto; }
     .player-detail-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-    .player-detail-back { background: #f3f4f6; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .player-detail-back { background: #f3f4f6; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
     .player-detail-back:hover { background: #e5e7eb; }
-    .player-detail-title { font-size: 14px; color: #6b7280; }
+    .player-detail-title { font-size: 14px; color: #6b7280; flex: 1; }
     .player-detail-card { background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: center; }
     .player-detail-dorsal { font-size: 48px; font-weight: 800; color: #1a1a1a; line-height: 1; }
     .player-detail-pos { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-top: 4px; letter-spacing: 1px; }
@@ -69,6 +70,42 @@
     .player-detail-value.accent { color: #3e2fdc; }
     .player-detail-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; padding: 12px 20px; background: #3e2fdc; color: white; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.2s; }
     .player-detail-link:hover { background: #3425b0; transform: translateY(-2px); }
+    
+    /* Modo oscuro */
+    .dark { background: #0f0f1a; color: #e5e7eb; }
+    .dark .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+    .dark .card, .dark .player-detail, .dark .search-panel, .dark .bench-panel { background: #1a1a2e; color: #e5e7eb; }
+    .dark .table-row { background: #1a1a2e; border-color: #2a2a4a; }
+    .dark .table-row:hover { background: #252540; }
+    .dark .team-btn { background: #1a1a2e; border-color: #2a2a4a; color: #e5e7eb; }
+    .dark .team-btn:hover, .dark .team-btn.active { background: #252540; border-color: #3e2fdc; }
+    .dark .nav-section-header { background: #1a1a2e; color: #e5e7eb; }
+    .dark .main-tab { background: #1a1a2e; color: #9ca3af; }
+    .dark .main-tab.active { background: #3e2fdc; color: white; }
+    .dark .search-input { background: #252540; border-color: #2a2a4a; color: #e5e7eb; }
+    .dark .player-detail-section { background: #252540; }
+    .dark .player-detail-row { border-color: #2a2a4a; }
+    .dark .player-detail-label { color: #9ca3af; }
+    .dark .player-detail-value { color: #e5e7eb; }
+    .dark .bench-card { background: linear-gradient(165deg, #3e2fdc 0%, #5a4fdc 50%, #3e2fdc 100%); }
+    .dark .bench-card-pos, .dark .bench-card-name { color: white; }
+    .dark .footer { background: #1a1a2e; }
+    .dark .welcome-card { background: #1a1a2e; }
+    
+    /* Configuración header */
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .config-btn { background: rgba(255,255,255,0.1); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: white; }
+    .config-btn:hover { background: rgba(255,255,255,0.2); }
+    
+    /* Favoritos */
+    .fav-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 4px; transition: transform 0.2s; }
+    .fav-btn:hover { transform: scale(1.2); }
+    .fav-star { opacity: 0.3; }
+    .fav-star.active { opacity: 1; }
+    
+    /* Exportar */
+    .export-btn { padding: 10px 16px; background: #3e2fdc; color: white; border: none; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+    .export-btn:hover { background: #3425b0; transform: translateY(-2px); }
     .stats-row { display: flex; gap: 24px; }
     .stat { text-align: center; }
     .stat-value { font-size: 24px; font-weight: 600; }
@@ -1039,6 +1076,20 @@
       const [navSection, setNavSection] = useState(null);
       const [searchOpen, setSearchOpen] = useState(false);
       const [viewMode, setViewMode] = useState("list");
+      const [darkMode, setDarkMode] = useState(() => localStorage.getItem("lafabrica_dark") === "true");
+      const [favorites, setFavorites] = useState(() => {
+        try { return JSON.parse(localStorage.getItem(`lafabrica_favs_${localStorage.getItem("lafabrica_user")}`)) || []; }
+        catch { return []; }
+      });
+
+      React.useEffect(() => { localStorage.setItem("lafabrica_dark", darkMode); }, [darkMode]);
+      React.useEffect(() => { if(user) localStorage.setItem(`lafabrica_favs_${user}`, JSON.stringify(favorites)); }, [favorites, user]);
+
+      const toggleFavorite = (player, team) => {
+        const key = `${player.nombre}_${team}`;
+        setFavorites(prev => prev.includes(key) ? prev.filter(f => f !== key) : [...prev, key]);
+      };
+      const isFavorite = (player, team) => favorites.includes(`${player.nombre}_${team}`);
 
       const handleLogout = () => { localStorage.removeItem("lafabrica_user"); setUser(null); };
       const handleYearPlayerSelect = (teamName, player) => { setSelectedTeam(teamName); setMainTab("equipos"); setPlayerDetail({...player, _team: teamName}); };
@@ -1078,12 +1129,16 @@
       const totalPlayers = useMemo(() => Object.values(canteraData).reduce((a, t) => a + t.jugadores.length, 0), []);
 
       return (
-        <div style={{minHeight: '100vh', background: '#f9fafb'}}>
+        <div className={darkMode ? 'dark' : ''} style={{minHeight: '100vh', background: darkMode ? '#0f0f1a' : '#f9fafb'}}>
           <header className="header"><div className="container"><div className="header-content">
-            <div><h1 className="title">⚽ La Fábrica 25/26</h1><p className="subtitle">Cantera Real Madrid · {teams.length} equipos · {totalPlayers} jugadores</p></div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}><svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 5C25 5 10 25 10 50C10 75 25 95 50 95C75 95 90 75 90 50C90 25 75 5 50 5Z" stroke="#3e2fdc" strokeWidth="4" fill="none"/><path d="M50 15C30 15 20 30 20 50C20 70 30 85 50 85C70 85 80 70 80 50C80 30 70 15 50 15Z" stroke="#3e2fdc" strokeWidth="3" fill="none"/><text x="50" y="58" textAnchor="middle" fill="#3e2fdc" fontSize="24" fontWeight="bold" fontFamily="serif">M</text><path d="M30 35L70 65" stroke="#3e2fdc" strokeWidth="3"/></svg><div><h1 className="title">La Fábrica 25/26</h1><p className="subtitle">Cantera Real Madrid · {teams.length} equipos · {totalPlayers} jugadores</p></div></div>
             <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
               {!isSearching && stats.intl > 0 && <div className="badge">🏆 {stats.intl} internacionales</div>}
-              <button className="logout-btn" onClick={handleLogout}>Salir ({user})</button>
+              <div className="header-actions">
+                <button className="config-btn" onClick={() => setDarkMode(!darkMode)} title={darkMode ? "Modo claro" : "Modo oscuro"}>{darkMode ? "☀️" : "🌙"}</button>
+                <button className="config-btn" onClick={() => setMainTab("favoritos")} title="Favoritos">⭐</button>
+                <button className="logout-btn" onClick={handleLogout}>Salir ({user})</button>
+              </div>
             </div>
           </div></div></header>
 
@@ -1093,6 +1148,9 @@
                 <div className="player-detail-header">
                   <button className="player-detail-back" onClick={() => setPlayerDetail(null)}>←</button>
                   <span className="player-detail-title">Volver a {playerDetail._team || selectedTeam}</span>
+                  <button className="fav-btn" onClick={() => toggleFavorite(playerDetail, playerDetail._team || selectedTeam)} title={isFavorite(playerDetail, playerDetail._team || selectedTeam) ? "Quitar de favoritos" : "Añadir a favoritos"}>
+                    <span className={`fav-star ${isFavorite(playerDetail, playerDetail._team || selectedTeam) ? 'active' : ''}`}>⭐</span>
+                  </button>
                 </div>
                 <div className="player-detail-card">
                   <div className="player-detail-dorsal">{playerDetail.dorsal || "-"}</div>
@@ -1118,6 +1176,13 @@
                     <div className="player-detail-row"><span className="player-detail-label">Equipo</span><span className="player-detail-value">{playerDetail._team || selectedTeam}</span></div>
                     {playerDetail.seleccion && <div className="player-detail-row"><span className="player-detail-label">Selección</span><span className="player-detail-value accent">🏆 {playerDetail.seleccion}</span></div>}
                   </div>
+                  {(playerDetail.clubOrigen || playerDetail.añoCantera) && (
+                    <div className="player-detail-section">
+                      <div className="player-detail-section-title">📍 Trayectoria</div>
+                      {playerDetail.clubOrigen && <div className="player-detail-row"><span className="player-detail-label">Club de procedencia</span><span className="player-detail-value">{playerDetail.clubOrigen}</span></div>}
+                      {playerDetail.añoCantera && <div className="player-detail-row"><span className="player-detail-label">En la cantera desde</span><span className="player-detail-value accent">{playerDetail.añoCantera}</span></div>}
+                    </div>
+                  )}
                   {playerDetail.url && (
                     <a href={playerDetail.url} target="_blank" rel="noopener noreferrer" className="player-detail-link">
                       🔗 Ver perfil en realmadrid.com
@@ -1133,11 +1198,56 @@
               <button className={`main-tab ${mainTab === 'mi11' ? 'active' : ''}`} onClick={() => setMainTab('mi11')}>⭐ Mi 11</button>
             </div>
 
-            {mainTab === 'mi11' ? (
+            {mainTab === 'favoritos' ? (
               <div>
                 <div className="card" style={{marginBottom: 16}}>
-                  <h2 className="team-name">⭐ Mi 11 Ideal</h2>
-                  <p className="team-cat">Crea tu once combinando jugadores de todos los equipos</p>
+                  <h2 className="team-name">⭐ Mis Favoritos</h2>
+                  <p className="team-cat">{favorites.length} jugador{favorites.length !== 1 ? 'es' : ''} marcado{favorites.length !== 1 ? 's' : ''}</p>
+                </div>
+                {favorites.length === 0 ? (
+                  <div className="empty-state">No tienes jugadores favoritos. Añádelos desde su ficha individual.</div>
+                ) : (
+                  <div className="table-container">
+                    {favorites.map((favKey, i) => {
+                      const [nombre, team] = [favKey.substring(0, favKey.lastIndexOf('_')), favKey.substring(favKey.lastIndexOf('_') + 1)];
+                      const teamData = canteraData[team];
+                      const player = teamData?.jugadores.find(p => p.nombre === nombre);
+                      if (!player) return null;
+                      const ps = getPositionStyle(player.posicion);
+                      return (
+                        <div key={i} className="table-row" onClick={() => setPlayerDetail({...player, _team: team})} style={{cursor: 'pointer'}}>
+                          <div className="row-num">{player.dorsal || '-'}</div>
+                          <div><div className="player-name">{player.apodo}</div><div className="player-fullname">{player.nombre}</div></div>
+                          <div><span className="position-badge" style={{background: ps.bg, color: ps.text}}><span className="position-dot" style={{background: ps.dot}}></span>{player.posicion}</span></div>
+                          <div className="birth-place">{team}</div>
+                          <div className="chevron">▶</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : mainTab === 'mi11' ? (
+              <div>
+                <div className="card" style={{marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12}}>
+                  <div>
+                    <h2 className="team-name">⭐ Mi 11 Ideal</h2>
+                    <p className="team-cat">Crea tu once combinando jugadores de todos los equipos</p>
+                  </div>
+                  <button 
+                    className="export-btn"
+                    onClick={() => {
+                      const field = document.querySelector('.field-container');
+                      if (field && window.html2canvas) {
+                        html2canvas(field, {backgroundColor: null, scale: 2}).then(canvas => {
+                          const link = document.createElement('a');
+                          link.download = `Mi11_LaFabrica_${user}.png`;
+                          link.href = canvas.toDataURL();
+                          link.click();
+                        });
+                      }
+                    }}
+                  >📷 Exportar imagen</button>
                 </div>
                 <FieldView 
                   players={Object.values(canteraData).flatMap(t => t.jugadores.map(j => ({...j, _team: Object.keys(canteraData).find(k => canteraData[k] === t)})))} 
