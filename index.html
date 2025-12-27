@@ -42,6 +42,7 @@
     .card-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
     .team-name { font-size: 22px; font-weight: 600; color: #111827; }
     .team-cat { font-size: 14px; color: #6b7280; margin-top: 4px; }
+    .team-coaches { font-size: 13px; color: #3e2fdc; margin-top: 6px; font-weight: 500; }
     .stats-row { display: flex; gap: 24px; }
     .stat { text-align: center; }
     .stat-value { font-size: 24px; font-weight: 600; }
@@ -219,7 +220,7 @@
 
     const canteraData = {
       "Castilla": {
-        categoria: "1ª RFEF", jugadores: [
+        categoria: "1ª RFEF", entrenadores: ["Álvaro Arbeloa", "Julián Carmona"], jugadores: [
           { nombre: "Francisco Javier González Pérez", apodo: "Fran González", posicion: "Portero", fechaNacimiento: "24/06/2005", lugarNacimiento: "León", seleccion: "Sub-21 España", dorsal: 1, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/francisco-javier-gonzalez-perez" },
           { nombre: "David Jiménez Corredor", apodo: "D. Jiménez", posicion: "Defensa", fechaNacimiento: "14/03/2004", lugarNacimiento: "Madrid", seleccion: "Sub-19 España", dorsal: 2, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/david-jimenez-corredor" },
           { nombre: "Víctor Valdepeñas Talavera", apodo: "Valdepeñas", posicion: "Defensa", fechaNacimiento: "20/10/2006", lugarNacimiento: "Madrid", seleccion: "Sub-19 España", dorsal: 3, url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/victor-valdepenas-talavera" },
@@ -244,7 +245,7 @@
         ]
       },
       "Real Madrid C": {
-        categoria: "2ª RFEF", jugadores: [
+        categoria: "2ª RFEF", entrenadores: ["Joselu Sánchez", "Alfonso Berenguer"], jugadores: [
           { nombre: "Ferran Quetglas Lorente", apodo: "F. Quetglas", posicion: "Portero", fechaNacimiento: "06/06/2005", lugarNacimiento: "Mallorca", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/ferran-quetglas-lorente" },
           { nombre: "Diego Arroyo Sánchez", apodo: "D. Arroyo", posicion: "Portero", fechaNacimiento: "24/01/2006", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/diego-arroyo-sanchez" },
           { nombre: "Hugo Mantecón Gil", apodo: "Hugo Mantecón", posicion: "Portero", fechaNacimiento: "28/01/2005", lugarNacimiento: "Pinto", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c/hugo-mantecon-gil" },
@@ -273,7 +274,7 @@
         ]
       },
       "Juvenil A": {
-        categoria: "Juvenil - División de Honor Juvenil", jugadores: [
+        categoria: "Juvenil - División de Honor Juvenil", entrenadores: ["Julián López de Lerma"], jugadores: [
           { nombre: "Javier Navarro Jiménez", apodo: "Javi Navarro", posicion: "Portero", fechaNacimiento: "15/01/2007", lugarNacimiento: "Valencia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/javier-navarro-jimenez" },
           { nombre: "Aarón Gómez Villar", apodo: "Aarón", posicion: "Portero", fechaNacimiento: "08/02/2007", lugarNacimiento: "Murcia", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/aaron-gomez-villar" },
           { nombre: "Thiago Pitarch Pinar", apodo: "Thiago", posicion: "Centrocampista", fechaNacimiento: "14/09/2007", lugarNacimiento: "Valencia", seleccion: "Sub-18 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/thiago-pitarch-pinar" },
@@ -302,7 +303,7 @@
         ]
       },
       "Juvenil B": {
-        categoria: "Juvenil - Liga Nacional", jugadores: [
+        categoria: "Juvenil - Liga Nacional", entrenadores: ["Marcos Jiménez", "Víctor Pizarro"], jugadores: [
           { nombre: "Guillermo Ponce López", apodo: "Guille", posicion: "Portero", fechaNacimiento: "10/03/2009", lugarNacimiento: "Madrid", seleccion: "Sub-17 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/guillermo-ponce-lopez" },
           { nombre: "Fernando Vega Martín", apodo: "Fernando", posicion: "Portero", fechaNacimiento: "18/12/2008", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/fernando-vega-martin" },
           { nombre: "Ares Capatana García-Abad", apodo: "Ares", posicion: "Defensa", fechaNacimiento: "26/01/2009", lugarNacimiento: "Alcalá de Henares", seleccion: "Sub-16 España", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-b/ares-capatana-garcia-abad" },
@@ -330,7 +331,7 @@
         ]
       },
       "Juvenil C": {
-        categoria: "Juvenil - Autonómica Juvenil", jugadores: [
+        categoria: "Juvenil - Autonómica Juvenil", entrenadores: ["Álvaro López", "Nacho Román"], jugadores: [
           { nombre: "José Alberto Castelau de Roa", apodo: "Castelau", posicion: "Portero", fechaNacimiento: "13/01/2009", lugarNacimiento: "Getafe", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/jose-alberto-castelau-de-roa" },
           { nombre: "Héctor Martínez Sánchez", apodo: "Héctor", posicion: "Portero", fechaNacimiento: "05/02/2009", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/hector-martinez-sanchez" },
           { nombre: "Víctor Rivas Lagos", apodo: "Víctor Rivas", posicion: "Portero", fechaNacimiento: "12/04/2009", lugarNacimiento: "Sevilla", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-c/victor-rivas-lagos" },
@@ -359,7 +360,7 @@
         ]
       },
       "Cadete A": {
-        categoria: "Cadete - Superliga", jugadores: [
+        categoria: "Cadete - Superliga", entrenadores: ["Carlos Cura", "Jesús Bargueiras"], jugadores: [
           { nombre: "Izan Ramírez Pérez", apodo: "Izan", posicion: "Portero", fechaNacimiento: "15/02/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/izan-ramirez-perez" },
           { nombre: "Iván Vázquez Rech", apodo: "Iván", posicion: "Portero", fechaNacimiento: "08/07/2010", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/ivan-vazquez-rech" },
           { nombre: "David Kravets", apodo: "David", posicion: "Defensa", fechaNacimiento: "22/04/2010", lugarNacimiento: "Ucrania", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-a/david-kravets" },
@@ -388,7 +389,7 @@
         ]
       },
       "Cadete B": {
-        categoria: "Cadete - División de Honor", jugadores: [
+        categoria: "Cadete - División de Honor", entrenadores: ["Luis Ayllón"], jugadores: [
           { nombre: "Mauro Del Castillo Mustafa", apodo: "Mauro", posicion: "Portero", fechaNacimiento: "18/03/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/mauro-del-castillo-mustafa" },
           { nombre: "Izan Santamaría Lominchar", apodo: "Izan", posicion: "Portero", fechaNacimiento: "24/09/2011", lugarNacimiento: "Toledo", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/izan-santamaria-lominchar" },
           { nombre: "Rubén Lebrero Pérez", apodo: "Rubén", posicion: "Defensa", fechaNacimiento: "07/01/2011", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/cadete-b/ruben-lebrero-perez" },
@@ -417,7 +418,7 @@
         ]
       },
       "Infantil A": {
-        categoria: "Infantil - Superliga", jugadores: [
+        categoria: "Infantil - Superliga", entrenadores: ["Alberto Madrid"], jugadores: [
           { nombre: "Lucas Gómez Saldaña", apodo: "Lucas", posicion: "Portero", fechaNacimiento: "12/03/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/lucas-gomez-saldana" },
           { nombre: "Gonzalo Martínez Alcaine", apodo: "Gonzalo", posicion: "Portero", fechaNacimiento: "28/07/2012", lugarNacimiento: "Zaragoza", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/gonzalo-martinez-alcaine" },
           { nombre: "Mateo Soria Bravo", apodo: "Mateo", posicion: "Defensa", fechaNacimiento: "05/01/2012", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-a/mateo-soria-bravo" },
@@ -445,7 +446,7 @@
         ]
       },
       "Infantil B": {
-        categoria: "Infantil - División de Honor", jugadores: [
+        categoria: "Infantil - División de Honor", entrenadores: ["Juan Carlos Duque", "Diego Elcoroiribe"], jugadores: [
           { nombre: "Enzo Martínez García", apodo: "Enzo", posicion: "Portero", fechaNacimiento: "17/04/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/enzo-martinez-garcia" },
           { nombre: "Yago Núñez López", apodo: "Yago", posicion: "Portero", fechaNacimiento: "08/09/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/yago-nunez-lopez" },
           { nombre: "Andrés Estaire Ballvé", apodo: "Andrés", posicion: "Defensa", fechaNacimiento: "22/01/2013", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/infantil-b/andres-estaire-ballve" },
@@ -473,7 +474,7 @@
         ]
       },
       "Alevín A": {
-        categoria: "Alevín - Superliga", jugadores: [
+        categoria: "Alevín - Superliga", entrenadores: ["Mario Madrid", "David Valentín"], jugadores: [
           { nombre: "Martín Casillas Carbonero", apodo: "Martín", posicion: "Portero", fechaNacimiento: "03/01/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/martin-carbonero" },
           { nombre: "Marco Pérez Martino", apodo: "Marco", posicion: "Portero", fechaNacimiento: "29/12/2014", lugarNacimiento: "Valladolid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/marco-perez-martino" },
           { nombre: "Daniel Havrylyak", apodo: "Dani", posicion: "Defensa", fechaNacimiento: "07/03/2014", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-a/daniel-havrylyak" },
@@ -499,7 +500,7 @@
         ]
       },
       "Alevín B": {
-        categoria: "Alevín - División de Honor F7", jugadores: [
+        categoria: "Alevín - División de Honor F7", entrenadores: ["Mario Seguido", "Jorge"], jugadores: [
           { nombre: "Adrián Badás Moreno", apodo: "Badás", posicion: "Portero", fechaNacimiento: "20/03/2015", lugarNacimiento: "Parla", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/adrian-badas-moreno" },
           { nombre: "Eduard Andrei Ocheanu", apodo: "Eduard", posicion: "Portero", fechaNacimiento: "26/03/2015", lugarNacimiento: "Coslada", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/eduard-eduard-andrei-ocheanu" },
           { nombre: "Diego Alonso Guerrero", apodo: "Diego", posicion: "Defensa", fechaNacimiento: "02/01/2015", lugarNacimiento: "Aranjuez", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-b/diego-alonso-guerrero" },
@@ -515,7 +516,7 @@
         ]
       },
       "Alevín C": {
-        categoria: "Alevín - División de Honor F7", jugadores: [
+        categoria: "Alevín - División de Honor F7", entrenadores: ["Rubén Barrios", "Alberto Borreguero"], jugadores: [
           { nombre: "Samuel Rodríguez Palmero", apodo: "Samuel", posicion: "Portero", fechaNacimiento: "15/05/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/samuel-rodriguez-palmero" },
           { nombre: "Eitan Levinstein Vieyra", apodo: "Eitan", posicion: "Portero", fechaNacimiento: "22/08/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/eitan-levinstein-vieyra" },
           { nombre: "Marcos Gómez Hernández", apodo: "Marcos", posicion: "Defensa", fechaNacimiento: "09/02/2015", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/alevin-c/marcos-gomez-hernandez" },
@@ -533,7 +534,7 @@
         ]
       },
       "Benjamín A": {
-        categoria: "Benjamín - Superliga F7", jugadores: [
+        categoria: "Benjamín - Superliga F7", entrenadores: ["José Rubido", "David Jiménez"], jugadores: [
           { nombre: "Lucas Carbonero", apodo: "Lucas", posicion: "Portero", fechaNacimiento: "08/03/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/lucas-carbonero" },
           { nombre: "Hugo Fernández Fernández", apodo: "Hugo", posicion: "Portero", fechaNacimiento: "21/09/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/hugo-fernandez-fernandez" },
           { nombre: "Diego Ruiz Guerra", apodo: "Diego", posicion: "Defensa", fechaNacimiento: "14/01/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-a/diego-ruiz-guerra" },
@@ -551,7 +552,7 @@
         ]
       },
       "Benjamín B": {
-        categoria: "Benjamín - División de Honor F7", jugadores: [
+        categoria: "Benjamín - División de Honor F7", entrenadores: ["Víctor Carvajal", "Juan Guitart"], jugadores: [
           { nombre: "Alberto Arellano Aragoneses", apodo: "Alberto", posicion: "Portero", fechaNacimiento: "02/01/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/alberto-arellano-aragoneses" },
           { nombre: "Jaime Acosta Carrillo", apodo: "Jaime", posicion: "Portero", fechaNacimiento: "19/01/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/jaime-acosta-carrillo" },
           { nombre: "Marco de la Rosa Sánchez", apodo: "Marco de la Rosa", posicion: "Defensa", fechaNacimiento: "22/07/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/marco-de-la-rosa-sanchez" },
@@ -569,7 +570,7 @@
         ]
       },
       "Prebenjamín A": {
-        categoria: "Prebenjamín - 1ª Autonómica", jugadores: [
+        categoria: "Prebenjamín - 1ª Autonómica", entrenadores: ["Javier Rubio", "Rubén García"], jugadores: [
           { nombre: "Guillermo Millán Arias", apodo: "Guille", posicion: "Portero", fechaNacimiento: "15/05/2018", lugarNacimiento: "Madrid", dorsal: "1", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/guillermo-millan-arias" },
           { nombre: "Alejandro Brihuega Barrios", apodo: "Alejandro", posicion: "Defensa", fechaNacimiento: "05/07/2018", lugarNacimiento: "Madrid", dorsal: "2", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/alejandro-brihuega-barrios" },
           { nombre: "Dylan Cuevas López", apodo: "Dylan", posicion: "Defensa", fechaNacimiento: "21/12/2018", lugarNacimiento: "Madrid", dorsal: "3", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-a/dylan-cuevas-lopez" },
@@ -587,7 +588,7 @@
         ]
       },
       "Prebenjamín B": {
-        categoria: "Prebenjamín - 1ª Autonómica", jugadores: [
+        categoria: "Prebenjamín - 1ª Autonómica", entrenadores: ["Raúl Rubia", "Sergio Rodríguez"], jugadores: [
           { nombre: "Jaime Crespo Larraz", apodo: "Jaime", posicion: "Portero", fechaNacimiento: "25/08/2019", lugarNacimiento: "Madrid", dorsal: "1", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/jaime-crespo-larraz" },
           { nombre: "Daniel Rodríguez Pérez", apodo: "Dani", posicion: "Defensa", fechaNacimiento: "22/02/2019", lugarNacimiento: "Madrid", dorsal: "2", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/daniel-rodriguez-perez" },
           { nombre: "Elías Peña González", apodo: "Elías", posicion: "Defensa", fechaNacimiento: "30/03/2019", lugarNacimiento: "Madrid", dorsal: "3", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/prebenjamin-b/elias-pena-gonzalez" },
@@ -607,7 +608,7 @@
         ]
       },
       "Debutante": {
-        categoria: "Debutante - Prebenjamín 1er Año", jugadores: [
+        categoria: "Debutante - Prebenjamín 1er Año", entrenadores: ["Juan Carlos Juárez", "Rubén"], jugadores: [
           { nombre: "Aritz Díaz Maestro", apodo: "Aritz", posicion: "Portero", fechaNacimiento: "22/03/2020", lugarNacimiento: "Madrid", dorsal: "1", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/aritz-diaz-maestro" },
           { nombre: "Luca Díaz Pizarro", apodo: "Luca", posicion: "Defensa", fechaNacimiento: "14/07/2020", lugarNacimiento: "Madrid", dorsal: "5", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/luca-diaz-pizarro" },
           { nombre: "Héctor Miguel Rovira", apodo: "Héctor", posicion: "Defensa", fechaNacimiento: "05/01/2020", lugarNacimiento: "Madrid", dorsal: "6", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/debutante/hector-miguel-rovira" },
@@ -1168,7 +1169,7 @@
             )}
 
             {selectedTeam && <>
-              <div className="card"><div className="card-header"><div><h2 className="team-name">{selectedTeam}</h2><p className="team-cat">{currentTeam.categoria}</p></div><div className="stats-row">
+              <div className="card"><div className="card-header"><div><h2 className="team-name">{selectedTeam}</h2><p className="team-cat">{currentTeam.categoria}</p>{currentTeam.entrenadores && currentTeam.entrenadores.length > 0 && <p className="team-coaches">🧑‍💼 {currentTeam.entrenadores[0]}{currentTeam.entrenadores[1] ? ` y ${currentTeam.entrenadores[1]}` : ''}</p>}</div><div className="stats-row">
                 <div className="stat"><div className="stat-value" style={{color:'#f59e0b'}}>{stats.por}</div><div className="stat-label">POR</div></div>
                 <div className="stat"><div className="stat-value" style={{color:'#10b981'}}>{stats.def}</div><div className="stat-label">DEF</div></div>
                 <div className="stat"><div className="stat-value" style={{color:ACCENT}}>{stats.med}</div><div className="stat-label">MED</div></div>
