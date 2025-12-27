@@ -165,9 +165,9 @@
     .player-card { width: 65px; height: 90px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 5px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); }
     .player-card::before { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(0,0,0,0.15); border-radius: 3px; pointer-events: none; }
     .player-card-inner { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; overflow: hidden; border-radius: 5px; }
-    .player-card-rating { font-size: 28px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); position: relative; z-index: 2; }
-    .player-card-pos { font-size: 11px; font-weight: 700; color: #1a1a1a; margin-top: 2px; letter-spacing: 1px; position: relative; z-index: 2; }
-    .player-card-divider { width: 30px; height: 1px; background: rgba(0,0,0,0.2); margin: 6px 0; position: relative; z-index: 2; }
+    .player-card-pos { font-size: 10px; font-weight: 700; color: #1a1a1a; letter-spacing: 1px; position: relative; z-index: 2; margin-bottom: 2px; }
+    .player-card-rating { font-size: 32px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); position: relative; z-index: 2; }
+    .player-card-divider { width: 30px; height: 1px; background: rgba(0,0,0,0.2); margin: 5px 0; position: relative; z-index: 2; }
     .player-card-name { font-size: 8px; font-weight: 700; color: #1a1a1a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55px; letter-spacing: 0.5px; position: relative; z-index: 2; }
     .player-card-club { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; z-index: 2; }
     .player-card-club-badge { width: 12px; height: 12px; background: linear-gradient(135deg, #3e2fdc, #1a1a6e); border-radius: 2px; }
@@ -190,6 +190,7 @@
     .bench-card-pos { font-size: 10px; font-weight: 700; color: #1a1a1a; display: inline-block; margin-bottom: 4px; background: rgba(0,0,0,0.1); padding: 2px 8px; border-radius: 4px; }
     .bench-card-name { font-size: 11px; font-weight: 700; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; letter-spacing: 0.3px; }
     .bench-card-dorsal { font-size: 10px; color: #4a4a00; font-weight: 600; margin-top: 2px; }
+    .bench-card-team { font-size: 9px; color: #1a1a6e; font-weight: 600; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .field-empty-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: rgba(255,255,255,0.5); }
     .field-empty-msg span { font-size: 48px; display: block; margin-bottom: 8px; }
     .field-empty-msg p { font-size: 14px; }
@@ -788,11 +789,22 @@
       "DEL": { left: "80%", top: "50%", label: "DEL" }
     };
 
-    function FieldView({ players, teamName, isF7 }) {
-      const [fieldPlayers, setFieldPlayers] = useState({});
+    function FieldView({ players, teamName, isF7, user, isCombined }) {
+      const storageKey = isCombined ? `lafabrica_mi11_${user}` : `lafabrica_11_${user}_${teamName}`;
+      const [fieldPlayers, setFieldPlayers] = useState(() => {
+        try {
+          const saved = localStorage.getItem(storageKey);
+          return saved ? JSON.parse(saved) : {};
+        } catch { return {}; }
+      });
       const [selectedSlot, setSelectedSlot] = useState(null);
       const positions = isF7 ? FIELD_POSITIONS_7 : FIELD_POSITIONS_11;
       const maxPlayers = isF7 ? 7 : 11;
+
+      // Guardar cuando cambia
+      React.useEffect(() => {
+        localStorage.setItem(storageKey, JSON.stringify(fieldPlayers));
+      }, [fieldPlayers, storageKey]);
 
       const usedPlayerIds = Object.values(fieldPlayers).map(p => p?.nombre);
       const availablePlayers = players.filter(p => !usedPlayerIds.includes(p.nombre));
@@ -809,12 +821,10 @@
 
       const handleSlotClick = (slotId) => {
         if (fieldPlayers[slotId]) {
-          // Si hay jugador, quitarlo
           const newField = { ...fieldPlayers };
           delete newField[slotId];
           setFieldPlayers(newField);
         } else {
-          // Si no hay jugador, marcar slot para añadir
           setSelectedSlot(slotId);
         }
       };
@@ -824,7 +834,6 @@
           setFieldPlayers({ ...fieldPlayers, [selectedSlot]: player });
           setSelectedSlot(null);
         } else if (onFieldCount < maxPlayers) {
-          // Auto-asignar al primer slot vacío apropiado
           const basePos = getBasePosition(player.posicion);
           let targetSlot = null;
           
@@ -906,8 +915,8 @@
                     <div className="player-card">
                       <div className="player-card-inner">
                         <div className="player-card-shine"></div>
-                        <div className="player-card-rating">{player.dorsal || "-"}</div>
                         <div className="player-card-pos">{getPosAbbr(player.posicion)}</div>
+                        <div className="player-card-rating">{player.dorsal || "-"}</div>
                         <div className="player-card-divider"></div>
                         <div className="player-card-name">{player.apodo}</div>
                         <div className="player-card-club">
@@ -969,7 +978,8 @@
                             {getPosAbbr(p.posicion)}
                           </span>
                           <div className="bench-card-name">{p.apodo}</div>
-                          {p.dorsal && <div className="bench-card-dorsal">#{p.dorsal}</div>}
+                          {p._team && <div className="bench-card-team">{p._team}</div>}
+                          {!p._team && p.dorsal && <div className="bench-card-dorsal">#{p.dorsal}</div>}
                         </div>
                       );
                     })}
@@ -1052,9 +1062,24 @@
             <div className="main-tabs">
               <button className={`main-tab ${mainTab === 'equipos' ? 'active' : ''}`} onClick={() => setMainTab('equipos')}>⚽ Equipos</button>
               <button className={`main-tab ${mainTab === 'generaciones' ? 'active' : ''}`} onClick={() => setMainTab('generaciones')}>📅 Generaciones</button>
+              <button className={`main-tab ${mainTab === 'mi11' ? 'active' : ''}`} onClick={() => setMainTab('mi11')}>⭐ Mi 11</button>
             </div>
 
-            {mainTab === 'generaciones' ? (
+            {mainTab === 'mi11' ? (
+              <div>
+                <div className="card" style={{marginBottom: 16}}>
+                  <h2 className="team-name">⭐ Mi 11 Ideal</h2>
+                  <p className="team-cat">Crea tu once combinando jugadores de todos los equipos</p>
+                </div>
+                <FieldView 
+                  players={Object.values(canteraData).flatMap(t => t.jugadores.map(j => ({...j, _team: Object.keys(canteraData).find(k => canteraData[k] === t)})))} 
+                  teamName="Mi11"
+                  isF7={false}
+                  user={user}
+                  isCombined={true}
+                />
+              </div>
+            ) : mainTab === 'generaciones' ? (
               <YearFilter onSelectPlayer={handleYearPlayerSelect} />
             ) : (
             <>
@@ -1158,6 +1183,7 @@
                   players={currentTeam.jugadores} 
                   teamName={selectedTeam}
                   isF7={teamsF7.includes(selectedTeam)}
+                  user={user}
                 />
               ) : (
               <>
