@@ -43,6 +43,32 @@
     .team-name { font-size: 22px; font-weight: 600; color: #111827; }
     .team-cat { font-size: 14px; color: #6b7280; margin-top: 4px; }
     .team-coaches { font-size: 13px; color: #3e2fdc; margin-top: 6px; font-weight: 500; }
+    
+    /* Vista detalle jugador */
+    .player-detail { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto; }
+    .player-detail-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .player-detail-back { background: #f3f4f6; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .player-detail-back:hover { background: #e5e7eb; }
+    .player-detail-title { font-size: 14px; color: #6b7280; }
+    .player-detail-card { background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: center; }
+    .player-detail-dorsal { font-size: 48px; font-weight: 800; color: #1a1a1a; line-height: 1; }
+    .player-detail-pos { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-top: 4px; letter-spacing: 1px; }
+    .player-detail-name { font-size: 24px; font-weight: 800; color: #1a1a1a; margin-top: 16px; text-transform: uppercase; }
+    .player-detail-fullname { font-size: 12px; color: #4a4a4a; margin-top: 4px; }
+    .player-detail-badges { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; }
+    .player-detail-badge { width: 32px; height: 38px; }
+    .player-detail-badge img { width: 100%; height: 100%; object-fit: contain; }
+    .player-detail-flag { font-size: 28px; }
+    .player-detail-info { display: grid; gap: 16px; }
+    .player-detail-section { background: #f9fafb; border-radius: 12px; padding: 16px; }
+    .player-detail-section-title { font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .player-detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+    .player-detail-row:last-child { border-bottom: none; }
+    .player-detail-label { font-size: 13px; color: #6b7280; }
+    .player-detail-value { font-size: 13px; font-weight: 600; color: #111827; }
+    .player-detail-value.accent { color: #3e2fdc; }
+    .player-detail-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; padding: 12px 20px; background: #3e2fdc; color: white; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+    .player-detail-link:hover { background: #3425b0; transform: translateY(-2px); }
     .stats-row { display: flex; gap: 24px; }
     .stat { text-align: center; }
     .stat-value { font-size: 24px; font-weight: 600; }
@@ -163,19 +189,18 @@
     .field-slot-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
     .field-card { position: absolute; transform: translate(-50%, -50%); cursor: pointer; transition: all 0.2s; z-index: 10; }
     .field-card:hover { transform: translate(-50%, -50%) scale(1.12); z-index: 20; }
-    .player-card { width: 75px; height: 105px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 6px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); }
-    .player-card::before { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; pointer-events: none; }
+    .player-card { width: 75px; height: 105px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 6px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     .player-card-inner { position: relative; height: 100%; padding: 6px; overflow: hidden; border-radius: 6px; }
-    .player-card-left { position: absolute; top: 6px; left: 6px; text-align: center; z-index: 2; }
-    .player-card-rating { font-size: 22px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); }
-    .player-card-pos { font-size: 9px; font-weight: 700; color: #1a1a1a; margin-top: 2px; letter-spacing: 0.5px; }
-    .player-card-photo { position: absolute; top: 8px; right: 4px; width: 40px; height: 45px; display: flex; align-items: center; justify-content: center; }
-    .player-card-initials { width: 38px; height: 38px; background: linear-gradient(135deg, #2a2a4a 0%, #1a1a2e 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #c9a227; border: 2px solid rgba(201,162,39,0.4); }
-    .player-card-name { position: absolute; top: 54px; left: 0; right: 0; font-size: 8px; font-weight: 700; color: #1a1a1a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; letter-spacing: 0.3px; border-bottom: 1px solid rgba(0,0,0,0.15); padding-bottom: 3px; }
-    .player-card-apellidos { position: absolute; top: 66px; left: 0; right: 0; font-size: 6px; font-weight: 600; color: #3a3a3a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 3px; letter-spacing: 0.2px; }
-    .player-card-footer { position: absolute; bottom: 4px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 6px; }
-    .player-card-badge { width: 14px; height: 16px; background: linear-gradient(180deg, #ffd700 0%, #ffd700 40%, #00529f 40%, #00529f 60%, #ffd700 60%); border-radius: 2px; border: 1px solid #b8860b; }
-    .player-card-flag { font-size: 12px; line-height: 1; }
+    .player-card-left { position: absolute; top: 8px; left: 8px; text-align: center; z-index: 2; }
+    .player-card-rating { font-size: 24px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); }
+    .player-card-pos { font-size: 10px; font-weight: 700; color: #1a1a1a; margin-top: 2px; letter-spacing: 0.5px; }
+    .player-card-center { position: absolute; top: 38px; left: 0; right: 0; text-align: center; }
+    .player-card-apodo { font-size: 10px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; }
+    .player-card-apellido { font-size: 10px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
+    .player-card-footer { position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .player-card-badge { width: 18px; height: 22px; }
+    .player-card-badge img { width: 100%; height: 100%; object-fit: contain; }
+    .player-card-flag { font-size: 14px; line-height: 1; }
     .player-card-remove { position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; background: #ef4444; border: 2px solid white; border-radius: 50%; color: white; font-size: 14px; font-weight: 700; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; line-height: 1; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
     .field-card:hover .player-card-remove { display: flex; }
     .player-card-shine { position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); transition: left 0.5s; pointer-events: none; z-index: 1; }
@@ -565,7 +590,7 @@
           { nombre: "Luca Muñoz Heredia", apodo: "Luca", posicion: "Centrocampista", fechaNacimiento: "13/03/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/luca-munoz-heredia" },
           { nombre: "Enzo González Díaz", apodo: "Enzo", posicion: "Centrocampista", fechaNacimiento: "04/09/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/enzo-gonzalez-diaz" },
           { nombre: "Jared Ibrahim Denyaro Strong", apodo: "Jared", posicion: "Centrocampista", fechaNacimiento: "21/05/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/jared-ibrahim-denyaro-strong" },
-          { nombre: "Neyzan Peláez Almendro", apodo: "Neyzan", posicion: "Delantero", fechaNacimiento: "16/12/2016", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/neyzan-pelaez-almendro" },
+          { nombre: "Neyzan Peláez Almendro", apodo: "Neyzan", posicion: "Delantero", fechaNacimiento: "16/12/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/neyzan-pelaez-almendro" },
           { nombre: "Nicolás Courtois Domínguez", apodo: "Nicolás", posicion: "Delantero", fechaNacimiento: "02/05/2017", lugarNacimiento: "Boadilla del Monte", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/nicolas-courtois-dominguez" },
           { nombre: "Gonzalo Blanco González", apodo: "Gonzalo", posicion: "Delantero", fechaNacimiento: "28/05/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/gonzalo-blanco-gonzalez" },
           { nombre: "Mateo Pinto Ledesma", apodo: "Mateo", posicion: "Delantero", fechaNacimiento: "09/08/2017", lugarNacimiento: "Madrid", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/benjamin-b/mateo-pinto-ledesma" },
@@ -677,8 +702,8 @@
     const getApellidos = (nombreCompleto) => {
       if (!nombreCompleto) return "";
       const partes = nombreCompleto.split(' ');
-      if (partes.length <= 2) return partes.join(' ');
-      return partes.slice(1).join(' ');
+      if (partes.length <= 1) return "";
+      return partes[1]; // Solo primer apellido
     };
 
     function LoginScreen({ onLogin }) {
@@ -934,13 +959,12 @@
                           <div className="player-card-rating">{player.dorsal || "-"}</div>
                           <div className="player-card-pos">{getPosAbbr(player.posicion)}</div>
                         </div>
-                        <div className="player-card-photo">
-                          <div className="player-card-initials">{getInitials(player.nombre)}</div>
+                        <div className="player-card-center">
+                          <div className="player-card-apodo">{player.apodo}</div>
+                          <div className="player-card-apellido">{getApellidos(player.nombre)}</div>
                         </div>
-                        <div className="player-card-name">{player.apodo}</div>
-                        <div className="player-card-apellidos">{getApellidos(player.nombre)}</div>
                         <div className="player-card-footer">
-                          <div className="player-card-badge"></div>
+                          <img className="player-card-badge" src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="RM" />
                           <span className="player-card-flag">{getFlag(player.lugarNacimiento, player.seleccion)}</span>
                         </div>
                       </div>
@@ -1023,6 +1047,7 @@
       const [mainTab, setMainTab] = useState("equipos");
       const [selectedTeam, setSelectedTeam] = useState(null);
       const [expandedPlayer, setExpandedPlayer] = useState(null);
+      const [playerDetail, setPlayerDetail] = useState(null);
       const [searchTerm, setSearchTerm] = useState("");
       const [positionFilter, setPositionFilter] = useState("Todas");
       const [teamFilter, setTeamFilter] = useState("Todos");
@@ -1032,7 +1057,7 @@
       const [viewMode, setViewMode] = useState("list");
 
       const handleLogout = () => { localStorage.removeItem("lafabrica_user"); setUser(null); };
-      const handleYearPlayerSelect = (teamName, player) => { setSelectedTeam(teamName); setMainTab("equipos"); setExpandedPlayer(player.nombre); };
+      const handleYearPlayerSelect = (teamName, player) => { setSelectedTeam(teamName); setMainTab("equipos"); setPlayerDetail({...player, _team: teamName}); };
 
       if (!user) return <LoginScreen onLogin={setUser} />;
 
@@ -1079,6 +1104,45 @@
           </div></div></header>
 
           <main className="container" style={{paddingTop: 24, paddingBottom: 24}}>
+            {playerDetail ? (
+              <div className="player-detail">
+                <div className="player-detail-header">
+                  <button className="player-detail-back" onClick={() => setPlayerDetail(null)}>←</button>
+                  <span className="player-detail-title">Volver a {playerDetail._team || selectedTeam}</span>
+                </div>
+                <div className="player-detail-card">
+                  <div className="player-detail-dorsal">{playerDetail.dorsal || "-"}</div>
+                  <div className="player-detail-pos">{playerDetail.posicion}</div>
+                  <div className="player-detail-name">{playerDetail.apodo}</div>
+                  <div className="player-detail-fullname">{playerDetail.nombre}</div>
+                  <div className="player-detail-badges">
+                    <div className="player-detail-badge"><img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="RM" /></div>
+                    <span className="player-detail-flag">{getFlag(playerDetail.lugarNacimiento, playerDetail.seleccion)}</span>
+                  </div>
+                </div>
+                <div className="player-detail-info">
+                  <div className="player-detail-section">
+                    <div className="player-detail-section-title">👤 Información Personal</div>
+                    <div className="player-detail-row"><span className="player-detail-label">Nombre completo</span><span className="player-detail-value">{playerDetail.nombre}</span></div>
+                    <div className="player-detail-row"><span className="player-detail-label">Fecha de nacimiento</span><span className="player-detail-value">{playerDetail.fechaNacimiento || '-'}</span></div>
+                    <div className="player-detail-row"><span className="player-detail-label">Lugar de nacimiento</span><span className="player-detail-value">{playerDetail.lugarNacimiento || '-'}</span></div>
+                  </div>
+                  <div className="player-detail-section">
+                    <div className="player-detail-section-title">⚽ Información Deportiva</div>
+                    {playerDetail.dorsal && <div className="player-detail-row"><span className="player-detail-label">Dorsal</span><span className="player-detail-value accent">#{playerDetail.dorsal}</span></div>}
+                    <div className="player-detail-row"><span className="player-detail-label">Posición</span><span className="player-detail-value">{playerDetail.posicion}</span></div>
+                    <div className="player-detail-row"><span className="player-detail-label">Equipo</span><span className="player-detail-value">{playerDetail._team || selectedTeam}</span></div>
+                    {playerDetail.seleccion && <div className="player-detail-row"><span className="player-detail-label">Selección</span><span className="player-detail-value accent">🏆 {playerDetail.seleccion}</span></div>}
+                  </div>
+                  {playerDetail.url && (
+                    <a href={playerDetail.url} target="_blank" rel="noopener noreferrer" className="player-detail-link">
+                      🔗 Ver perfil en realmadrid.com
+                    </a>
+                  )}
+                </div>
+              </div>
+            ) : (
+            <>
             <div className="main-tabs">
               <button className={`main-tab ${mainTab === 'equipos' ? 'active' : ''}`} onClick={() => setMainTab('equipos')}>⚽ Equipos</button>
               <button className={`main-tab ${mainTab === 'generaciones' ? 'active' : ''}`} onClick={() => setMainTab('generaciones')}>📅 Generaciones</button>
@@ -1145,7 +1209,7 @@
                   <div className="search-results">
                     <div className="search-results-title">{globalResults.length} resultado{globalResults.length !== 1 ? 's' : ''}</div>
                     {globalResults.map((p, i) => { const ps = getPositionStyle(p.posicion); return (
-                      <div key={i} className="search-result-item" onClick={() => { setSelectedTeam(p.equipo); setSearchTerm(""); setSearchOpen(false); setNavSection(teamsF11.includes(p.equipo) ? "F11" : "F7"); }}>
+                      <div key={i} className="search-result-item" onClick={() => { setPlayerDetail({...p, _team: p.equipo}); setSearchTerm(""); setSearchOpen(false); }}>
                         <div className="result-info"><span className="position-badge" style={{background: ps.bg, color: ps.text}}><span className="position-dot" style={{background: ps.dot}}></span>{p.posicion.substring(0,3).toUpperCase()}</span><div><div className="result-name">{p.apodo}</div><div className="result-fullname">{p.nombre}</div></div></div>
                         <div className="result-team">{p.equipo}</div>
                       </div>
@@ -1209,30 +1273,16 @@
               <>
               <div className="table-container">
                 <div className="table-header"><div>#</div><div>Jugador</div><div>Posición</div><div>Nacimiento</div><div>Origen</div><div></div></div>
-                {filteredPlayers.map((p, i) => { const ps = getPositionStyle(p.posicion); const exp = expandedPlayer === p.nombre; return (
+                {filteredPlayers.map((p, i) => { const ps = getPositionStyle(p.posicion); return (
                   <div key={i}>
-                    <div className={`table-row ${exp ? 'expanded' : ''}`} onClick={() => setExpandedPlayer(exp ? null : p.nombre)}>
+                    <div className="table-row" onClick={() => setPlayerDetail({...p, _team: selectedTeam})} style={{cursor: 'pointer'}}>
                       <div className="row-num">{p.dorsal || '-'}</div>
                       <div><div className="player-name">{p.apodo}</div><div className="player-fullname">{p.nombre}</div></div>
                       <div><span className="position-badge" style={{background: ps.bg, color: ps.text}}><span className="position-dot" style={{background: ps.dot}}></span>{p.posicion}</span></div>
                       <div className="birth-date">{p.fechaNacimiento || '-'}</div>
                       <div className="birth-place">{p.lugarNacimiento || '-'}</div>
-                      <div className={`chevron ${exp ? 'open' : ''}`}>▶</div>
+                      <div className="chevron">▶</div>
                     </div>
-                    {exp && <div className="expanded-content"><div className="expanded-grid">
-                      <div className="info-card"><h4 className="info-title">Información Personal</h4>
-                        <div className="info-item"><div className="info-label">Nombre completo</div><div className="info-value">{p.nombre}</div></div>
-                        <div className="info-item"><div className="info-label">Fecha nacimiento</div><div className="info-value">{p.fechaNacimiento || '-'}</div></div>
-                        <div className="info-item"><div className="info-label">Lugar nacimiento</div><div className="info-value">{p.lugarNacimiento || '-'}</div></div>
-                      </div>
-                      <div className="info-card"><h4 className="info-title">Información Deportiva</h4>
-                        {p.dorsal && <div className="info-item"><div className="info-label">Dorsal</div><div className="info-value accent">#{p.dorsal}</div></div>}
-                        <div className="info-item"><div className="info-label">Posición</div><div className="info-value">{p.posicion}</div></div>
-                        <div className="info-item"><div className="info-label">Equipo</div><div className="info-value">{selectedTeam}</div></div>
-                        {p.seleccion && <div className="info-item"><div className="info-label">Selección</div><div className="info-value accent">🏆 {p.seleccion}</div></div>}
-                        {p.url && <div className="info-item"><div className="info-label">Perfil Oficial</div><div className="info-value"><a href={p.url} target="_blank" rel="noopener noreferrer" style={{color: '#3e2fdc', textDecoration: 'none'}}>🔗 Ver en realmadrid.com</a></div></div>}
-                      </div>
-                    </div></div>}
                   </div>
                 ); })}
                 {filteredPlayers.length === 0 && <div className="empty-state">No hay jugadores con esa posición</div>}
@@ -1241,6 +1291,8 @@
               </>
               )}
             </>}
+            </>
+            )}
             </>
             )}
           </main>
