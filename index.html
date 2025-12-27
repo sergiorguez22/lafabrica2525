@@ -781,12 +781,12 @@
 
     const FIELD_POSITIONS_7 = {
       "POR": { left: "10%", top: "50%", label: "POR" },
-      "DEF1": { left: "30%", top: "30%", label: "DEF" },
-      "DEF2": { left: "30%", top: "70%", label: "DEF" },
-      "MC1": { left: "50%", top: "25%", label: "MC" },
-      "MC2": { left: "50%", top: "50%", label: "MC" },
-      "MC3": { left: "50%", top: "75%", label: "MC" },
-      "DEL": { left: "80%", top: "50%", label: "DEL" }
+      "LI": { left: "32%", top: "20%", label: "LI" },
+      "DFC": { left: "18%", top: "50%", label: "DFC" },
+      "LD": { left: "32%", top: "80%", label: "LD" },
+      "MC": { left: "55%", top: "50%", label: "MC" },
+      "DC1": { left: "80%", top: "38%", label: "DC" },
+      "DC2": { left: "80%", top: "62%", label: "DC" }
     };
 
     function FieldView({ players, teamName, isF7, user, isCombined }) {
@@ -840,15 +840,17 @@
           if (isF7) {
             if (basePos === "Portero" && !fieldPlayers["POR"]) targetSlot = "POR";
             else if (basePos === "Defensa") {
-              if (!fieldPlayers["DEF1"]) targetSlot = "DEF1";
-              else if (!fieldPlayers["DEF2"]) targetSlot = "DEF2";
+              if (player.posicion.includes("Derecho") && !fieldPlayers["LD"]) targetSlot = "LD";
+              else if (player.posicion.includes("Izquierdo") && !fieldPlayers["LI"]) targetSlot = "LI";
+              else if (!fieldPlayers["DFC"]) targetSlot = "DFC";
+              else if (!fieldPlayers["LD"]) targetSlot = "LD";
+              else if (!fieldPlayers["LI"]) targetSlot = "LI";
             }
-            else if (basePos === "Centrocampista") {
-              if (!fieldPlayers["MC1"]) targetSlot = "MC1";
-              else if (!fieldPlayers["MC2"]) targetSlot = "MC2";
-              else if (!fieldPlayers["MC3"]) targetSlot = "MC3";
+            else if (basePos === "Centrocampista" && !fieldPlayers["MC"]) targetSlot = "MC";
+            else if (basePos === "Delantero") {
+              if (!fieldPlayers["DC1"]) targetSlot = "DC1";
+              else if (!fieldPlayers["DC2"]) targetSlot = "DC2";
             }
-            else if (basePos === "Delantero" && !fieldPlayers["DEL"]) targetSlot = "DEL";
           } else {
             if (basePos === "Portero" && !fieldPlayers["POR"]) targetSlot = "POR";
             else if (basePos === "Defensa") {
