@@ -163,15 +163,18 @@
     .field-slot-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
     .field-card { position: absolute; transform: translate(-50%, -50%); cursor: pointer; transition: all 0.2s; z-index: 10; }
     .field-card:hover { transform: translate(-50%, -50%) scale(1.12); z-index: 20; }
-    .player-card { width: 65px; height: 90px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 5px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); }
-    .player-card::before { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(0,0,0,0.15); border-radius: 3px; pointer-events: none; }
-    .player-card-inner { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; overflow: hidden; border-radius: 5px; }
-    .player-card-pos { font-size: 10px; font-weight: 700; color: #1a1a1a; letter-spacing: 1px; position: relative; z-index: 2; margin-bottom: 2px; }
-    .player-card-rating { font-size: 32px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); position: relative; z-index: 2; }
-    .player-card-divider { width: 30px; height: 1px; background: rgba(0,0,0,0.2); margin: 5px 0; position: relative; z-index: 2; }
-    .player-card-name { font-size: 8px; font-weight: 700; color: #1a1a1a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55px; letter-spacing: 0.5px; position: relative; z-index: 2; }
-    .player-card-club { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; z-index: 2; }
-    .player-card-club-badge { width: 12px; height: 12px; background: linear-gradient(135deg, #3e2fdc, #1a1a6e); border-radius: 2px; }
+    .player-card { width: 75px; height: 105px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 6px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); }
+    .player-card::before { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; pointer-events: none; }
+    .player-card-inner { position: relative; height: 100%; padding: 6px; overflow: hidden; border-radius: 6px; }
+    .player-card-left { position: absolute; top: 6px; left: 6px; text-align: center; z-index: 2; }
+    .player-card-rating { font-size: 22px; font-weight: 800; color: #1a1a1a; line-height: 1; text-shadow: 1px 1px 0 rgba(255,255,255,0.3); }
+    .player-card-pos { font-size: 9px; font-weight: 700; color: #1a1a1a; margin-top: 2px; letter-spacing: 0.5px; }
+    .player-card-photo { position: absolute; top: 8px; right: 4px; width: 40px; height: 45px; display: flex; align-items: center; justify-content: center; }
+    .player-card-initials { width: 38px; height: 38px; background: linear-gradient(135deg, #2a2a4a 0%, #1a1a2e 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #c9a227; border: 2px solid rgba(201,162,39,0.4); }
+    .player-card-name { position: absolute; top: 54px; left: 0; right: 0; font-size: 8px; font-weight: 700; color: #1a1a1a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; letter-spacing: 0.3px; border-bottom: 1px solid rgba(0,0,0,0.15); padding-bottom: 3px; }
+    .player-card-apellidos { position: absolute; top: 66px; left: 0; right: 0; font-size: 6px; font-weight: 600; color: #3a3a3a; text-align: center; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 3px; letter-spacing: 0.2px; }
+    .player-card-footer { position: absolute; bottom: 4px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 6px; }
+    .player-card-badge { width: 14px; height: 16px; background: linear-gradient(180deg, #ffd700 0%, #ffd700 40%, #00529f 40%, #00529f 60%, #ffd700 60%); border-radius: 2px; border: 1px solid #b8860b; }
     .player-card-flag { font-size: 12px; line-height: 1; }
     .player-card-remove { position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; background: #ef4444; border: 2px solid white; border-radius: 50%; color: white; font-size: 14px; font-weight: 700; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; line-height: 1; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
     .field-card:hover .player-card-remove { display: flex; }
@@ -667,6 +670,16 @@
       if (texto.includes("ghana") || texto.includes("ghanés")) return "🇬🇭";
       return "🇪🇸";
     };
+    const getInitials = (nombre) => {
+      if (!nombre) return "??";
+      return nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    };
+    const getApellidos = (nombreCompleto) => {
+      if (!nombreCompleto) return "";
+      const partes = nombreCompleto.split(' ');
+      if (partes.length <= 2) return partes.join(' ');
+      return partes.slice(1).join(' ');
+    };
 
     function LoginScreen({ onLogin }) {
       const [username, setUsername] = useState("");
@@ -917,13 +930,17 @@
                   <div key={slotId} className="field-card" style={{ left: pos.left, top: pos.top }}>
                     <div className="player-card">
                       <div className="player-card-inner">
-                        <div className="player-card-shine"></div>
-                        <div className="player-card-pos">{getPosAbbr(player.posicion)}</div>
-                        <div className="player-card-rating">{player.dorsal || "-"}</div>
-                        <div className="player-card-divider"></div>
+                        <div className="player-card-left">
+                          <div className="player-card-rating">{player.dorsal || "-"}</div>
+                          <div className="player-card-pos">{getPosAbbr(player.posicion)}</div>
+                        </div>
+                        <div className="player-card-photo">
+                          <div className="player-card-initials">{getInitials(player.nombre)}</div>
+                        </div>
                         <div className="player-card-name">{player.apodo}</div>
-                        <div className="player-card-club">
-                          <div className="player-card-club-badge"></div>
+                        <div className="player-card-apellidos">{getApellidos(player.nombre)}</div>
+                        <div className="player-card-footer">
+                          <div className="player-card-badge"></div>
                           <span className="player-card-flag">{getFlag(player.lugarNacimiento, player.seleccion)}</span>
                         </div>
                       </div>
