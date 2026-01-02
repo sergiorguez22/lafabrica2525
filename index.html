@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>La Fábrica 25/26 v35 - Cantera Real Madrid</title>
+  <title>La Fábrica 25/26 v36 - Cantera Real Madrid</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1002,86 +1002,60 @@
         setError(null);
         
         try {
-          // Múltiples fuentes RSS - URLs verificadas
+          // Múltiples fuentes RSS
           const feeds = [
             { url: 'https://www.bernabeudigital.com/feed', source: 'Bernabéu Digital', allCantera: true },
             { url: 'https://www.defensacentral.com/feed/', source: 'Defensa Central', allCantera: false },
             { url: 'https://e00-marca.uecdn.es/rss/futbol/real-madrid.xml', source: 'Marca', allCantera: false },
-            { url: 'https://as.com/rss/tags/real_madrid.xml', source: 'AS', allCantera: false },
-            { url: 'https://www.managing-madrid.com/rss/current', source: 'Managing Madrid', allCantera: false },
-            { url: 'https://madridistanews.com/feed/', source: 'Madridista News', allCantera: false }
+            { url: 'https://as.com/rss/tags/real_madrid.xml', source: 'AS', allCantera: false }
           ];
           
           let allNews = [];
           
-          // Proxies CORS alternativos
-          const proxies = [
-            (url) => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=20`,
-            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
-          ];
-          
           for (const feed of feeds) {
-            for (const proxyFn of proxies) {
-              try {
-                const proxyUrl = proxyFn(feed.url);
-                const response = await fetch(proxyUrl);
-                
-                // Si es rss2json
-                if (proxyUrl.includes('rss2json')) {
-                  const data = await response.json();
-                  console.log(feed.source, '- rss2json status:', data.status, '- items:', data.items?.length || 0);
-                  if (data.status === 'ok' && data.items && data.items.length > 0) {
-                    const newsItems = data.items
-                      .filter(item => feed.allCantera || isCanteraNews(item.title, item.description))
-                      .map(item => ({
-                        titulo: item.title,
-                        resumen: item.description?.replace(/<[^>]*>/g, '').substring(0, 180) + '...',
-                        fuente: feed.source,
-                        url: item.link,
-                        fecha: new Date(item.pubDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
-                        fechaObj: new Date(item.pubDate),
-                        imagen: item.thumbnail || item.enclosure?.link || item.enclosure?.url || null
-                      }));
-                    console.log(feed.source, '- noticias de cantera filtradas:', newsItems.length);
-                    allNews = [...allNews, ...newsItems];
-                    break; // Éxito, pasar al siguiente feed
-                  }
-                } else {
-                  // Si es allorigins, parsear XML
-                  const text = await response.text();
-                  const parser = new DOMParser();
-                  const xml = parser.parseFromString(text, 'text/xml');
-                  const items = xml.querySelectorAll('item');
+            try {
+              // Usar corsproxy.io que funciona mejor
+              const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(feed.url)}`;
+              const response = await fetch(proxyUrl);
+              const text = await response.text();
+              
+              // Parsear XML
+              const parser = new DOMParser();
+              const xml = parser.parseFromString(text, 'text/xml');
+              const items = xml.querySelectorAll('item');
+              
+              console.log(feed.source, '- items encontrados:', items.length);
+              
+              if (items.length > 0) {
+                items.forEach(item => {
+                  const title = item.querySelector('title')?.textContent || '';
+                  const description = item.querySelector('description')?.textContent || '';
+                  const link = item.querySelector('link')?.textContent || '';
+                  const pubDate = item.querySelector('pubDate')?.textContent || '';
                   
-                  if (items.length > 0) {
-                    items.forEach(item => {
-                      const title = item.querySelector('title')?.textContent || '';
-                      const description = item.querySelector('description')?.textContent || '';
-                      const link = item.querySelector('link')?.textContent || '';
-                      const pubDate = item.querySelector('pubDate')?.textContent || '';
-                      const enclosure = item.querySelector('enclosure');
-                      const mediaContent = item.querySelector('content');
-                      const imagen = enclosure?.getAttribute('url') || mediaContent?.getAttribute('url') || null;
-                      
-                      if (feed.allCantera || isCanteraNews(title, description)) {
-                        allNews.push({
-                          titulo: title,
-                          resumen: description.replace(/<[^>]*>/g, '').substring(0, 180) + '...',
-                          fuente: feed.source,
-                          url: link,
-                          fecha: pubDate ? new Date(pubDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Reciente',
-                          fechaObj: pubDate ? new Date(pubDate) : new Date(),
-                          imagen: imagen
-                        });
-                      }
+                  // Buscar imagen en diferentes lugares
+                  const enclosure = item.querySelector('enclosure');
+                  const mediaContent = item.getElementsByTagName('media:content')[0];
+                  const mediaThumbnail = item.getElementsByTagName('media:thumbnail')[0];
+                  const imagen = enclosure?.getAttribute('url') || 
+                                 mediaContent?.getAttribute('url') || 
+                                 mediaThumbnail?.getAttribute('url') || null;
+                  
+                  if (feed.allCantera || isCanteraNews(title, description)) {
+                    allNews.push({
+                      titulo: title,
+                      resumen: description.replace(/<[^>]*>/g, '').substring(0, 180) + '...',
+                      fuente: feed.source,
+                      url: link,
+                      fecha: pubDate ? new Date(pubDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Reciente',
+                      fechaObj: pubDate ? new Date(pubDate) : new Date(),
+                      imagen: imagen
                     });
-                    break; // Éxito, pasar al siguiente feed
                   }
-                }
-              } catch (e) {
-                console.log('Error con proxy para', feed.source, ':', e.message);
-                continue; // Intentar siguiente proxy
+                });
               }
+            } catch (e) {
+              console.log('Error con feed', feed.source, ':', e.message);
             }
           }
           
@@ -1887,7 +1861,7 @@
             </>
             )}
           </main>
-          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v35</p></footer>
+          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v36</p></footer>
         </div>
       );
     }
