@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>La Fábrica 25/26 v37 - Cantera Real Madrid</title>
+  <title>La Fábrica 25/26 v38 - Cantera Real Madrid</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -338,8 +338,9 @@
     .news-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; display: flex; flex-direction: column; }
     .news-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.15); transform: translateY(-4px); }
     .dark .news-card { background: #1a1a2e; }
-    .news-card-image { position: relative; width: 100%; height: 220px; overflow: hidden; }
-    .news-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .news-card-image { position: relative; width: 100%; height: auto; overflow: hidden; background: #f3f4f6; }
+    .news-card-image img { width: 100%; height: auto; max-height: 300px; object-fit: contain; transition: transform 0.3s; }
+    .dark .news-card-image { background: #252540; }
     .news-card:hover .news-card-image img { transform: scale(1.05); }
     .news-card-source { position: absolute; top: 12px; left: 12px; background: rgba(62, 47, 220, 0.95); color: white; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .news-card-content { padding: 20px; display: flex; flex-direction: column; flex: 1; }
@@ -1861,7 +1862,7 @@
             </>
             )}
           </main>
-          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v37</p></footer>
+          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v38</p></footer>
         </div>
       );
     }
