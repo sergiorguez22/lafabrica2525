@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>La Fábrica 25/26 v33 - Cantera Real Madrid</title>
+  <title>La Fábrica 25/26 v35 - Cantera Real Madrid</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -932,12 +932,59 @@
       const [error, setError] = useState(null);
       const [lastUpdate, setLastUpdate] = useState(null);
 
-      // Palabras clave para filtrar noticias de cantera
-      const canteraKeywords = ['cantera', 'castilla', 'juvenil', 'cadete', 'infantil', 'alevín', 'benjamín', 'filial', 'la fábrica', 'raúl', 'arbeloa', 'juvenil a', 'juvenil b', 'sub-19', 'sub-17', 'sub-15', 'sub-14', 'sub-12', 'youth league', 'mini estadi', 'alfredo di stéfano', 'real madrid c', 'división de honor', 'valdebebas', 'canterano', 'promesa', 'debutante', 'prebenjamín', '1ª rfef'];
+      // Palabras clave para filtrar noticias de cantera (ampliadas)
+      const canteraKeywords = [
+        // Equipos y categorías
+        'cantera', 'castilla', 'juvenil', 'cadete', 'infantil', 'alevín', 'alevin', 'benjamín', 'benjamin',
+        'filial', 'la fábrica', 'fabrica', 'real madrid c', 'rm castilla',
+        // Categorías específicas
+        'juvenil a', 'juvenil b', 'juvenil c', 'cadete a', 'cadete b', 'infantil a', 'infantil b',
+        'sub-19', 'sub-17', 'sub-15', 'sub-14', 'sub-12', 'sub19', 'sub17', 'sub15',
+        // Competiciones
+        'youth league', 'uefa youth', 'división de honor', 'liga juvenil', '1ª rfef', 'primera rfef',
+        'copa del rey juvenil', 'copa de campeones juvenil',
+        // Lugares
+        'alfredo di stéfano', 'di stefano', 'valdebebas cantera', 'ciudad deportiva juvenil',
+        // Personas clave cantera
+        'raúl gonzález blanco', 'arbeloa cantera', 'guti cantera',
+        // Términos generales
+        'canterano', 'promesa blanca', 'debutante', 'prebenjamín', 'prebenjamin', 'academia rm',
+        'debut en el primer equipo desde', 'sube al primer equipo', 'convocado del castilla',
+        'formación cantera', 'categorías inferiores'
+      ];
+
+      // Palabras que indican que es del primer equipo (excluir)
+      const excludeKeywords = [
+        'champions league', 'liga ea sports', 'laliga', 'la liga', 'copa del rey senior',
+        'supercopa', 'mundial de clubes', 'fichaje', 'millones', 'bernabéu lleno',
+        'clásico', 'clasico', 'derbi', 'ancelotti', 'carlo ancelotti',
+        'mbappé', 'mbappe', 'vinicius', 'bellingham', 'rodrygo', 'valverde', 'courtois',
+        'modric', 'kroos', 'carvajal selección', 'militao', 'alaba', 'tchouameni', 'camavinga'
+      ];
 
       const isCanteraNews = (title, description) => {
-        const text = (title + ' ' + (description || '')).toLowerCase();
-        return canteraKeywords.some(keyword => text.includes(keyword));
+        const text = (title + ' ' + (description || '')).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        
+        // Primero verificar si tiene palabras de exclusión (primer equipo)
+        const hasExcludeWord = excludeKeywords.some(keyword => {
+          const normalizedKeyword = keyword.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          return text.includes(normalizedKeyword);
+        });
+        
+        // Si tiene palabras de exclusión, solo aceptar si tiene palabras MUY específicas de cantera
+        const strictCanteraKeywords = ['castilla', 'juvenil', 'cadete', 'infantil', 'cantera', 'la fabrica', 'youth league', 'canterano'];
+        
+        const hasCanteraWord = canteraKeywords.some(keyword => {
+          const normalizedKeyword = keyword.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          return text.includes(normalizedKeyword);
+        });
+        
+        const hasStrictCanteraWord = strictCanteraKeywords.some(keyword => text.includes(keyword));
+        
+        // Si tiene exclusión pero también palabra estricta de cantera, aceptar
+        if (hasExcludeWord && !hasStrictCanteraWord) return false;
+        
+        return hasCanteraWord;
       };
 
       // Imágenes placeholder de fútbol
@@ -958,9 +1005,11 @@
           // Múltiples fuentes RSS - URLs verificadas
           const feeds = [
             { url: 'https://www.bernabeudigital.com/feed', source: 'Bernabéu Digital', allCantera: true },
+            { url: 'https://www.defensacentral.com/feed/', source: 'Defensa Central', allCantera: false },
             { url: 'https://e00-marca.uecdn.es/rss/futbol/real-madrid.xml', source: 'Marca', allCantera: false },
             { url: 'https://as.com/rss/tags/real_madrid.xml', source: 'AS', allCantera: false },
-            { url: 'https://www.managing-madrid.com/rss/current', source: 'Managing Madrid', allCantera: false }
+            { url: 'https://www.managing-madrid.com/rss/current', source: 'Managing Madrid', allCantera: false },
+            { url: 'https://madridistanews.com/feed/', source: 'Madridista News', allCantera: false }
           ];
           
           let allNews = [];
@@ -980,6 +1029,7 @@
                 // Si es rss2json
                 if (proxyUrl.includes('rss2json')) {
                   const data = await response.json();
+                  console.log(feed.source, '- rss2json status:', data.status, '- items:', data.items?.length || 0);
                   if (data.status === 'ok' && data.items && data.items.length > 0) {
                     const newsItems = data.items
                       .filter(item => feed.allCantera || isCanteraNews(item.title, item.description))
@@ -992,6 +1042,7 @@
                         fechaObj: new Date(item.pubDate),
                         imagen: item.thumbnail || item.enclosure?.link || item.enclosure?.url || null
                       }));
+                    console.log(feed.source, '- noticias de cantera filtradas:', newsItems.length);
                     allNews = [...allNews, ...newsItems];
                     break; // Éxito, pasar al siguiente feed
                   }
@@ -1034,7 +1085,7 @@
             }
           }
           
-          console.log('Noticias encontradas:', allNews.length);
+          console.log('Noticias de cantera encontradas:', allNews.length);
           
           // Ordenar por fecha (más recientes primero) y eliminar duplicados
           allNews.sort((a, b) => b.fechaObj - a.fechaObj);
@@ -1052,7 +1103,7 @@
           setLastUpdate(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }));
           
           if (newsWithImages.length === 0) {
-            setError("No se encontraron noticias de la cantera en este momento. Prueba más tarde.");
+            setError("No se encontraron noticias de la cantera. Los medios no tienen noticias recientes sobre La Fábrica.");
           }
         } catch (err) {
           console.error("Error fetching news:", err);
@@ -1836,7 +1887,7 @@
             </>
             )}
           </main>
-          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v33</p></footer>
+          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v35</p></footer>
         </div>
       );
     }
