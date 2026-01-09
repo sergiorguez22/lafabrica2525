@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>La Fábrica 25/26 v47 - Cantera Real Madrid</title>
+  <title>La Fábrica 25/26 v49 - Cantera Real Madrid</title>
   
   <!-- PWA Meta Tags -->
   <meta name="description" content="Dashboard de la cantera del Real Madrid - La Fábrica 25/26">
@@ -303,22 +303,37 @@
     .view-btn:hover { border-color: #3e2fdc; }
     .view-btn.active { border-color: #3e2fdc; background: rgba(62, 47, 220, 0.1); color: #3e2fdc; }
     .field-wrapper { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
-    .field-container { background: linear-gradient(180deg, #1a472a 0%, #2d5a3f 50%, #1a472a 100%); border-radius: 16px; padding: 20px; position: relative; aspect-ratio: 1.5; min-height: 450px; box-shadow: inset 0 0 60px rgba(0,0,0,0.3); overflow: hidden; }
-    .field-pattern { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 60px); }
-    .field-lines { position: absolute; inset: 25px; border: 3px solid rgba(255,255,255,0.7); border-radius: 4px; }
-    .field-center-line { position: absolute; left: 50%; top: 25px; bottom: 25px; width: 3px; background: rgba(255,255,255,0.7); }
-    .field-center-circle { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; border: 3px solid rgba(255,255,255,0.7); border-radius: 50%; }
-    .field-center-dot { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: rgba(255,255,255,0.7); border-radius: 50%; }
-    .field-area { position: absolute; width: 100px; height: 180px; border: 3px solid rgba(255,255,255,0.7); top: 50%; transform: translateY(-50%); }
+    .field-container { 
+      background: repeating-linear-gradient(
+        90deg,
+        #2e8b3d 0px,
+        #2e8b3d 40px,
+        #34a046 40px,
+        #34a046 80px
+      );
+      border-radius: 16px; 
+      padding: 20px; 
+      position: relative; 
+      aspect-ratio: 1.5; 
+      min-height: 450px; 
+      box-shadow: inset 0 0 80px rgba(0,0,0,0.25), 0 4px 20px rgba(0,0,0,0.2); 
+      overflow: hidden; 
+    }
+    .field-pattern { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 60px); pointer-events: none; }
+    .field-lines { position: absolute; inset: 25px; border: 3px solid rgba(255,255,255,0.85); border-radius: 4px; }
+    .field-center-line { position: absolute; left: 50%; top: 25px; bottom: 25px; width: 3px; background: rgba(255,255,255,0.85); }
+    .field-center-circle { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; border: 3px solid rgba(255,255,255,0.85); border-radius: 50%; }
+    .field-center-dot { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: rgba(255,255,255,0.85); border-radius: 50%; }
+    .field-area { position: absolute; width: 100px; height: 180px; border: 3px solid rgba(255,255,255,0.85); top: 50%; transform: translateY(-50%); }
     .field-area.left { left: 25px; border-left: none; border-radius: 0 4px 4px 0; }
     .field-area.right { right: 25px; border-right: none; border-radius: 4px 0 0 4px; }
-    .field-goal-area { position: absolute; width: 45px; height: 90px; border: 3px solid rgba(255,255,255,0.7); top: 50%; transform: translateY(-50%); }
+    .field-goal-area { position: absolute; width: 45px; height: 90px; border: 3px solid rgba(255,255,255,0.85); top: 50%; transform: translateY(-50%); }
     .field-goal-area.left { left: 25px; border-left: none; }
     .field-goal-area.right { right: 25px; border-right: none; }
-    .field-slot { position: absolute; width: 60px; height: 70px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 8px; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
-    .field-slot:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
+    .field-slot { position: absolute; width: 60px; height: 70px; border: 2px dashed rgba(255,255,255,0.4); border-radius: 8px; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+    .field-slot:hover { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.15); }
     .field-slot.occupied { border: none; background: none; }
-    .field-slot-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 600; }
+    .field-slot-label { font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; font-weight: 600; }
     .field-card { position: absolute; transform: translate(-50%, -50%); cursor: pointer; transition: all 0.2s; z-index: 10; }
     .field-card:hover { transform: translate(-50%, -50%) scale(1.12); z-index: 20; }
     .player-card { width: 70px; height: 95px; background: linear-gradient(165deg, #e8d994 0%, #c9a227 30%, #a67c00 70%, #8b6914 100%); border-radius: 6px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
@@ -351,16 +366,43 @@
     .bench-card-name { font-size: 11px; font-weight: 700; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; letter-spacing: 0.3px; }
     .bench-card-dorsal { font-size: 10px; color: #4a4a00; font-weight: 600; margin-top: 2px; }
     .bench-card-team { font-size: 9px; color: #1a1a6e; font-weight: 600; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .field-empty-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: rgba(255,255,255,0.5); }
-    .field-empty-msg span { font-size: 48px; display: block; margin-bottom: 8px; }
-    .field-empty-msg p { font-size: 14px; }
+    .field-empty-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: rgba(255,255,255,0.6); }
+    .field-empty-msg p { font-size: 14px; background: rgba(0,0,0,0.3); padding: 10px 16px; border-radius: 8px; }
     .field-formation { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.5); color: white; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 5; }
     .clear-field-btn { margin-top: 12px; width: 100%; padding: 10px; background: rgba(239,68,68,0.1); color: #ef4444; border: none; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .clear-field-btn:hover { background: rgba(239,68,68,0.2); }
     @media (max-width: 900px) {
       .field-wrapper { grid-template-columns: 1fr; }
+      .field-container { 
+        aspect-ratio: 0.7; 
+        min-height: 500px;
+        background: repeating-linear-gradient(
+          180deg,
+          #2e8b3d 0px,
+          #2e8b3d 35px,
+          #34a046 35px,
+          #34a046 70px
+        );
+      }
+      .field-lines { inset: 20px; }
+      .field-center-line { left: 20px; right: 20px; top: 50%; bottom: auto; width: auto; height: 3px; }
+      .field-center-circle { width: 70px; height: 70px; }
+      .field-area { width: 140px; height: 70px; left: 50%; top: auto; transform: translateX(-50%); }
+      .field-area.left { top: 20px; bottom: auto; border-top: none; border-left: 3px solid rgba(255,255,255,0.85); border-radius: 0 0 4px 4px; }
+      .field-area.right { bottom: 20px; top: auto; border-bottom: none; border-right: 3px solid rgba(255,255,255,0.85); border-radius: 4px 4px 0 0; }
+      .field-goal-area { width: 70px; height: 35px; left: 50%; top: auto; transform: translateX(-50%); }
+      .field-goal-area.left { top: 20px; border-top: none; border-left: 3px solid rgba(255,255,255,0.85); }
+      .field-goal-area.right { bottom: 20px; top: auto; border-bottom: none; border-right: 3px solid rgba(255,255,255,0.85); }
       .bench-panel { max-height: 300px; }
       .bench-grid { grid-template-columns: repeat(3, 1fr); }
+      .player-card { width: 55px; height: 75px; }
+      .player-card-pos { font-size: 9px; }
+      .player-card-apodo { font-size: 8px; }
+      .player-card-apellido { font-size: 7px; }
+      .player-card-badge { width: 12px; height: 15px; }
+      .player-card-flag { width: 12px; height: 9px; }
+      .field-slot { width: 50px; height: 58px; }
+      .field-slot-label { font-size: 8px; }
     }
     
     /* Estilos para Noticias - Minimalista */
@@ -951,7 +993,7 @@
       }
     };
 
-    const USERS = { "Pacojor": "Sergio1999", "SergioRguez": "sergitoferrari22", "Pabli": "realmadrid", "RaúlRubia": "prebenjaminb" };
+    const USERS = { "Pacojor": "Sergio1999", "SergioRguez": "sergitoferrari22", "Pabli": "realmadrid", "RaúlRubia": "prebenjaminb", "JuanB": "realmadrid2026" };
 
     const ACCENT = '#3e2fdc';
     const getBasePosition = (pos) => {
@@ -1099,231 +1141,70 @@
       );
     }
 
-    // Componente de Noticias con RSS feeds
+    // Componente de Noticias - Contenido estático de la cantera
     function NewsSection() {
       const [news, setNews] = useState([]);
       const [loading, setLoading] = useState(true);
-      const [error, setError] = useState(null);
-      const [lastUpdate, setLastUpdate] = useState(null);
 
-      // Palabras clave para filtrar noticias de cantera (ampliadas)
-      const canteraKeywords = [
-        // Equipos y categorías
-        'cantera', 'castilla', 'juvenil', 'cadete', 'infantil', 'alevín', 'alevin', 'benjamín', 'benjamin',
-        'filial', 'la fábrica', 'fabrica', 'real madrid c', 'rm castilla',
-        // Categorías específicas
-        'juvenil a', 'juvenil b', 'juvenil c', 'cadete a', 'cadete b', 'infantil a', 'infantil b',
-        'sub-19', 'sub-17', 'sub-15', 'sub-14', 'sub-12', 'sub19', 'sub17', 'sub15',
-        // Competiciones
-        'youth league', 'uefa youth', 'división de honor', 'liga juvenil', '1ª rfef', 'primera rfef',
-        'copa del rey juvenil', 'copa de campeones juvenil',
-        // Lugares
-        'alfredo di stéfano', 'di stefano', 'valdebebas cantera', 'ciudad deportiva juvenil',
-        // Personas clave cantera
-        'raúl gonzález blanco', 'arbeloa cantera', 'guti cantera',
-        // Términos generales
-        'canterano', 'promesa blanca', 'debutante', 'prebenjamín', 'prebenjamin', 'academia rm',
-        'debut en el primer equipo desde', 'sube al primer equipo', 'convocado del castilla',
-        'formación cantera', 'categorías inferiores'
-      ];
-
-      // Palabras que indican que es del primer equipo (excluir)
-      const excludeKeywords = [
-        'champions league', 'liga ea sports', 'laliga', 'la liga', 'copa del rey senior',
-        'supercopa', 'mundial de clubes', 'fichaje', 'millones', 'bernabéu lleno',
-        'clásico', 'clasico', 'derbi', 'ancelotti', 'carlo ancelotti',
-        'mbappé', 'mbappe', 'vinicius', 'bellingham', 'rodrygo', 'valverde', 'courtois',
-        'modric', 'kroos', 'carvajal selección', 'militao', 'alaba', 'tchouameni', 'camavinga'
-      ];
-
-      const isCanteraNews = (title, description) => {
-        const text = (title + ' ' + (description || '')).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        
-        // Primero verificar si tiene palabras de exclusión (primer equipo)
-        const hasExcludeWord = excludeKeywords.some(keyword => {
-          const normalizedKeyword = keyword.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-          return text.includes(normalizedKeyword);
-        });
-        
-        // Si tiene palabras de exclusión, solo aceptar si tiene palabras MUY específicas de cantera
-        const strictCanteraKeywords = ['castilla', 'juvenil', 'cadete', 'infantil', 'cantera', 'la fabrica', 'youth league', 'canterano'];
-        
-        const hasCanteraWord = canteraKeywords.some(keyword => {
-          const normalizedKeyword = keyword.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-          return text.includes(normalizedKeyword);
-        });
-        
-        const hasStrictCanteraWord = strictCanteraKeywords.some(keyword => text.includes(keyword));
-        
-        // Si tiene exclusión pero también palabra estricta de cantera, aceptar
-        if (hasExcludeWord && !hasStrictCanteraWord) return false;
-        
-        return hasCanteraWord;
-      };
-
-      // Imágenes placeholder de fútbol
-      const placeholderImages = [
-        "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=250&fit=crop",
-        "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&h=250&fit=crop",
-        "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=400&h=250&fit=crop",
-        "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=400&h=250&fit=crop",
-        "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&h=250&fit=crop",
-        "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=400&h=250&fit=crop"
-      ];
-
-      const fetchNews = async () => {
-        setLoading(true);
-        setError(null);
-        
-        // Múltiples proxies CORS actualizados 2025
-        const corsProxies = [
-          (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-          (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-          (url) => `https://api.cors.lol/?url=${encodeURIComponent(url)}`,
-          (url) => `https://proxy.corsfix.com/?${encodeURIComponent(url)}`
-        ];
-        
-        const fetchWithProxy = async (url) => {
-          for (const proxy of corsProxies) {
-            try {
-              const proxyUrl = proxy(url);
-              const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 8000);
-              
-              const response = await fetch(proxyUrl, { 
-                signal: controller.signal,
-                headers: { 
-                  'Accept': 'application/rss+xml, application/xml, text/xml, */*',
-                  'Origin': window.location.origin
-                }
-              });
-              clearTimeout(timeoutId);
-              
-              if (response.ok) {
-                const text = await response.text();
-                if (text && (text.includes('<item>') || text.includes('<entry>'))) {
-                  return text;
-                }
-              }
-            } catch (e) {
-              console.log('Proxy failed, trying next...');
-              continue;
-            }
-          }
-          return null;
-        };
-        
-        try {
-          // Múltiples fuentes RSS
-          const feeds = [
-            { url: 'https://www.bernabeudigital.com/feed', source: 'Bernabéu Digital', allCantera: true },
-            { url: 'https://www.defensacentral.com/feed/', source: 'Defensa Central', allCantera: false },
-            { url: 'https://e00-marca.uecdn.es/rss/futbol/real-madrid.xml', source: 'Marca', allCantera: false },
-            { url: 'https://as.com/rss/tags/real_madrid.xml', source: 'AS', allCantera: false }
-          ];
-          
-          let allNews = [];
-          let feedsAttempted = 0;
-          let feedsSucceeded = 0;
-          
-          for (const feed of feeds) {
-            feedsAttempted++;
-            try {
-              const text = await fetchWithProxy(feed.url);
-              
-              if (!text) {
-                console.log('No se pudo obtener feed de', feed.source);
-                continue;
-              }
-              
-              feedsSucceeded++;
-              
-              // Parsear XML
-              const parser = new DOMParser();
-              const xml = parser.parseFromString(text, 'text/xml');
-              const items = xml.querySelectorAll('item');
-              
-              console.log(feed.source, '- items encontrados:', items.length);
-              
-              if (items.length > 0) {
-                items.forEach(item => {
-                  const title = item.querySelector('title')?.textContent || '';
-                  const description = item.querySelector('description')?.textContent || '';
-                  const link = item.querySelector('link')?.textContent || '';
-                  const pubDate = item.querySelector('pubDate')?.textContent || '';
-                  
-                  // Buscar imagen en diferentes lugares
-                  const enclosure = item.querySelector('enclosure');
-                  const mediaContent = item.getElementsByTagName('media:content')[0];
-                  const mediaThumbnail = item.getElementsByTagName('media:thumbnail')[0];
-                  const imagen = enclosure?.getAttribute('url') || 
-                                 mediaContent?.getAttribute('url') || 
-                                 mediaThumbnail?.getAttribute('url') || null;
-                  
-                  if (feed.allCantera || isCanteraNews(title, description)) {
-                    allNews.push({
-                      titulo: title,
-                      resumen: description.replace(/<[^>]*>/g, '').substring(0, 180) + '...',
-                      fuente: feed.source,
-                      url: link,
-                      fecha: pubDate ? new Date(pubDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Reciente',
-                      fechaObj: pubDate ? new Date(pubDate) : new Date(),
-                      imagen: imagen
-                    });
-                  }
-                });
-              }
-            } catch (e) {
-              console.log('Error con feed', feed.source, ':', e.message);
-            }
-          }
-          
-          // Si no se pudo acceder a ningún feed, mostrar noticias de ejemplo
-          if (feedsSucceeded === 0) {
-            console.log('Ningún proxy funcionó, mostrando noticias de ejemplo');
-            allNews = [
-              { titulo: "La cantera sigue brillando en La Fábrica", resumen: "Los equipos de la cantera del Real Madrid continúan su gran trabajo formativo esta temporada...", fuente: "La Fábrica", url: "#", fecha: "Hoy", fechaObj: new Date(), imagen: placeholderImages[0] },
-              { titulo: "Nuevas promesas emergen del Castilla", resumen: "El filial blanco cuenta con varios jugadores que están llamando la atención del primer equipo...", fuente: "La Fábrica", url: "#", fecha: "Hoy", fechaObj: new Date(), imagen: placeholderImages[1] },
-              { titulo: "La Fábrica: cantera de campeones", resumen: "El Real Madrid sigue apostando por su cantera como fuente de talento para el primer equipo...", fuente: "La Fábrica", url: "#", fecha: "Hoy", fechaObj: new Date(), imagen: placeholderImages[2] }
-            ];
-            setNews(allNews);
-            setLastUpdate(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }));
-            setError("No se pudieron cargar noticias en tiempo real. Mostrando contenido de ejemplo.");
-            setLoading(false);
-            return;
-          }
-          
-          console.log('Noticias de cantera encontradas:', allNews.length);
-          
-          // Ordenar por fecha (más recientes primero) y eliminar duplicados
-          allNews.sort((a, b) => b.fechaObj - a.fechaObj);
-          const uniqueNews = allNews.filter((item, index, self) => 
-            index === self.findIndex(t => t.titulo === item.titulo)
-          ).slice(0, 8);
-          
-          // Asignar imágenes placeholder si no hay
-          const newsWithImages = uniqueNews.map((item, idx) => ({
-            ...item,
-            imagen: item.imagen || placeholderImages[idx % placeholderImages.length]
-          }));
-          
-          setNews(newsWithImages);
-          setLastUpdate(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }));
-          
-          if (newsWithImages.length === 0) {
-            setError("No se encontraron noticias de la cantera. Los medios no tienen noticias recientes sobre La Fábrica.");
-          }
-        } catch (err) {
-          console.error("Error fetching news:", err);
-          setError("No se pudieron cargar las noticias. Inténtalo de nuevo.");
-        } finally {
-          setLoading(false);
+      // Noticias estáticas de la cantera del Real Madrid
+      const staticNews = [
+        {
+          titulo: "El Castilla sigue su camino en Primera RFEF",
+          resumen: "El filial madridista continúa su competición en la tercera categoría del fútbol español, sirviendo como último escalón antes del primer equipo para los jóvenes talentos de La Fábrica.",
+          fuente: "La Fábrica",
+          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla",
+          fecha: "Temporada 24/25",
+          imagen: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=250&fit=crop"
+        },
+        {
+          titulo: "La cantera blanca, cuna de campeones",
+          resumen: "La Fábrica del Real Madrid sigue produciendo talento de primer nivel. Jugadores como Raúl, Casillas, Carvajal y muchos más han salido de estas categorías inferiores para triunfar en el fútbol mundial.",
+          fuente: "La Fábrica",
+          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina",
+          fecha: "Historia",
+          imagen: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&h=250&fit=crop"
+        },
+        {
+          titulo: "Juvenil A compite en la UEFA Youth League",
+          resumen: "El equipo juvenil del Real Madrid participa en la máxima competición europea de su categoría, enfrentándose a los mejores equipos juveniles del continente.",
+          fuente: "La Fábrica",
+          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a",
+          fecha: "Competición",
+          imagen: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=400&h=250&fit=crop"
+        },
+        {
+          titulo: "Valdebebas: el hogar de La Fábrica",
+          resumen: "La Ciudad Deportiva Real Madrid en Valdebebas cuenta con instalaciones de primer nivel donde entrenan todos los equipos de la cantera, desde prebenjamines hasta el Castilla.",
+          fuente: "La Fábrica",
+          url: "https://www.realmadrid.com/es-ES/sobre-el-real-madrid/el-club/ciudad-real-madrid",
+          fecha: "Instalaciones",
+          imagen: "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=400&h=250&fit=crop"
+        },
+        {
+          titulo: "Real Madrid C en Segunda RFEF",
+          resumen: "El tercer equipo de la estructura madridista compite en Segunda RFEF, ofreciendo minutos de competición a jugadores que están entre el juvenil y el Castilla.",
+          fuente: "La Fábrica",
+          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c",
+          fecha: "Temporada 24/25",
+          imagen: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&h=250&fit=crop"
+        },
+        {
+          titulo: "Formación integral en La Fábrica",
+          resumen: "Además del aspecto deportivo, la cantera del Real Madrid ofrece formación académica y personal para garantizar el desarrollo completo de los jóvenes futbolistas.",
+          fuente: "La Fábrica",
+          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina",
+          fecha: "Formación",
+          imagen: "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=400&h=250&fit=crop"
         }
-      };
+      ];
 
-      // Cargar noticias automáticamente al montar
       React.useEffect(() => {
-        fetchNews();
+        // Simular carga breve para mejor UX
+        const timer = setTimeout(() => {
+          setNews(staticNews);
+          setLoading(false);
+        }, 500);
+        return () => clearTimeout(timer);
       }, []);
 
       return (
@@ -1332,34 +1213,12 @@
             <h2 className="news-title">
               <span>📰</span> Noticias de La Fábrica
             </h2>
-            <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
-              {lastUpdate && <span style={{fontSize: 12, color: '#9ca3af'}}>Actualizado: {lastUpdate}</span>}
-              <button 
-                className={`news-refresh-btn ${loading ? 'loading' : ''}`}
-                onClick={fetchNews}
-                disabled={loading}
-              >
-                {loading ? '⏳ Buscando...' : '🔄 Actualizar'}
-              </button>
-            </div>
           </div>
 
           {loading && (
             <div className="news-loading">
               <div className="news-loading-spinner"></div>
-              <p className="news-loading-text">Buscando las últimas noticias de la cantera...</p>
-            </div>
-          )}
-
-          {error && (
-            <div className="news-error">
-              <p>{error}</p>
-              <button 
-                onClick={fetchNews} 
-                style={{marginTop: 12, padding: '8px 16px', background: '#dc2626', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer'}}
-              >
-                Reintentar
-              </button>
+              <p className="news-loading-text">Cargando noticias...</p>
             </div>
           )}
 
@@ -1397,7 +1256,7 @@
       );
     }
 
-    // Posiciones en el campo (porcentajes)
+    // Posiciones en el campo (porcentajes) - Desktop horizontal
     const FIELD_POSITIONS_11 = {
       "POR": { left: "8%", top: "50%", label: "POR" },
       "LI": { left: "22%", top: "15%", label: "LI" },
@@ -1412,6 +1271,21 @@
       "ED": { left: "75%", top: "80%", label: "EXT" }
     };
 
+    // Posiciones móvil - Campo vertical (intercambiamos left<->top)
+    const FIELD_POSITIONS_11_MOBILE = {
+      "POR": { left: "50%", top: "8%", label: "POR" },
+      "LI": { left: "85%", top: "22%", label: "LI" },
+      "DFC1": { left: "62%", top: "18%", label: "DFC" },
+      "DFC2": { left: "38%", top: "18%", label: "DFC" },
+      "LD": { left: "15%", top: "22%", label: "LD" },
+      "MCD": { left: "50%", top: "36%", label: "MCD" },
+      "MC1": { left: "68%", top: "48%", label: "MC" },
+      "MC2": { left: "32%", top: "48%", label: "MC" },
+      "EI": { left: "82%", top: "70%", label: "EXT" },
+      "DC": { left: "50%", top: "82%", label: "DC" },
+      "ED": { left: "18%", top: "70%", label: "EXT" }
+    };
+
     const FIELD_POSITIONS_7 = {
       "POR": { left: "10%", top: "50%", label: "POR" },
       "LI": { left: "32%", top: "20%", label: "LI" },
@@ -1422,9 +1296,31 @@
       "DC2": { left: "80%", top: "62%", label: "DC" }
     };
 
+    const FIELD_POSITIONS_7_MOBILE = {
+      "POR": { left: "50%", top: "10%", label: "POR" },
+      "LI": { left: "80%", top: "28%", label: "LI" },
+      "DFC": { left: "50%", top: "24%", label: "DFC" },
+      "LD": { left: "20%", top: "28%", label: "LD" },
+      "MC": { left: "50%", top: "50%", label: "MC" },
+      "DC1": { left: "65%", top: "78%", label: "DC" },
+      "DC2": { left: "35%", top: "78%", label: "DC" }
+    };
+
+    // Hook para detectar móvil
+    function useIsMobile() {
+      const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+      React.useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 900);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
+      return isMobile;
+    }
+
     function FieldView({ players, teamName, isF7, user, isCombined }) {
       const storageKey = isCombined ? `lafabrica_mi11_${user}` : `lafabrica_11_${user}_${teamName}`;
       const playerNames = players.map(p => p.nombre);
+      const isMobile = useIsMobile();
       
       const loadSavedPlayers = () => {
         try {
@@ -1448,7 +1344,11 @@
       const [fieldPlayers, setFieldPlayers] = useState(loadSavedPlayers);
       const [selectedSlot, setSelectedSlot] = useState(null);
       const [saveStatus, setSaveStatus] = useState(null);
-      const positions = isF7 ? FIELD_POSITIONS_7 : FIELD_POSITIONS_11;
+      
+      // Seleccionar posiciones según dispositivo
+      const positions = isMobile 
+        ? (isF7 ? FIELD_POSITIONS_7_MOBILE : FIELD_POSITIONS_11_MOBILE)
+        : (isF7 ? FIELD_POSITIONS_7 : FIELD_POSITIONS_11);
       const maxPlayers = isF7 ? 7 : 11;
 
       // Para Mi 11: guardar automáticamente cuando cambia
@@ -1613,8 +1513,7 @@
             
             {onFieldCount === 0 && (
               <div className="field-empty-msg">
-                <span>👆</span>
-                <p>Haz clic en los jugadores del banquillo para añadirlos</p>
+                <p>Selecciona jugadores del banquillo</p>
               </div>
             )}
           </div>
@@ -2103,7 +2002,7 @@
             </>
             )}
           </main>
-          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v47</p></footer>
+          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v49</p></footer>
         </div>
       );
     }
