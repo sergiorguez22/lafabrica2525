@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>La Fábrica 25/26 v46 - Cantera Real Madrid</title>
+  <title>La Fábrica 25/26 v47 - Cantera Real Madrid</title>
   
   <!-- PWA Meta Tags -->
   <meta name="description" content="Dashboard de la cantera del Real Madrid - La Fábrica 25/26">
@@ -1175,27 +1175,38 @@
         setLoading(true);
         setError(null);
         
-        // Múltiples proxies CORS de respaldo
+        // Múltiples proxies CORS actualizados 2025
         const corsProxies = [
           (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-          (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-          (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
+          (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+          (url) => `https://api.cors.lol/?url=${encodeURIComponent(url)}`,
+          (url) => `https://proxy.corsfix.com/?${encodeURIComponent(url)}`
         ];
         
         const fetchWithProxy = async (url) => {
           for (const proxy of corsProxies) {
             try {
               const proxyUrl = proxy(url);
+              const controller = new AbortController();
+              const timeoutId = setTimeout(() => controller.abort(), 8000);
+              
               const response = await fetch(proxyUrl, { 
-                headers: { 'Accept': 'application/rss+xml, application/xml, text/xml, */*' }
+                signal: controller.signal,
+                headers: { 
+                  'Accept': 'application/rss+xml, application/xml, text/xml, */*',
+                  'Origin': window.location.origin
+                }
               });
+              clearTimeout(timeoutId);
+              
               if (response.ok) {
                 const text = await response.text();
-                if (text && text.includes('<item>')) {
+                if (text && (text.includes('<item>') || text.includes('<entry>'))) {
                   return text;
                 }
               }
             } catch (e) {
+              console.log('Proxy failed, trying next...');
               continue;
             }
           }
@@ -1212,8 +1223,11 @@
           ];
           
           let allNews = [];
+          let feedsAttempted = 0;
+          let feedsSucceeded = 0;
           
           for (const feed of feeds) {
+            feedsAttempted++;
             try {
               const text = await fetchWithProxy(feed.url);
               
@@ -1221,6 +1235,8 @@
                 console.log('No se pudo obtener feed de', feed.source);
                 continue;
               }
+              
+              feedsSucceeded++;
               
               // Parsear XML
               const parser = new DOMParser();
@@ -1260,6 +1276,21 @@
             } catch (e) {
               console.log('Error con feed', feed.source, ':', e.message);
             }
+          }
+          
+          // Si no se pudo acceder a ningún feed, mostrar noticias de ejemplo
+          if (feedsSucceeded === 0) {
+            console.log('Ningún proxy funcionó, mostrando noticias de ejemplo');
+            allNews = [
+              { titulo: "La cantera sigue brillando en La Fábrica", resumen: "Los equipos de la cantera del Real Madrid continúan su gran trabajo formativo esta temporada...", fuente: "La Fábrica", url: "#", fecha: "Hoy", fechaObj: new Date(), imagen: placeholderImages[0] },
+              { titulo: "Nuevas promesas emergen del Castilla", resumen: "El filial blanco cuenta con varios jugadores que están llamando la atención del primer equipo...", fuente: "La Fábrica", url: "#", fecha: "Hoy", fechaObj: new Date(), imagen: placeholderImages[1] },
+              { titulo: "La Fábrica: cantera de campeones", resumen: "El Real Madrid sigue apostando por su cantera como fuente de talento para el primer equipo...", fuente: "La Fábrica", url: "#", fecha: "Hoy", fechaObj: new Date(), imagen: placeholderImages[2] }
+            ];
+            setNews(allNews);
+            setLastUpdate(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }));
+            setError("No se pudieron cargar noticias en tiempo real. Mostrando contenido de ejemplo.");
+            setLoading(false);
+            return;
           }
           
           console.log('Noticias de cantera encontradas:', allNews.length);
@@ -2072,7 +2103,7 @@
             </>
             )}
           </main>
-          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v46</p></footer>
+          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v47</p></footer>
         </div>
       );
     }
