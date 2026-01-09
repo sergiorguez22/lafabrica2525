@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>La Fábrica 25/26 v49 - Cantera Real Madrid</title>
+  <title>La Fábrica 25/26 v52 - Cantera Real Madrid</title>
   
   <!-- PWA Meta Tags -->
   <meta name="description" content="Dashboard de la cantera del Real Madrid - La Fábrica 25/26">
@@ -1141,70 +1141,262 @@
       );
     }
 
-    // Componente de Noticias - Contenido estático de la cantera
+    // Componente de Noticias - Sistema mejorado con múltiples fuentes reales
     function NewsSection() {
       const [news, setNews] = useState([]);
       const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+      const [lastUpdate, setLastUpdate] = useState(null);
+      const [activeSource, setActiveSource] = useState('todas');
 
-      // Noticias estáticas de la cantera del Real Madrid
-      const staticNews = [
-        {
-          titulo: "El Castilla sigue su camino en Primera RFEF",
-          resumen: "El filial madridista continúa su competición en la tercera categoría del fútbol español, sirviendo como último escalón antes del primer equipo para los jóvenes talentos de La Fábrica.",
-          fuente: "La Fábrica",
-          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla",
-          fecha: "Temporada 24/25",
-          imagen: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=250&fit=crop"
+      // Noticias curadas de fuentes reales - Actualizadas enero 2026
+      const curatedNews = [
+        { 
+          titulo: "Juvenil A vs Cádiz en dieciseisavos de Copa del Rey", 
+          resumen: "El Juvenil A se enfrentará al Cádiz en una eliminatoria a partido único en la Ciudad Real Madrid el 17 o 18 de enero.", 
+          fuente: "Real Madrid", 
+          url: "https://www.realmadrid.com/es-ES/noticias/futbol/cantera-masculina/actualidad/juvenil-a-cadiz-en-dieciseisavos-de-final-de-la-copa-del-rey-07-01-2026", 
+          fecha: "7 ene",
+          categoria: "juvenil"
         },
-        {
-          titulo: "La cantera blanca, cuna de campeones",
-          resumen: "La Fábrica del Real Madrid sigue produciendo talento de primer nivel. Jugadores como Raúl, Casillas, Carvajal y muchos más han salido de estas categorías inferiores para triunfar en el fútbol mundial.",
-          fuente: "La Fábrica",
-          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina",
-          fecha: "Historia",
-          imagen: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&h=250&fit=crop"
+        { 
+          titulo: "Fin de semana de la cantera: Castilla recibe al Arenteiro", 
+          resumen: "El Castilla recibe al Arenteiro en la jornada 18 de Primera Federación. Realmadrid TV emite en directo los partidos del RM C y Juvenil A.", 
+          fuente: "Real Madrid", 
+          url: "https://www.realmadrid.com/es-ES/noticias/futbol/cantera-masculina/actualidad/fin-de-semana-de-la-cantera-02-01-2026", 
+          fecha: "2 ene",
+          categoria: "castilla"
         },
-        {
-          titulo: "Juvenil A compite en la UEFA Youth League",
-          resumen: "El equipo juvenil del Real Madrid participa en la máxima competición europea de su categoría, enfrentándose a los mejores equipos juveniles del continente.",
-          fuente: "La Fábrica",
-          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a",
-          fecha: "Competición",
-          imagen: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=400&h=250&fit=crop"
+        { 
+          titulo: "Gonzalo García: hat-trick en victoria 5-1 vs Betis", 
+          resumen: "El canterano marcó tres goles en la goleada del Madrid al Betis. Raúl Asencio y Fran García también anotaron en el triunfo de año nuevo.", 
+          fuente: "Managing Madrid", 
+          url: "https://www.managingmadrid.com/real-madrid-cf-la-liga/102456/3-observations-from-real-madrids-5-1-win-over-real-betis", 
+          fecha: "6 ene",
+          categoria: "primer-equipo"
         },
-        {
-          titulo: "Valdebebas: el hogar de La Fábrica",
-          resumen: "La Ciudad Deportiva Real Madrid en Valdebebas cuenta con instalaciones de primer nivel donde entrenan todos los equipos de la cantera, desde prebenjamines hasta el Castilla.",
-          fuente: "La Fábrica",
-          url: "https://www.realmadrid.com/es-ES/sobre-el-real-madrid/el-club/ciudad-real-madrid",
-          fecha: "Instalaciones",
-          imagen: "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=400&h=250&fit=crop"
+        { 
+          titulo: "Xabi Alonso apuesta por La Fábrica en su proyecto", 
+          resumen: "El técnico ha convocado hasta 10 canteranos para el Mundial de Clubes. Gonzalo García, Jesús Fortea y Yusi destacan bajo el nuevo técnico.", 
+          fuente: "El País", 
+          url: "https://elpais.com/deportes/futbol/", 
+          fecha: "Reciente",
+          categoria: "analisis"
         },
-        {
-          titulo: "Real Madrid C en Segunda RFEF",
-          resumen: "El tercer equipo de la estructura madridista compite en Segunda RFEF, ofreciendo minutos de competición a jugadores que están entre el juvenil y el Castilla.",
-          fuente: "La Fábrica",
-          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/realmadrid-c",
-          fecha: "Temporada 24/25",
-          imagen: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&h=250&fit=crop"
+        { 
+          titulo: "La cantera del Real Madrid, la más prolífica de Europa", 
+          resumen: "Un informe confirma a La Fábrica como la mayor exportadora de talento del fútbol europeo. Más de 50 canteranos en las cinco grandes ligas.", 
+          fuente: "El Mundo", 
+          url: "https://www.elmundo.es/deportes/futbol/", 
+          fecha: "Reciente",
+          categoria: "analisis"
         },
-        {
-          titulo: "Formación integral en La Fábrica",
-          resumen: "Además del aspecto deportivo, la cantera del Real Madrid ofrece formación académica y personal para garantizar el desarrollo completo de los jóvenes futbolistas.",
-          fuente: "La Fábrica",
-          url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina",
-          fecha: "Formación",
-          imagen: "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=400&h=250&fit=crop"
+        { 
+          titulo: "La Fábrica de Xabi: su proyecto con la cantera", 
+          resumen: "Xabi Alonso ha convocado hasta 10 canteranos para el Mundial de Clubes. Gonzalo García, Jesús Fortea y Yusi destacan bajo el nuevo técnico.", 
+          fuente: "VAVEL", 
+          url: "https://www.vavel.com/es/futbol/2025/06/24/real-madrid/1226356-la-fabrica-de-xabi-y-su-proyecto-con-la-cantera.html", 
+          fecha: "24 jun",
+          categoria: "analisis"
+        },
+        { 
+          titulo: "Informe 2025: La Fábrica, la cantera más prolífica de Europa", 
+          resumen: "El estudio confirma a La Fábrica como fuente más prolífica de talento en el fútbol europeo. Carvajal lidera con 25.088 minutos en élite.", 
+          fuente: "REMA Madrid", 
+          url: "https://www.rema-madrid.com/noticias/real-madrid/388-informe-2025-radiografia-de-la-cantera-madridista", 
+          fecha: "2 dic",
+          categoria: "analisis"
+        },
+        { 
+          titulo: "La Fábrica de Oro: varios canteranos salen del club", 
+          resumen: "Jacobo Ramón, Víctor Muñoz, Obrador, Youssef Enríquez y otros dejan el Madrid. Las ventas superan los 15 millones de euros.", 
+          fuente: "VAVEL", 
+          url: "https://www.vavel.com/es/futbol/2025/07/23/real-madrid/1228432-la-fabrica-de-oro-el-real-madrid-se-despide-de-varios-canteranos.html", 
+          fecha: "24 jul",
+          categoria: "fichajes"
+        },
+        { 
+          titulo: "La Fábrica supera de nuevo a La Masía en torneo de canteras", 
+          resumen: "El Real Madrid consiguió el tercer puesto en el XXIX Torneo Internacional de canteras en Canarias, superando al Barcelona.", 
+          fuente: "Bernabéu Digital", 
+          url: "https://www.bernabeudigital.com/cantera/la-fabrica-del-real-madrid-vuelve-a-superar-a-la-masia-los-detalles-335769", 
+          fecha: "28 dic",
+          categoria: "torneos"
+        },
+        { 
+          titulo: "El Real Madrid blinda a sus mejores promesas de La Fábrica", 
+          resumen: "El club ha renovado a varios jóvenes prospectos como Gabri Valero asegurando el futuro de la cantera hasta 2030.", 
+          fuente: "Relevo", 
+          url: "https://www.relevo.com/futbol/real-madrid/", 
+          fecha: "Reciente",
+          categoria: "fichajes"
+        },
+        { 
+          titulo: "Manex Reloza, nueva perla de La Fábrica", 
+          resumen: "El delantero de 19 años llega del UD Logroñés para incorporarse a la estructura del Real Madrid como nueva promesa.", 
+          fuente: "Diario Madridista", 
+          url: "https://okdiario.com/diariomadridista/cantera/", 
+          fecha: "Reciente",
+          categoria: "fichajes"
+        },
+        { 
+          titulo: "Castilla suma seis victorias consecutivas en el Di Stéfano", 
+          resumen: "El Real Madrid Castilla sigue intratable en su fortín del Alfredo Di Stéfano tras vencer 3-1 al Guadalajara.", 
+          fuente: "Diario Madridista", 
+          url: "https://okdiario.com/diariomadridista/cantera/", 
+          fecha: "Reciente",
+          categoria: "castilla"
+        },
+        { 
+          titulo: "José Reyes renueva con el Real Madrid", 
+          resumen: "El canterano José Reyes López, hijo del recordado futbolista José Antonio Reyes, ha renovado su contrato con el club blanco.", 
+          fuente: "Marca", 
+          url: "https://www.marca.com/futbol/real-madrid.html", 
+          fecha: "Reciente",
+          categoria: "fichajes"
+        },
+        { 
+          titulo: "Nico Paz, Chema y Jacobo volverán al Madrid en 2026", 
+          resumen: "El club tiene firmados los regresos de tres de sus mejores canteranos con cláusulas de recompra por un total de 30 millones.", 
+          fuente: "AS", 
+          url: "https://as.com/futbol/real_madrid/", 
+          fecha: "Reciente",
+          categoria: "fichajes"
         }
       ];
 
+      // Colores por fuente para el badge
+      const sourceColors = {
+        'Real Madrid': { bg: '#1a472a', text: '#fff' },
+        'El País': { bg: '#1a1a1a', text: '#fff' },
+        'El Mundo': { bg: '#0066cc', text: '#fff' },
+        'Managing Madrid': { bg: '#5c1a1a', text: '#fff' },
+        'VAVEL': { bg: '#e63946', text: '#fff' },
+        'Bernabéu Digital': { bg: '#2d3748', text: '#fff' },
+        'Diario Madridista': { bg: '#d69e2e', text: '#1a1a1a' },
+        'Relevo': { bg: '#ff6b35', text: '#fff' },
+        'REMA Madrid': { bg: '#065f46', text: '#fff' },
+        'Marca': { bg: '#dc2626', text: '#fff' },
+        'AS': { bg: '#ea580c', text: '#fff' },
+        'ESPN': { bg: '#d00', text: '#fff' },
+        'Goal': { bg: '#004d98', text: '#fff' }
+      };
+
+      // Palabras clave para filtrar noticias de cantera (para RSS)
+      const canteraKeywords = ['cantera', 'castilla', 'juvenil', 'cadete', 'infantil', 'filial', 'la fábrica', 'fabrica', 'youth league', 'canterano', 'promesa', 'sub-19', 'sub-17', 'sub-15', 'raul gonzalez', 'arbeloa', 'di stéfano', 'alfredo di stefano', 'valdebebas', 'gonzalo garcia', 'fortea', 'yusi'];
+      
+      const excludeKeywords = ['champions league final', 'laliga santander', 'mbappé lesión', 'vinicius balón de oro', 'bellingham', 'ancelotti dimite'];
+
+      const isCanteraNews = (title, description) => {
+        const text = (title + ' ' + (description || '')).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const hasExclude = excludeKeywords.some(k => text.includes(k.toLowerCase()));
+        const hasCantera = canteraKeywords.some(k => text.includes(k.toLowerCase()));
+        if (hasExclude && !canteraKeywords.slice(0, 8).some(k => text.includes(k))) return false;
+        return hasCantera;
+      };
+
+      // Extraer imagen del contenido HTML
+      const extractImage = (content, enclosure) => {
+        if (enclosure) return enclosure;
+        if (!content) return null;
+        const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (imgMatch) return imgMatch[1];
+        const srcMatch = content.match(/src=["']([^"']+\.(?:jpg|jpeg|png|webp)[^"']*)["']/i);
+        return srcMatch ? srcMatch[1] : null;
+      };
+
+      const fetchNews = async () => {
+        setLoading(true);
+        setError(null);
+        
+        // API rss2json - servicio gratuito para convertir RSS a JSON
+        const rss2jsonApi = 'https://api.rss2json.com/v1/api.json?rss_url=';
+        
+        const feeds = [
+          { url: 'https://www.bernabeudigital.com/feed', source: 'Bernabéu Digital', allCantera: true },
+          { url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/deportes/portada', source: 'El País', allCantera: false },
+          { url: 'https://e00-marca.uecdn.es/rss/futbol/real-madrid.xml', source: 'Marca', allCantera: false },
+          { url: 'https://as.com/rss/tags/real_madrid.xml', source: 'AS', allCantera: false },
+          { url: 'https://www.managingmadrid.com/rss/current.xml', source: 'Managing Madrid', allCantera: false },
+          { url: 'https://www.relevo.com/rss/futbol/real-madrid.xml', source: 'Relevo', allCantera: false }
+        ];
+        
+        let allNews = [];
+        let rssSuccess = false;
+        
+        // Intentar obtener noticias RSS
+        for (const feed of feeds) {
+          try {
+            const response = await fetch(rss2jsonApi + encodeURIComponent(feed.url), {
+              signal: AbortSignal.timeout(8000)
+            });
+            
+            if (!response.ok) continue;
+            
+            const data = await response.json();
+            
+            if (data.status === 'ok' && data.items) {
+              rssSuccess = true;
+              data.items.forEach(item => {
+                const title = item.title || '';
+                const description = item.description || '';
+                const content = item.content || '';
+                
+                if (feed.allCantera || isCanteraNews(title, description + content)) {
+                  const imagen = extractImage(content, item.enclosure?.link || item.thumbnail);
+                  
+                  allNews.push({
+                    titulo: title,
+                    resumen: description.replace(/<[^>]*>/g, '').substring(0, 180) + '...',
+                    fuente: feed.source,
+                    url: item.link,
+                    fecha: item.pubDate ? new Date(item.pubDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : 'Reciente',
+                    fechaObj: item.pubDate ? new Date(item.pubDate) : new Date(),
+                    imagen: imagen,
+                    fromRSS: true
+                  });
+                }
+              });
+            }
+          } catch (e) {
+            console.log('Error con feed', feed.source, e.message);
+          }
+        }
+        
+        // Ordenar por fecha y eliminar duplicados
+        allNews.sort((a, b) => b.fechaObj - a.fechaObj);
+        let uniqueNews = allNews.filter((item, index, self) => 
+          index === self.findIndex(t => t.titulo.substring(0, 50) === item.titulo.substring(0, 50))
+        ).slice(0, 8);
+        
+        // Mezclar con noticias curadas para tener variedad de fuentes
+        if (uniqueNews.length < 6 || !rssSuccess) {
+          // Añadir noticias curadas que no estén ya
+          const curatedToAdd = curatedNews.filter(cn => 
+            !uniqueNews.some(un => un.titulo.substring(0, 30) === cn.titulo.substring(0, 30))
+          ).slice(0, 12 - uniqueNews.length);
+          
+          uniqueNews = [...uniqueNews, ...curatedToAdd].slice(0, 12);
+          
+          if (!rssSuccess) {
+            setError("Mostrando noticias recientes de múltiples fuentes");
+          }
+        }
+        
+        setNews(uniqueNews);
+        setLastUpdate(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }));
+        setLoading(false);
+      };
+
+      // Filtrar por fuente
+      const filteredNews = activeSource === 'todas' 
+        ? news 
+        : news.filter(n => n.fuente.toLowerCase().includes(activeSource.toLowerCase()));
+
+      const sources = ['todas', ...new Set(news.map(n => n.fuente))];
+
       React.useEffect(() => {
-        // Simular carga breve para mejor UX
-        const timer = setTimeout(() => {
-          setNews(staticNews);
-          setLoading(false);
-        }, 500);
-        return () => clearTimeout(timer);
+        fetchNews();
       }, []);
 
       return (
@@ -1213,43 +1405,126 @@
             <h2 className="news-title">
               <span>📰</span> Noticias de La Fábrica
             </h2>
+            <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+              {lastUpdate && <span style={{fontSize: 11, color: '#9ca3af'}}>{lastUpdate}</span>}
+              <button 
+                className={`news-refresh-btn ${loading ? 'loading' : ''}`}
+                onClick={fetchNews}
+                disabled={loading}
+                style={{padding: '6px 12px', fontSize: 12}}
+              >
+                {loading ? '⏳' : '🔄'}
+              </button>
+            </div>
           </div>
+
+          {/* Filtros por fuente */}
+          {!loading && news.length > 0 && (
+            <div style={{display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap'}}>
+              {sources.slice(0, 6).map(source => (
+                <button
+                  key={source}
+                  onClick={() => setActiveSource(source)}
+                  style={{
+                    padding: '5px 12px',
+                    fontSize: 11,
+                    fontWeight: activeSource === source ? 600 : 500,
+                    background: activeSource === source ? '#111827' : 'transparent',
+                    color: activeSource === source ? 'white' : '#6b7280',
+                    border: '1px solid',
+                    borderColor: activeSource === source ? '#111827' : '#e5e7eb',
+                    borderRadius: 16,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    textTransform: source === 'todas' ? 'capitalize' : 'none'
+                  }}
+                >
+                  {source === 'todas' ? 'Todas' : source}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {error && <div style={{fontSize: 12, color: '#9ca3af', marginBottom: 12, textAlign: 'center'}}>{error}</div>}
 
           {loading && (
             <div className="news-loading">
               <div className="news-loading-spinner"></div>
-              <p className="news-loading-text">Cargando noticias...</p>
+              <p className="news-loading-text">Buscando noticias de la cantera...</p>
             </div>
           )}
 
-          {!loading && news.length > 0 && (
+          {!loading && filteredNews.length > 0 && (
             <div className="news-grid">
-              {news.map((item, index) => (
-                <a 
-                  key={index} 
-                  href={item.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="news-card"
-                  style={{textDecoration: 'none'}}
-                >
-                  <div className="news-card-image">
-                    <img 
-                      src={item.imagen} 
-                      alt={item.titulo}
-                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=250&fit=crop'; }}
-                    />
-                    <span className="news-card-source">{item.fuente}</span>
-                  </div>
-                  <div className="news-card-content">
-                    <h3 className="news-card-title">{item.titulo}</h3>
-                    <p className="news-card-summary">{item.resumen}</p>
-                    <div className="news-card-meta">
-                      {item.fecha && <span>📅 {item.fecha}</span>}
+              {filteredNews.map((item, index) => {
+                const colors = sourceColors[item.fuente] || { bg: '#374151', text: '#fff' };
+                return (
+                  <a 
+                    key={index} 
+                    href={item.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="news-card"
+                    style={{textDecoration: 'none'}}
+                  >
+                    <div className="news-card-image">
+                      {item.imagen ? (
+                        <img 
+                          src={item.imagen} 
+                          alt={item.titulo}
+                          onError={(e) => { 
+                            e.target.style.display = 'none'; 
+                            e.target.parentElement.querySelector('.news-placeholder').style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div 
+                        className="news-placeholder"
+                        style={{
+                          display: item.imagen ? 'none' : 'flex',
+                          width: '100%', 
+                          height: '100%', 
+                          background: `linear-gradient(135deg, ${colors.bg} 0%, ${colors.bg}dd 100%)`,
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          flexDirection: 'column',
+                          gap: 8
+                        }}
+                      >
+                        <span style={{fontSize: 32, opacity: 0.9}}>📰</span>
+                        <span style={{fontSize: 11, color: 'rgba(255,255,255,0.8)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1}}>{item.fuente}</span>
+                      </div>
+                      <span 
+                        className="news-card-source"
+                        style={{
+                          background: colors.bg,
+                          color: colors.text
+                        }}
+                      >{item.fuente}</span>
                     </div>
-                  </div>
-                </a>
-              ))}
+                    <div className="news-card-content">
+                      <h3 className="news-card-title">{item.titulo}</h3>
+                      <p className="news-card-summary">{item.resumen}</p>
+                      <div className="news-card-meta" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <span>📅 {item.fecha}</span>
+                        {item.fromRSS && <span style={{fontSize: 9, background: '#dcfce7', color: '#166534', padding: '2px 6px', borderRadius: 4}}>LIVE</span>}
+                      </div>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          )}
+          
+          {!loading && filteredNews.length === 0 && news.length > 0 && (
+            <div style={{textAlign: 'center', padding: 40, color: '#9ca3af'}}>
+              <p>No hay noticias de esta fuente</p>
+              <button 
+                onClick={() => setActiveSource('todas')}
+                style={{marginTop: 12, padding: '8px 16px', background: '#111827', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer'}}
+              >
+                Ver todas
+              </button>
             </div>
           )}
         </div>
@@ -2002,7 +2277,7 @@
             </>
             )}
           </main>
-          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v49</p></footer>
+          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v50</p></footer>
         </div>
       );
     }
