@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>La Fábrica 25/26 v45 - Cantera Real Madrid</title>
+  <title>La Fábrica 25/26 v46 - Cantera Real Madrid</title>
   
   <!-- PWA Meta Tags -->
   <meta name="description" content="Dashboard de la cantera del Real Madrid - La Fábrica 25/26">
@@ -410,19 +410,19 @@
 </head>
 <body>
   <!-- Pantalla de carga inicial -->
-  <div id="loading-screen" style="position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:'Inter',sans-serif;">
+  <div id="loading-screen" style="position:fixed;inset:0;background:#ffffff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:'Inter',sans-serif;">
     <div style="width:60px;height:72px;margin-bottom:24px;">
       <svg viewBox="0 0 60 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M30 0L60 18V54L30 72L0 54V18L30 0Z" fill="#FABE2C"/>
-        <text x="30" y="44" font-size="28" text-anchor="middle" fill="#1a1a2e" font-weight="bold">RM</text>
+        <path d="M30 0L60 18V54L30 72L0 54V18L30 0Z" fill="#3e2fdc"/>
+        <text x="30" y="44" font-size="28" text-anchor="middle" fill="#ffffff" font-weight="bold">RM</text>
       </svg>
     </div>
-    <div id="loading-text" style="color:rgba(255,255,255,0.9);font-size:16px;font-weight:500;margin-bottom:16px;">Cargando La Fábrica...</div>
-    <div style="width:200px;height:4px;background:rgba(255,255,255,0.2);border-radius:4px;overflow:hidden;">
-      <div id="loading-bar" style="width:0%;height:100%;background:#FABE2C;border-radius:4px;transition:width 0.3s;"></div>
+    <div id="loading-text" style="color:#3e2fdc;font-size:16px;font-weight:500;margin-bottom:16px;">Cargando La Fábrica...</div>
+    <div style="width:200px;height:4px;background:rgba(62,47,220,0.15);border-radius:4px;overflow:hidden;">
+      <div id="loading-bar" style="width:0%;height:100%;background:#3e2fdc;border-radius:4px;transition:width 0.3s;"></div>
     </div>
     <div id="loading-retry" style="display:none;margin-top:20px;">
-      <button onclick="location.reload()" style="padding:12px 24px;background:#FABE2C;color:#1a1a2e;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Reintentar</button>
+      <button onclick="location.reload()" style="padding:12px 24px;background:#3e2fdc;color:#ffffff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Reintentar</button>
     </div>
   </div>
   
@@ -1175,6 +1175,33 @@
         setLoading(true);
         setError(null);
         
+        // Múltiples proxies CORS de respaldo
+        const corsProxies = [
+          (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+          (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+          (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
+        ];
+        
+        const fetchWithProxy = async (url) => {
+          for (const proxy of corsProxies) {
+            try {
+              const proxyUrl = proxy(url);
+              const response = await fetch(proxyUrl, { 
+                headers: { 'Accept': 'application/rss+xml, application/xml, text/xml, */*' }
+              });
+              if (response.ok) {
+                const text = await response.text();
+                if (text && text.includes('<item>')) {
+                  return text;
+                }
+              }
+            } catch (e) {
+              continue;
+            }
+          }
+          return null;
+        };
+        
         try {
           // Múltiples fuentes RSS
           const feeds = [
@@ -1188,10 +1215,12 @@
           
           for (const feed of feeds) {
             try {
-              // Usar corsproxy.io que funciona mejor
-              const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(feed.url)}`;
-              const response = await fetch(proxyUrl);
-              const text = await response.text();
+              const text = await fetchWithProxy(feed.url);
+              
+              if (!text) {
+                console.log('No se pudo obtener feed de', feed.source);
+                continue;
+              }
               
               // Parsear XML
               const parser = new DOMParser();
@@ -2043,7 +2072,7 @@
             </>
             )}
           </main>
-          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v45</p></footer>
+          <footer className="footer"><p className="footer-text">La Fábrica 25/26 · Cantera Real Madrid · {totalPlayers} jugadores en {teams.length} equipos · v46</p></footer>
         </div>
       );
     }
