@@ -440,39 +440,6 @@
     .news-error { background: #fef2f2; border-radius: 8px; padding: 16px; color: #dc2626; text-align: center; font-size: 13px; }
     .dark .news-error { background: rgba(220, 38, 38, 0.1); }
     
-
-    /* Competicion Internacional */
-    .intl-comp { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; padding: 20px; margin-bottom: 20px; color: white; }
-    .intl-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-    .intl-info { display: flex; align-items: center; gap: 10px; }
-    .intl-icon { font-size: 13px; font-weight: 800; background: rgba(255,255,255,0.2); padding: 6px 10px; border-radius: 6px; }
-    .intl-name { font-size: 16px; font-weight: 700; }
-    .intl-fase { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
-    .intl-status { padding: 6px 14px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 20px; font-size: 11px; font-weight: 600; }
-    .intl-stats { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
-    .intl-st { text-align: center; }
-    .intl-st-v { font-size: 20px; font-weight: 700; }
-    .intl-st-l { font-size: 9px; color: rgba(255,255,255,0.6); text-transform: uppercase; }
-    .intl-list { display: flex; flex-direction: column; gap: 6px; }
-    .intl-list-t { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
-    .intl-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 12px; }
-    .intl-j { font-size: 10px; color: rgba(255,255,255,0.5); min-width: 20px; }
-    .intl-rival { flex: 1; font-size: 13px; font-weight: 500; }
-    .intl-res { font-size: 14px; font-weight: 700; padding: 3px 8px; border-radius: 4px; min-width: 44px; text-align: center; }
-    .intl-res.w { background: rgba(16, 185, 129, 0.3); color: #34d399; }
-    .intl-res.d { background: rgba(251, 191, 36, 0.3); color: #fbbf24; }
-    .intl-res.l { background: rgba(239, 68, 68, 0.3); color: #f87171; }
-    .intl-gol { font-size: 10px; color: rgba(255,255,255,0.5); }
-    .intl-next { background: rgba(62, 47, 220, 0.3); border: 1px solid rgba(62, 47, 220, 0.5); border-radius: 10px; padding: 12px; margin-top: 10px; }
-    .intl-next-t { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-bottom: 6px; }
-    .intl-next-c { display: flex; align-items: center; justify-content: space-between; }
-    .intl-next-r { font-size: 14px; font-weight: 600; }
-    .intl-next-f { font-size: 11px; color: #a5a0ff; }
-    .intl-next-d { font-size: 10px; color: rgba(255,255,255,0.5); }
-    .intl-hl { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%); border-radius: 8px; padding: 10px 14px; margin-top: 10px; }
-    .intl-hl-t { font-size: 12px; font-weight: 500; color: #fcd34d; }
-    @media (max-width: 600px) { .intl-stats { grid-template-columns: repeat(4, 1fr); } }
-
     @media (max-width: 768px) {
       .table-header, .table-row { grid-template-columns: 40px 1fr 100px 40px; }
       .table-header > *:nth-child(4), .table-header > *:nth-child(5),
@@ -625,23 +592,7 @@
 
     const canteraData = {
       "Castilla": {
-        categoria: "1ª RFEF", entrenadores: ["Álvaro Arbeloa", "Julián Carmona"],
-        competicionInternacional: {
-          nombre: "Premier League International Cup",
-          escudo: "ENG",
-          fase: "Fase de Grupos - Grupo A",
-          estado: "Clasificado a Cuartos",
-          estadisticas: { pj: 4, pg: 2, pe: 2, pp: 0, gf: 5, gc: 3, pts: 8 },
-          posicion: 1,
-          partidos: [
-            { jornada: 1, fecha: "10/09/25", local: false, rival: "Wolverhampton", resultado: "0-1", goles: "Bruno 84", victoria: true },
-            { jornada: 2, fecha: "29/10/25", local: false, rival: "Southampton", resultado: "1-1", goles: "Thiago 75", victoria: null },
-            { jornada: 3, fecha: "03/12/25", local: false, rival: "Everton", resultado: "0-2", goles: "Pol Fortuny x2", victoria: true },
-            { jornada: 4, fecha: "16/12/25", local: false, rival: "Manchester City", resultado: "1-1", goles: "Palacios 3", victoria: null }
-          ],
-          proximoPartido: null,
-          destacado: "Invictos en fase de grupos"
-        }, jugadores: [
+        categoria: "1ª RFEF", entrenadores: ["Álvaro Arbeloa", "Julián Carmona"], jugadores: [
           { nombre: "Francisco Javier González Pérez", apodo: "Fran González", posicion: "Portero", fechaNacimiento: "24/06/2005", lugarNacimiento: "León", seleccion: "Sub-21 España", dorsal: 1, trayectoriaMadrid: "Castilla (2024-)|Juvenil A (2023-2024)|Juvenil B (2022-2023)", trayectoriaPrevia: "Cultural Leonesa (2010-2022)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/francisco-javier-gonzalez-perez" },
           { nombre: "David Jiménez Corredor", apodo: "D. Jiménez", posicion: "Defensa", fechaNacimiento: "14/03/2004", lugarNacimiento: "Madrid", seleccion: "Sub-19 España", dorsal: 2, trayectoriaMadrid: "Castilla (2024-)|Real Madrid C (2023-2024)|Juvenil A (2022-2023)|Juvenil B (2021-2022)|Juvenil C (2020-2021)|Cadete A (2019-2020)|Cadete B (2018-2019)|Infantil A (2017-2018)|Infantil B (2016-2017)|Alevín A (2015-2016)|Alevín B (2014-2015)|Benjamín A (2013-2014)", trayectoriaPrevia: "Juventud URJC (2010-2013)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/david-jimenez-corredor" },
           { nombre: "Víctor Valdepeñas Talavera", apodo: "Valdepeñas", posicion: "Defensa", fechaNacimiento: "20/10/2006", lugarNacimiento: "Madrid", seleccion: "Sub-19 España", dorsal: 3, trayectoriaMadrid: "Castilla (2025-)|Juvenil A (2024-2025)|Juvenil B (2023-2024)|Juvenil C (2022-2023)|Infantil A (2019-2020)|Infantil B (2018-2019)", trayectoriaPrevia: "Leganés (2020-2023)|Rayo Vallecano (2016-2018)|Villa Rosa (2011-2016)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/victor-valdepenas-talavera" },
@@ -695,25 +646,7 @@
         ]
       },
       "Juvenil A": {
-        categoria: "Juvenil - División de Honor Juvenil", entrenadores: ["Julián López de Lerma"],
-        competicionInternacional: {
-          nombre: "UEFA Youth League",
-          escudo: "UEFA",
-          fase: "Fase Liga - Ruta Champions",
-          estado: "Clasificado Top 6",
-          estadisticas: { pj: 6, pg: 5, pe: 0, pp: 1, gf: 14, gc: 6, pts: 15 },
-          posicion: 4,
-          partidos: [
-            { jornada: 1, fecha: "16/09/25", local: true, rival: "Marseille", resultado: "3-2", goles: "Victoria", victoria: true },
-            { jornada: 2, fecha: "30/09/25", local: false, rival: "Kairat Almaty", resultado: "1-4", goles: "Goleada", victoria: true },
-            { jornada: 3, fecha: "22/10/25", local: true, rival: "Juventus", resultado: "1-0", goles: "Victoria", victoria: true },
-            { jornada: 4, fecha: "04/11/25", local: false, rival: "Liverpool", resultado: "0-4", goles: "Goleada", victoria: true },
-            { jornada: 5, fecha: "26/11/25", local: false, rival: "Olympiacos", resultado: "0-2", goles: "Victoria", victoria: true },
-            { jornada: 6, fecha: "10/12/25", local: true, rival: "Manchester City", resultado: "0-4", goles: "Derrota", victoria: false }
-          ],
-          proximoPartido: { fecha: "03/02/26", fase: "1/16", rival: "Marseille", local: true },
-          destacado: "5 victorias en 6 partidos"
-        }, jugadores: [
+        categoria: "Juvenil - División de Honor Juvenil", entrenadores: ["Julián López de Lerma"], jugadores: [
           { nombre: "Javier Navarro Jiménez", apodo: "Javi Navarro", posicion: "Portero", fechaNacimiento: "15/01/2007", lugarNacimiento: "Valencia", trayectoriaMadrid: "Juvenil A (2025-)|Juvenil B (2024-2025)|Juvenil C (2023-2024)|Cadete A (2022-2023)|Cadete B (2021-2022)|Infantil A (2020-2021)|Infantil B (2019-2020)", trayectoriaPrevia: "Unión Adarve (2017-2019)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/javier-navarro-jimenez" },
           { nombre: "Aarón Gómez Villar", apodo: "Aarón", posicion: "Portero", fechaNacimiento: "08/02/2007", lugarNacimiento: "Illescas (Toledo)", trayectoriaMadrid: "Juvenil A (2025-)|Juvenil B (2024-2025)|Juvenil C (2023-2024)|Alevín A (2018-2019)|Alevín B (2017-2018)|Benjamín A (2016-2017)", trayectoriaPrevia: "Getafe (2021-2023)|Rayo Vallecano (2019-2021)|Illescas (2013-2016)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/aaron-gomez-villar" },
           { nombre: "Illia Voloshyn", apodo: "Illia", posicion: "Portero", fechaNacimiento: "23/03/2007", lugarNacimiento: "Ucrania", seleccion: "Sub-20 Ucrania", trayectoriaMadrid: "Juvenil A (2025-)|Juvenil B (2025)|Juvenil C (2024-2025)", trayectoriaPrevia: "Rayo Majadahonda (2023-2024)|Novelda (2022-2023)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/illia-voloshyn" },
@@ -1237,16 +1170,16 @@
         { 
           titulo: "Xabi Alonso apuesta por La Fábrica en su proyecto", 
           resumen: "El técnico ha convocado hasta 10 canteranos para el Mundial de Clubes. Gonzalo García, Jesús Fortea y Yusi destacan bajo el nuevo técnico.", 
-          fuente: "El País", 
-          url: "https://elpais.com/deportes/futbol/", 
+          fuente: "Grada3", 
+          url: "https://www.grada3.com/2026/01/11/mili-canteranos-real-madrid-puerto/", 
           fecha: "Reciente",
           categoria: "analisis"
         },
         { 
           titulo: "La cantera del Real Madrid, la más prolífica de Europa", 
           resumen: "Un informe confirma a La Fábrica como la mayor exportadora de talento del fútbol europeo. Más de 50 canteranos en las cinco grandes ligas.", 
-          fuente: "El Mundo", 
-          url: "https://www.elmundo.es/deportes/futbol/", 
+          fuente: "Bernabéu Digital", 
+          url: "https://www.bernabeudigital.com/cantera/los-futuros-cracks-del-real-madrid-que-vienen-desde-la-cantera-336035", 
           fecha: "Reciente",
           categoria: "analisis"
         },
@@ -1317,8 +1250,8 @@
         { 
           titulo: "Nico Paz, Chema y Jacobo volverán al Madrid en 2026", 
           resumen: "El club tiene firmados los regresos de tres de sus mejores canteranos con cláusulas de recompra por un total de 30 millones.", 
-          fuente: "AS", 
-          url: "https://as.com/futbol/real_madrid/", 
+          fuente: "Defensa Central", 
+          url: "https://defensacentral.com/fichajes/real-madrid-tiene-firmados-3-jugadores-por-30-millones-2026_328307_102.html", 
           fecha: "Reciente",
           categoria: "fichajes"
         }
@@ -2326,54 +2259,6 @@
                 <div className="stat"><div className="stat-value" style={{color:ACCENT}}>{stats.med}</div><div className="stat-label">MED</div></div>
                 <div className="stat"><div className="stat-value" style={{color:'#ef4444'}}>{stats.del}</div><div className="stat-label">DEL</div></div>
               </div></div></div>
-
-
-              {currentTeam.competicionInternacional && (
-                <div className="intl-comp">
-                  <div className="intl-head">
-                    <div className="intl-info">
-                      <span className="intl-icon">{currentTeam.competicionInternacional.escudo}</span>
-                      <div>
-                        <div className="intl-name">{currentTeam.competicionInternacional.nombre}</div>
-                        <div className="intl-fase">{currentTeam.competicionInternacional.fase}</div>
-                      </div>
-                    </div>
-                    <div className="intl-status">{currentTeam.competicionInternacional.estado}</div>
-                  </div>
-                  <div className="intl-stats">
-                    <div className="intl-st"><div className="intl-st-v">{currentTeam.competicionInternacional.estadisticas.pj}</div><div className="intl-st-l">PJ</div></div>
-                    <div className="intl-st"><div className="intl-st-v" style={{color:"#34d399"}}>{currentTeam.competicionInternacional.estadisticas.pg}</div><div className="intl-st-l">PG</div></div>
-                    <div className="intl-st"><div className="intl-st-v" style={{color:"#fbbf24"}}>{currentTeam.competicionInternacional.estadisticas.pe}</div><div className="intl-st-l">PE</div></div>
-                    <div className="intl-st"><div className="intl-st-v" style={{color:"#f87171"}}>{currentTeam.competicionInternacional.estadisticas.pp}</div><div className="intl-st-l">PP</div></div>
-                    <div className="intl-st"><div className="intl-st-v">{currentTeam.competicionInternacional.estadisticas.gf}</div><div className="intl-st-l">GF</div></div>
-                    <div className="intl-st"><div className="intl-st-v">{currentTeam.competicionInternacional.estadisticas.gc}</div><div className="intl-st-l">GC</div></div>
-                    <div className="intl-st"><div className="intl-st-v" style={{color:"#a5a0ff"}}>{currentTeam.competicionInternacional.estadisticas.pts}</div><div className="intl-st-l">PTS</div></div>
-                  </div>
-                  <div className="intl-list">
-                    <div className="intl-list-t">Partidos</div>
-                    {currentTeam.competicionInternacional.partidos.map((p,i)=>(
-                      <div key={i} className="intl-row">
-                        <div className="intl-j">J{p.jornada}</div>
-                        <div className="intl-rival">{p.local?"vs":"@"} {p.rival}</div>
-                        <div className={"intl-res "+(p.victoria===true?"w":p.victoria===false?"l":"d")}>{p.resultado}</div>
-                        <div className="intl-gol">{p.goles}</div>
-                      </div>
-                    ))}
-                  </div>
-                  {currentTeam.competicionInternacional.proximoPartido && (
-                    <div className="intl-next">
-                      <div className="intl-next-t">Proximo partido</div>
-                      <div className="intl-next-c">
-                        <div className="intl-next-r">{currentTeam.competicionInternacional.proximoPartido.local?"vs":"@"} {currentTeam.competicionInternacional.proximoPartido.rival}</div>
-                        <div><div className="intl-next-f">{currentTeam.competicionInternacional.proximoPartido.fase}</div><div className="intl-next-d">{currentTeam.competicionInternacional.proximoPartido.fecha}</div></div>
-                      </div>
-                    </div>
-                  )}
-                  {currentTeam.competicionInternacional.destacado && (
-                    <div className="intl-hl"><span className="intl-hl-t">{currentTeam.competicionInternacional.destacado}</span></div>
-                  )}
-                </div>
-              )}
 
               <div className="view-toggle">
                 <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>📋 Lista</button>
