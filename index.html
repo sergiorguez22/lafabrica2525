@@ -1168,14 +1168,6 @@
           categoria: "castilla"
         },
         { 
-          titulo: "Gonzalo García: hat-trick en victoria 5-1 vs Betis", 
-          resumen: "El canterano marcó tres goles en la goleada del Madrid al Betis. Raúl Asencio y Fran García también anotaron en el triunfo de año nuevo.", 
-          fuente: "Managing Madrid", 
-          url: "https://www.managingmadrid.com/real-madrid-cf-la-liga/102456/3-observations-from-real-madrids-5-1-win-over-real-betis", 
-          fecha: "6 ene",
-          categoria: "primer-equipo"
-        },
-        { 
           titulo: "Xabi Alonso apuesta por La Fábrica en su proyecto", 
           resumen: "El técnico ha convocado hasta 10 canteranos para el Mundial de Clubes. Gonzalo García, Jesús Fortea y Yusi destacan bajo el nuevo técnico.", 
           fuente: "El País", 
@@ -1282,32 +1274,22 @@
         'Goal': { bg: '#004d98', text: '#fff' }
       };
 
-      // Palabras clave PRIMARIAS - deben aparecer para considerar noticia de cantera
-      const canteraPrimary = ['cantera', 'castilla', 'juvenil a', 'juvenil b', 'juvenil c', 'cadete', 'infantil', 'la fabrica', 'youth league', 'real madrid c', 'raul gonzalez blanco entrenador', 'arbeloa entrenador', 'di stefano estadio'];
+      // Palabras clave OBLIGATORIAS - debe contener al menos una para ser noticia de cantera
+      const canteraRequired = ['cantera', 'castilla', 'juvenil a', 'juvenil b', 'juvenil c', 'cadete a', 'cadete b', 'infantil a', 'infantil b', 'alevin', 'benjamin', 'la fabrica', 'youth league', 'real madrid c', 'raul entrenador castilla', 'arbeloa juvenil'];
       
-      // Palabras clave SECUNDARIAS - solo si aparecen con contexto de cantera
-      const canteraSecondary = ['canterano', 'promesa', 'filial', 'valdebebas juvenil', 'fortea', 'jacobo', 'david jimenez', 'manuel angel'];
-      
-      // Excluir estas noticias aunque mencionen palabras clave
-      const excludeKeywords = ['primer equipo', 'champions league', 'laliga', 'liga de campeones', 'balon de oro', 'mbappe', 'vinicius', 'bellingham', 'rodrygo', 'ancelotti', 'modric', 'kroos', 'courtois', 'militao', 'rudiger', 'alaba', 'carvajal', 'lucas vazquez', 'ceballos', 'camavinga', 'tchouameni', 'valverde', 'fichaje', 'mercado de fichajes', 'lesion de', 'baja de', 'renovacion de'];
+      // Palabras que INVALIDAN la noticia aunque tenga palabras de cantera
+      const invalidateNews = ['mbappe', 'vinicius', 'bellingham', 'rodrygo', 'ancelotti', 'modric', 'kroos', 'courtois', 'militao', 'rudiger', 'alaba', 'carvajal', 'lucas vazquez', 'ceballos', 'camavinga', 'tchouameni', 'valverde', 'endrick', 'guler', 'arda guler', 'champions league', 'liga de campeones', 'laliga', 'liga ea sports', 'balon de oro', 'the best', 'copa del rey semifinal', 'copa del rey final', 'supercopa', 'mundial de clubes', 'intercontinental', 'fichaje', 'fichajes', 'mercado', 'traspaso', 'clausula', 'renovacion', 'lesion', 'baja', 'parte medico', 'bernabeu', 'santiago bernabeu', 'grada', 'ultras', 'perez florentino', 'florentino'];
 
       const isCanteraNews = (title, description) => {
         const text = (title + ' ' + (description || '')).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         
-        // Excluir si menciona jugadores/temas del primer equipo
-        const hasExclude = excludeKeywords.some(k => text.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g, "")));
+        // Si contiene cualquier palabra invalidante, rechazar inmediatamente
+        const isInvalid = invalidateNews.some(k => text.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g, "")));
+        if (isInvalid) return false;
         
-        // Debe tener palabra clave primaria
-        const hasPrimary = canteraPrimary.some(k => text.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g, "")));
-        
-        // O secundaria (pero con más peso si también dice "real madrid")
-        const hasSecondary = canteraSecondary.some(k => text.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g, "")));
-        
-        // Si tiene exclusión y no tiene palabra primaria fuerte, rechazar
-        if (hasExclude && !canteraPrimary.slice(0, 6).some(k => text.includes(k))) return false;
-        
-        // Aceptar si tiene primaria, o secundaria con contexto
-        return hasPrimary || (hasSecondary && text.includes('madrid'));
+        // Debe contener palabra obligatoria de cantera
+        const hasRequired = canteraRequired.some(k => text.includes(k.normalize("NFD").replace(/[\u0300-\u036f]/g, "")));
+        return hasRequired;
       };
 
       // Extraer imagen del contenido HTML
@@ -1328,7 +1310,7 @@
         const rss2jsonApi = 'https://api.rss2json.com/v1/api.json?rss_url=';
         
         const feeds = [
-          { url: 'https://www.bernabeudigital.com/feed', source: 'Bernabéu Digital', allCantera: true },
+          { url: 'https://www.bernabeudigital.com/feed', source: 'Bernabéu Digital', allCantera: false },
           { url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/deportes/portada', source: 'El País', allCantera: false },
           { url: 'https://e00-marca.uecdn.es/rss/futbol/real-madrid.xml', source: 'Marca', allCantera: false },
           { url: 'https://as.com/rss/tags/real_madrid.xml', source: 'AS', allCantera: false },
@@ -2094,19 +2076,26 @@
                     <div className="player-detail-section">
                       <div className="player-detail-section-title">📍 Trayectoria</div>
                       
+                      {/* Selección internacional si tiene */}
+                      {playerDetail.seleccion && playerDetail.seleccion.includes('España') && (
+                        <div style={{fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border)'}}>
+                          Internacional {playerDetail.seleccion.toLowerCase().replace('sub-', 'sub-')} con España
+                        </div>
+                      )}
+                      
                       {/* Trayectoria en el Real Madrid - estilo web oficial */}
                       {playerDetail.trayectoriaMadrid && (
                         <div style={{marginBottom: '16px'}}>
                           <span style={{display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '12px'}}>Categorías inferiores del Real Madrid:</span>
-                          <div style={{display: 'flex', flexDirection: 'column', gap: '0', borderRight: '3px solid #D4A853', marginRight: '4px'}}>
+                          <div style={{display: 'flex', flexDirection: 'column', gap: '0'}}>
                             {playerDetail.trayectoriaMadrid.split('|').map((etapa, idx) => {
                               const match = etapa.trim().match(/^(.+?)\s*\((\d{4}(?:-\d{0,4})?-?)\)$/);
                               const equipoName = match ? match[1].trim() : etapa.trim();
                               const years = match ? match[2] : '';
                               return (
-                                <div key={idx} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', borderBottom: idx < playerDetail.trayectoriaMadrid.split('|').length - 1 ? '1px solid var(--border)' : 'none'}}>
-                                  <span style={{fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)'}}>{equipoName}</span>
-                                  {years && <span style={{fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)', marginRight: '8px'}}>{years}</span>}
+                                <div key={idx} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: idx < playerDetail.trayectoriaMadrid.split('|').length - 1 ? '1px solid var(--border)' : 'none'}}>
+                                  <span style={{fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)', paddingLeft: '12px'}}>{equipoName}</span>
+                                  {years && <span style={{fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)'}}>{years}</span>}
                                 </div>
                               );
                             })}
@@ -2116,21 +2105,18 @@
                       
                       {/* Trayectoria previa - clubes anteriores */}
                       {playerDetail.trayectoriaPrevia && (
-                        <div style={{marginTop: playerDetail.trayectoriaMadrid ? '8px' : '12px'}}>
-                          {!playerDetail.trayectoriaMadrid && <span style={{display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '12px'}}>Trayectoria previa:</span>}
-                          <div style={{display: 'flex', flexDirection: 'column', gap: '0', borderLeft: '3px solid var(--border)', marginLeft: '4px'}}>
-                            {playerDetail.trayectoriaPrevia.split('|').map((club, idx) => {
-                              const match = club.trim().match(/^(.+?)\s*\((\d{4}(?:-\d{4})?)\)$/);
-                              const clubName = match ? match[1].trim() : club.trim();
-                              const years = match ? match[2] : '';
-                              return (
-                                <div key={idx} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', borderBottom: idx < playerDetail.trayectoriaPrevia.split('|').length - 1 ? '1px solid var(--border)' : 'none'}}>
-                                  <span style={{fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)'}}>{clubName}</span>
-                                  {years && <span style={{fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)'}}>{years}</span>}
-                                </div>
-                              );
-                            })}
-                          </div>
+                        <div style={{marginTop: playerDetail.trayectoriaMadrid ? '8px' : '0'}}>
+                          {playerDetail.trayectoriaPrevia.split('|').map((club, idx) => {
+                            const match = club.trim().match(/^(.+?)\s*\((\d{4}(?:-\d{4})?)\)$/);
+                            const clubName = match ? match[1].trim() : club.trim();
+                            const years = match ? match[2] : '';
+                            return (
+                              <div key={idx} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: idx < playerDetail.trayectoriaPrevia.split('|').length - 1 ? '1px solid var(--border)' : 'none'}}>
+                                <span style={{fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)', paddingLeft: '12px'}}>{clubName}</span>
+                                {years && <span style={{fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)'}}>{years}</span>}
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                       
