@@ -441,56 +441,62 @@
     .dark .news-error { background: rgba(220, 38, 38, 0.1); }
     
 
-    /* Vista Competiciones */
-    .comp-container { display: flex; flex-direction: column; gap: 20px; }
-    .comp-card { background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
-    .comp-header { background: linear-gradient(135deg, #3b3b5c 0%, #2d2d44 100%); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    /* Vista Competiciones - Minimalista */
+    .comp-container { display: flex; flex-direction: column; gap: 16px; }
+    .comp-tabs { display: flex; gap: 8px; margin-bottom: 8px; }
+    .comp-tab { padding: 10px 20px; border-radius: 10px; border: 2px solid #e5e7eb; background: white; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; color: #6b7280; }
+    .comp-tab:hover { border-color: #3e2fdc; color: #3e2fdc; }
+    .comp-tab.active { border-color: #3e2fdc; background: rgba(62, 47, 220, 0.1); color: #3e2fdc; }
+    .comp-card { background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; }
+    .comp-header { padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }
     .comp-title { display: flex; align-items: center; gap: 12px; }
-    .comp-escudo { font-size: 28px; }
-    .comp-nombre { color: white; font-size: 18px; font-weight: 700; }
-    .comp-fase { color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 2px; }
-    .comp-badge { padding: 6px 14px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 20px; font-size: 11px; font-weight: 600; color: white; }
+    .comp-escudo { font-size: 24px; }
+    .comp-nombre { color: #111827; font-size: 16px; font-weight: 600; }
+    .comp-pos { color: #6b7280; font-size: 13px; margin-top: 2px; }
+    .comp-badge { padding: 6px 12px; background: #3e2fdc; border-radius: 6px; font-size: 11px; font-weight: 600; color: white; }
+    .comp-badge.green { background: #10b981; }
     .comp-body { padding: 20px; }
-    .comp-stats { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 20px; }
-    .comp-stat { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 12px 8px; text-align: center; }
-    .comp-stat-value { font-size: 22px; font-weight: 700; color: white; }
-    .comp-stat-value.green { color: #34d399; }
-    .comp-stat-value.yellow { color: #fbbf24; }
-    .comp-stat-value.red { color: #f87171; }
-    .comp-stat-value.purple { color: #a78bfa; }
-    .comp-stat-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 4px; }
-    .comp-section { margin-bottom: 20px; }
-    .comp-section-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .comp-stats { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 24px; }
+    .comp-stat { background: #f9fafb; border-radius: 8px; padding: 12px 8px; text-align: center; border: 1px solid #e5e7eb; }
+    .comp-stat-value { font-size: 20px; font-weight: 700; color: #111827; }
+    .comp-stat-value.green { color: #10b981; }
+    .comp-stat-value.yellow { color: #f59e0b; }
+    .comp-stat-value.red { color: #ef4444; }
+    .comp-stat-value.purple { color: #3e2fdc; }
+    .comp-stat-label { font-size: 10px; color: #9ca3af; text-transform: uppercase; margin-top: 4px; font-weight: 500; }
+    .comp-section { margin-bottom: 24px; }
+    .comp-section:last-child { margin-bottom: 0; }
+    .comp-section-title { font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
     .comp-table { width: 100%; border-collapse: collapse; }
-    .comp-table th { text-align: left; padding: 10px 12px; font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .comp-table th { text-align: left; padding: 12px; font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 600; background: #f9fafb; }
     .comp-table th:not(:first-child):not(:nth-child(2)) { text-align: center; }
-    .comp-table td { padding: 10px 12px; font-size: 13px; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .comp-table td { padding: 12px; font-size: 13px; color: #374151; border-bottom: 1px solid #f3f4f6; }
     .comp-table td:not(:first-child):not(:nth-child(2)) { text-align: center; }
-    .comp-table tr.highlight { background: rgba(99, 102, 241, 0.15); }
-    .comp-table tr.highlight td { color: white; font-weight: 600; }
-    .comp-equipo { display: flex; align-items: center; gap: 8px; }
-    .comp-match { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 8px; }
-    .comp-match-j { font-size: 11px; color: rgba(255,255,255,0.4); min-width: 24px; }
-    .comp-match-fecha { font-size: 11px; color: rgba(255,255,255,0.5); min-width: 50px; }
-    .comp-match-rival { flex: 1; font-size: 13px; color: white; font-weight: 500; }
-    .comp-match-result { font-size: 14px; font-weight: 700; padding: 4px 10px; border-radius: 6px; min-width: 50px; text-align: center; }
-    .comp-match-result.win { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-    .comp-match-result.draw { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
-    .comp-match-result.loss { background: rgba(239, 68, 68, 0.2); color: #f87171; }
-    .comp-match-goles { font-size: 11px; color: rgba(255,255,255,0.5); min-width: 100px; text-align: right; }
-    .comp-next { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; }
-    .comp-next-info { }
-    .comp-next-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 4px; }
-    .comp-next-rival { font-size: 16px; font-weight: 600; color: white; }
-    .comp-next-fase { font-size: 12px; color: #a78bfa; }
-    .comp-next-fecha { font-size: 12px; color: rgba(255,255,255,0.6); }
-    .comp-highlight { background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.15) 100%); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; margin-top: 16px; }
-    .comp-highlight-icon { font-size: 18px; }
-    .comp-highlight-text { font-size: 13px; color: #fcd34d; font-weight: 500; }
-    .comp-empty { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.5); }
+    .comp-table td:first-child { font-weight: 600; color: #9ca3af; }
+    .comp-table tr.highlight { background: rgba(62, 47, 220, 0.05); }
+    .comp-table tr.highlight td { color: #3e2fdc; font-weight: 600; }
+    .comp-table tr.highlight td:first-child { color: #3e2fdc; }
+    .comp-equipo { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+    .comp-match { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #f9fafb; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e5e7eb; }
+    .comp-match:last-child { margin-bottom: 0; }
+    .comp-match-j { font-size: 11px; color: #9ca3af; font-weight: 600; min-width: 28px; }
+    .comp-match-fecha { font-size: 12px; color: #6b7280; min-width: 55px; }
+    .comp-match-rival { flex: 1; font-size: 14px; color: #111827; font-weight: 500; }
+    .comp-match-result { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 6px; min-width: 48px; text-align: center; }
+    .comp-match-result.win { background: #d1fae5; color: #059669; }
+    .comp-match-result.draw { background: #fef3c7; color: #d97706; }
+    .comp-match-result.loss { background: #fee2e2; color: #dc2626; }
+    .comp-next { background: #f0f0ff; border: 1px solid #e0e0ff; border-radius: 10px; padding: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .comp-next-label { font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+    .comp-next-rival { font-size: 15px; font-weight: 600; color: #111827; }
+    .comp-next-fase { font-size: 12px; color: #3e2fdc; font-weight: 500; }
+    .comp-next-fecha { font-size: 13px; color: #6b7280; font-weight: 500; }
+    .comp-highlight { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+    .comp-highlight-text { font-size: 13px; color: #92400e; font-weight: 500; }
+    .comp-empty { text-align: center; padding: 60px 20px; color: #9ca3af; }
     .comp-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
     .comp-empty-text { font-size: 14px; }
-    @media (max-width: 600px) { .comp-stats { grid-template-columns: repeat(4, 1fr); } .comp-match-goles { display: none; } .comp-match-fecha { display: none; } }
+    @media (max-width: 600px) { .comp-stats { grid-template-columns: repeat(4, 1fr); } .comp-match-fecha { display: none; } .comp-tabs { flex-wrap: wrap; } }
 
     @media (max-width: 768px) {
       .table-header, .table-row { grid-template-columns: 40px 1fr 100px 40px; }
@@ -645,6 +651,47 @@
     const canteraData = {
       "Castilla": {
         categoria: "1ª RFEF", entrenadores: ["Álvaro Arbeloa", "Julián Carmona"],
+        competiciones: [
+          {
+            id: "liga",
+            nombre: "1a RFEF - Grupo 1",
+            escudo: "🇪🇸",
+            tipo: "Liga",
+            estadisticas: { pj: 18, pg: 9, pe: 5, pp: 4, gf: 28, gc: 18, pts: 32 },
+            posicion: 4,
+            clasificacion: [
+              { pos: 1, equipo: "Celta Fortuna", pj: 18, pg: 11, pe: 4, pp: 3, gf: 30, gc: 15, pts: 37 },
+              { pos: 2, equipo: "Deportivo", pj: 18, pg: 10, pe: 5, pp: 3, gf: 28, gc: 16, pts: 35 },
+              { pos: 3, equipo: "Lugo", pj: 18, pg: 9, pe: 6, pp: 3, gf: 25, gc: 14, pts: 33 },
+              { pos: 4, equipo: "Real Madrid Castilla", pj: 18, pg: 9, pe: 5, pp: 4, gf: 28, gc: 18, pts: 32 },
+              { pos: 5, equipo: "Racing Ferrol", pj: 18, pg: 8, pe: 6, pp: 4, gf: 22, gc: 16, pts: 30 },
+              { pos: 6, equipo: "Pontevedra", pj: 18, pg: 8, pe: 5, pp: 5, gf: 24, gc: 20, pts: 29 }
+            ]
+          },
+          {
+            id: "internacional",
+            nombre: "Premier League International Cup",
+            escudo: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+            tipo: "Internacional",
+            estadisticas: { pj: 4, pg: 2, pe: 2, pp: 0, gf: 5, gc: 3, pts: 8 },
+            posicion: 1,
+            estado: "Clasificado a Cuartos",
+            clasificacion: [
+              { pos: 1, equipo: "Real Madrid Castilla", pj: 4, pg: 2, pe: 2, pp: 0, gf: 5, gc: 3, pts: 8 },
+              { pos: 2, equipo: "Southampton", pj: 4, pg: 2, pe: 1, pp: 1, gf: 4, gc: 3, pts: 7 },
+              { pos: 3, equipo: "Everton", pj: 4, pg: 1, pe: 1, pp: 2, gf: 3, gc: 4, pts: 4 },
+              { pos: 4, equipo: "Manchester City", pj: 4, pg: 0, pe: 2, pp: 2, gf: 2, gc: 4, pts: 2 }
+            ],
+            partidos: [
+              { jornada: 1, fecha: "10 Sep", rival: "Wolverhampton", local: false, resultado: "0-1", victoria: true },
+              { jornada: 2, fecha: "29 Oct", rival: "Southampton", local: false, resultado: "1-1", victoria: null },
+              { jornada: 3, fecha: "3 Dic", rival: "Everton", local: false, resultado: "0-2", victoria: true },
+              { jornada: 4, fecha: "16 Dic", rival: "Manchester City", local: false, resultado: "1-1", victoria: null }
+            ],
+            proximoPartido: { fecha: "Feb 2026", fase: "Cuartos", rival: "Por determinar" },
+            destacado: "Invictos en fase de grupos"
+          }
+        ],
         competicionInternacional: {
           nombre: "Premier League International Cup",
           escudo: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
@@ -721,6 +768,51 @@
       },
       "Juvenil A": {
         categoria: "Juvenil - División de Honor Juvenil", entrenadores: ["Julián López de Lerma"],
+        competiciones: [
+          {
+            id: "liga",
+            nombre: "Division de Honor Juvenil - Grupo 5",
+            escudo: "🇪🇸",
+            tipo: "Liga",
+            estadisticas: { pj: 15, pg: 12, pe: 2, pp: 1, gf: 42, gc: 12, pts: 38 },
+            posicion: 1,
+            clasificacion: [
+              { pos: 1, equipo: "Real Madrid", pj: 15, pg: 12, pe: 2, pp: 1, gf: 42, gc: 12, pts: 38 },
+              { pos: 2, equipo: "Atletico Madrid", pj: 15, pg: 11, pe: 2, pp: 2, gf: 35, gc: 14, pts: 35 },
+              { pos: 3, equipo: "Getafe", pj: 15, pg: 9, pe: 3, pp: 3, gf: 28, gc: 16, pts: 30 },
+              { pos: 4, equipo: "Rayo Vallecano", pj: 15, pg: 8, pe: 4, pp: 3, gf: 26, gc: 18, pts: 28 },
+              { pos: 5, equipo: "Alcorcon", pj: 15, pg: 7, pe: 3, pp: 5, gf: 22, gc: 20, pts: 24 },
+              { pos: 6, equipo: "Leganes", pj: 15, pg: 6, pe: 4, pp: 5, gf: 20, gc: 19, pts: 22 }
+            ]
+          },
+          {
+            id: "internacional",
+            nombre: "UEFA Youth League",
+            escudo: "🇪🇺",
+            tipo: "Internacional",
+            estadisticas: { pj: 6, pg: 5, pe: 0, pp: 1, gf: 14, gc: 6, pts: 15 },
+            posicion: 4,
+            estado: "Clasificado (Top 6)",
+            clasificacion: [
+              { pos: 1, equipo: "Sporting CP", pj: 6, pg: 6, pe: 0, pp: 0, gf: 16, gc: 3, pts: 18 },
+              { pos: 2, equipo: "Bayern Munich", pj: 6, pg: 5, pe: 1, pp: 0, gf: 18, gc: 5, pts: 16 },
+              { pos: 3, equipo: "Barcelona", pj: 6, pg: 5, pe: 1, pp: 0, gf: 15, gc: 4, pts: 16 },
+              { pos: 4, equipo: "Real Madrid", pj: 6, pg: 5, pe: 0, pp: 1, gf: 14, gc: 6, pts: 15 },
+              { pos: 5, equipo: "Borussia Dortmund", pj: 6, pg: 4, pe: 1, pp: 1, gf: 12, gc: 5, pts: 13 },
+              { pos: 6, equipo: "Inter Milan", pj: 6, pg: 4, pe: 0, pp: 2, gf: 11, gc: 7, pts: 12 }
+            ],
+            partidos: [
+              { jornada: 1, fecha: "16 Sep", rival: "Marseille", local: true, resultado: "3-2", victoria: true },
+              { jornada: 2, fecha: "30 Sep", rival: "Kairat Almaty", local: false, resultado: "1-4", victoria: true },
+              { jornada: 3, fecha: "22 Oct", rival: "Juventus", local: true, resultado: "1-0", victoria: true },
+              { jornada: 4, fecha: "4 Nov", rival: "Liverpool", local: false, resultado: "0-4", victoria: true },
+              { jornada: 5, fecha: "26 Nov", rival: "Olympiacos", local: false, resultado: "0-2", victoria: true },
+              { jornada: 6, fecha: "10 Dic", rival: "Manchester City", local: true, resultado: "0-4", victoria: false }
+            ],
+            proximoPartido: { fecha: "3 Feb 2026", fase: "1/16", rival: "Marseille" },
+            destacado: "5 victorias en 6 partidos"
+          }
+        ],
         competicionInternacional: {
           nombre: "UEFA Youth League",
           escudo: "🇪🇺",
@@ -1713,6 +1805,122 @@
       return isMobile;
     }
 
+
+    // Componente de Competiciones
+    function CompeticionesView({ team }) {
+      const [activeComp, setActiveComp] = React.useState('liga');
+      
+      if (!team.competiciones || team.competiciones.length === 0) {
+        return (
+          <div className="comp-empty">
+            <div className="comp-empty-icon">🏆</div>
+            <div className="comp-empty-text">Este equipo no tiene competiciones registradas</div>
+          </div>
+        );
+      }
+      
+      const comp = team.competiciones.find(c => c.id === activeComp) || team.competiciones[0];
+      
+      return (
+        <div className="comp-container">
+          <div className="comp-tabs">
+            {team.competiciones.map(c => (
+              <button 
+                key={c.id}
+                className={`comp-tab ${activeComp === c.id ? 'active' : ''}`}
+                onClick={() => setActiveComp(c.id)}
+              >
+                <span>{c.escudo}</span> {c.tipo}
+              </button>
+            ))}
+          </div>
+          
+          <div className="comp-card">
+            <div className="comp-header">
+              <div className="comp-title">
+                <span className="comp-escudo">{comp.escudo}</span>
+                <div>
+                  <div className="comp-nombre">{comp.nombre}</div>
+                  <div className="comp-pos">Posicion: {comp.posicion}º</div>
+                </div>
+              </div>
+              {comp.estado && <span className="comp-badge green">{comp.estado}</span>}
+            </div>
+            
+            <div className="comp-body">
+              <div className="comp-stats">
+                <div className="comp-stat"><div className="comp-stat-value">{comp.estadisticas.pj}</div><div className="comp-stat-label">PJ</div></div>
+                <div className="comp-stat"><div className="comp-stat-value green">{comp.estadisticas.pg}</div><div className="comp-stat-label">PG</div></div>
+                <div className="comp-stat"><div className="comp-stat-value yellow">{comp.estadisticas.pe}</div><div className="comp-stat-label">PE</div></div>
+                <div className="comp-stat"><div className="comp-stat-value red">{comp.estadisticas.pp}</div><div className="comp-stat-label">PP</div></div>
+                <div className="comp-stat"><div className="comp-stat-value">{comp.estadisticas.gf}</div><div className="comp-stat-label">GF</div></div>
+                <div className="comp-stat"><div className="comp-stat-value">{comp.estadisticas.gc}</div><div className="comp-stat-label">GC</div></div>
+                <div className="comp-stat"><div className="comp-stat-value purple">{comp.estadisticas.pts}</div><div className="comp-stat-label">PTS</div></div>
+              </div>
+              
+              {comp.clasificacion && (
+                <div className="comp-section">
+                  <div className="comp-section-title">Clasificacion</div>
+                  <table className="comp-table">
+                    <thead>
+                      <tr><th>#</th><th>Equipo</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr>
+                    </thead>
+                    <tbody>
+                      {comp.clasificacion.map((eq, i) => (
+                        <tr key={i} className={eq.equipo.includes('Real Madrid') || eq.equipo.includes('Castilla') ? 'highlight' : ''}>
+                          <td>{eq.pos}</td>
+                          <td><div className="comp-equipo">{eq.equipo}</div></td>
+                          <td>{eq.pj}</td>
+                          <td>{eq.pg}</td>
+                          <td>{eq.pe}</td>
+                          <td>{eq.pp}</td>
+                          <td>{eq.gf}</td>
+                          <td>{eq.gc}</td>
+                          <td><strong>{eq.pts}</strong></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              
+              {comp.partidos && comp.partidos.length > 0 && (
+                <div className="comp-section">
+                  <div className="comp-section-title">Ultimos partidos</div>
+                  {comp.partidos.map((p, i) => (
+                    <div key={i} className="comp-match">
+                      <div className="comp-match-j">J{p.jornada}</div>
+                      <div className="comp-match-fecha">{p.fecha}</div>
+                      <div className="comp-match-rival">{p.local ? '🏠' : '✈️'} {p.rival}</div>
+                      <div className={`comp-match-result ${p.victoria === true ? 'win' : p.victoria === false ? 'loss' : 'draw'}`}>{p.resultado}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {comp.proximoPartido && (
+                <div className="comp-next">
+                  <div>
+                    <div className="comp-next-label">Proximo partido</div>
+                    <div className="comp-next-rival">vs {comp.proximoPartido.rival}</div>
+                    <div className="comp-next-fase">{comp.proximoPartido.fase}</div>
+                  </div>
+                  <div className="comp-next-fecha">{comp.proximoPartido.fecha}</div>
+                </div>
+              )}
+              
+              {comp.destacado && (
+                <div className="comp-highlight">
+                  <span>⭐</span>
+                  <span className="comp-highlight-text">{comp.destacado}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     function FieldView({ players, teamName, isF7, user, isCombined }) {
       const storageKey = isCombined ? `lafabrica_mi11_${user}` : `lafabrica_11_${user}_${teamName}`;
       const playerNames = players.map(p => p.nombre);
@@ -2386,7 +2594,7 @@
 
               <div className="view-toggle">
                 <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>📋 Plantilla</button>
-                {currentTeam.competicionInternacional && (
+                {currentTeam.competiciones && currentTeam.competiciones.length > 0 && (
                   <button className={`view-btn ${viewMode === 'comp' ? 'active' : ''}`} onClick={() => setViewMode('comp')}>🏆 Competiciones</button>
                 )}
                 <button className={`view-btn ${viewMode === 'field' ? 'active' : ''}`} onClick={() => setViewMode('field')}>🏟️ Campo</button>
@@ -2402,93 +2610,7 @@
                   isCombined={false}
                 />
               ) : viewMode === 'comp' ? (
-                <div className="comp-container">
-                  {currentTeam.competicionInternacional ? (
-                    <div className="comp-card">
-                      <div className="comp-header">
-                        <div className="comp-title">
-                          <span className="comp-escudo">{currentTeam.competicionInternacional.escudo}</span>
-                          <div>
-                            <div className="comp-nombre">{currentTeam.competicionInternacional.nombre}</div>
-                            <div className="comp-fase">{currentTeam.competicionInternacional.fase}</div>
-                          </div>
-                        </div>
-                        <span className="comp-badge">{currentTeam.competicionInternacional.estado}</span>
-                      </div>
-                      <div className="comp-body">
-                        <div className="comp-stats">
-                          <div className="comp-stat"><div className="comp-stat-value">{currentTeam.competicionInternacional.estadisticas.pj}</div><div className="comp-stat-label">PJ</div></div>
-                          <div className="comp-stat"><div className="comp-stat-value green">{currentTeam.competicionInternacional.estadisticas.pg}</div><div className="comp-stat-label">PG</div></div>
-                          <div className="comp-stat"><div className="comp-stat-value yellow">{currentTeam.competicionInternacional.estadisticas.pe}</div><div className="comp-stat-label">PE</div></div>
-                          <div className="comp-stat"><div className="comp-stat-value red">{currentTeam.competicionInternacional.estadisticas.pp}</div><div className="comp-stat-label">PP</div></div>
-                          <div className="comp-stat"><div className="comp-stat-value">{currentTeam.competicionInternacional.estadisticas.gf}</div><div className="comp-stat-label">GF</div></div>
-                          <div className="comp-stat"><div className="comp-stat-value">{currentTeam.competicionInternacional.estadisticas.gc}</div><div className="comp-stat-label">GC</div></div>
-                          <div className="comp-stat"><div className="comp-stat-value purple">{currentTeam.competicionInternacional.estadisticas.pts}</div><div className="comp-stat-label">PTS</div></div>
-                        </div>
-                        
-                        {currentTeam.competicionInternacional.clasificacion && (
-                          <div className="comp-section">
-                            <div className="comp-section-title">📊 Clasificacion</div>
-                            <table className="comp-table">
-                              <thead><tr><th>#</th><th>Equipo</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr></thead>
-                              <tbody>
-                                {currentTeam.competicionInternacional.clasificacion.map((eq, i) => (
-                                  <tr key={i} className={eq.equipo.includes('Real Madrid') || eq.equipo.includes('Castilla') ? 'highlight' : ''}>
-                                    <td>{eq.pos}</td>
-                                    <td><div className="comp-equipo"><span>{eq.escudo}</span> {eq.equipo}</div></td>
-                                    <td>{eq.pj}</td>
-                                    <td>{eq.pg}</td>
-                                    <td>{eq.pe}</td>
-                                    <td>{eq.pp}</td>
-                                    <td>{eq.gf}</td>
-                                    <td>{eq.gc}</td>
-                                    <td><strong>{eq.pts}</strong></td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                        
-                        <div className="comp-section">
-                          <div className="comp-section-title">📅 Partidos</div>
-                          {currentTeam.competicionInternacional.partidos.map((p, i) => (
-                            <div key={i} className="comp-match">
-                              <div className="comp-match-j">J{p.jornada}</div>
-                              <div className="comp-match-fecha">{p.fecha}</div>
-                              <div className="comp-match-rival">{p.local ? '🏠' : '✈️'} {p.rival}</div>
-                              <div className={`comp-match-result ${p.victoria === true ? 'win' : p.victoria === false ? 'loss' : 'draw'}`}>{p.resultado}</div>
-                              <div className="comp-match-goles">{p.goles}</div>
-                            </div>
-                          ))}
-                        </div>
-                        
-                        {currentTeam.competicionInternacional.proximoPartido && (
-                          <div className="comp-next">
-                            <div className="comp-next-info">
-                              <div className="comp-next-label">Proximo partido</div>
-                              <div className="comp-next-rival">{currentTeam.competicionInternacional.proximoPartido.local ? '🏠 vs' : '✈️ vs'} {currentTeam.competicionInternacional.proximoPartido.rival}</div>
-                              <div className="comp-next-fase">{currentTeam.competicionInternacional.proximoPartido.fase}</div>
-                            </div>
-                            <div className="comp-next-fecha">{currentTeam.competicionInternacional.proximoPartido.fecha}</div>
-                          </div>
-                        )}
-                        
-                        {currentTeam.competicionInternacional.destacado && (
-                          <div className="comp-highlight">
-                            <span className="comp-highlight-icon">⭐</span>
-                            <span className="comp-highlight-text">{currentTeam.competicionInternacional.destacado}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="comp-empty">
-                      <div className="comp-empty-icon">🏆</div>
-                      <div className="comp-empty-text">Este equipo no participa en competiciones internacionales</div>
-                    </div>
-                  )}
-                </div>
+                <CompeticionesView team={currentTeam} />
               ) : (
               <>
               <div className="table-container">
