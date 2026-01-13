@@ -883,6 +883,10 @@
               { pos: 4, equipo: "Getafe B", pj: 15, pg: 8, pe: 4, pp: 3, gf: 25, gc: 15, pts: 28 },
               { pos: 5, equipo: "Leganes B", pj: 15, pg: 7, pe: 3, pp: 5, gf: 22, gc: 18, pts: 24 },
               { pos: 6, equipo: "Alcorcon B", pj: 15, pg: 6, pe: 4, pp: 5, gf: 20, gc: 19, pts: 22 }
+            ],
+            ultimosPartidos: [
+              { rival: "Rayo Vallecano B", resultado: "V", marcador: "2-1", local: true },
+              { rival: "Getafe B", resultado: "E", marcador: "1-1", local: false }
             ]
           }
         ], jugadores: [
@@ -930,6 +934,10 @@
               { pos: 4, equipo: "Las Rozas", pj: 14, pg: 8, pe: 3, pp: 3, gf: 25, gc: 15, pts: 27 },
               { pos: 5, equipo: "Villanueva del Pardillo", pj: 14, pg: 7, pe: 2, pp: 5, gf: 22, gc: 18, pts: 23 },
               { pos: 6, equipo: "Torrelodones", pj: 14, pg: 6, pe: 3, pp: 5, gf: 20, gc: 17, pts: 21 }
+            ],
+            ultimosPartidos: [
+              { rival: "Alcobendas Sport", resultado: "V", marcador: "3-0", local: true },
+              { rival: "Las Rozas", resultado: "V", marcador: "0-2", local: false }
             ]
           }
         ], jugadores: [
@@ -2393,7 +2401,7 @@
                   <span></span>
                 </div>
               </button>
-              <img src={ESCUDO_RM} alt="RM" style={{width: '40px', height: '48px'}} />
+              <img src={ESCUDO_RM} alt="RM" style={{width: '40px', height: '48px', cursor: 'pointer'}} onClick={() => { setSelectedTeam(null); setPlayerDetail(null); setMainTab('equipos'); }} title="Volver al inicio" />
               <div><h1 className="title">La Fábrica 25/26</h1><p className="subtitle">Cantera Real Madrid · {teams.length} equipos · {totalPlayers} jugadores</p></div>
             </div>
             <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
