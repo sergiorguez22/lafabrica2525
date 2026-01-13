@@ -440,6 +440,58 @@
     .news-error { background: #fef2f2; border-radius: 8px; padding: 16px; color: #dc2626; text-align: center; font-size: 13px; }
     .dark .news-error { background: rgba(220, 38, 38, 0.1); }
     
+
+    /* Vista Competiciones */
+    .comp-container { display: flex; flex-direction: column; gap: 20px; }
+    .comp-card { background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+    .comp-header { background: linear-gradient(135deg, #3b3b5c 0%, #2d2d44 100%); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .comp-title { display: flex; align-items: center; gap: 12px; }
+    .comp-escudo { font-size: 28px; }
+    .comp-nombre { color: white; font-size: 18px; font-weight: 700; }
+    .comp-fase { color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 2px; }
+    .comp-badge { padding: 6px 14px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 20px; font-size: 11px; font-weight: 600; color: white; }
+    .comp-body { padding: 20px; }
+    .comp-stats { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 20px; }
+    .comp-stat { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 12px 8px; text-align: center; }
+    .comp-stat-value { font-size: 22px; font-weight: 700; color: white; }
+    .comp-stat-value.green { color: #34d399; }
+    .comp-stat-value.yellow { color: #fbbf24; }
+    .comp-stat-value.red { color: #f87171; }
+    .comp-stat-value.purple { color: #a78bfa; }
+    .comp-stat-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 4px; }
+    .comp-section { margin-bottom: 20px; }
+    .comp-section-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .comp-table { width: 100%; border-collapse: collapse; }
+    .comp-table th { text-align: left; padding: 10px 12px; font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .comp-table th:not(:first-child):not(:nth-child(2)) { text-align: center; }
+    .comp-table td { padding: 10px 12px; font-size: 13px; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .comp-table td:not(:first-child):not(:nth-child(2)) { text-align: center; }
+    .comp-table tr.highlight { background: rgba(99, 102, 241, 0.15); }
+    .comp-table tr.highlight td { color: white; font-weight: 600; }
+    .comp-equipo { display: flex; align-items: center; gap: 8px; }
+    .comp-match { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 8px; }
+    .comp-match-j { font-size: 11px; color: rgba(255,255,255,0.4); min-width: 24px; }
+    .comp-match-fecha { font-size: 11px; color: rgba(255,255,255,0.5); min-width: 50px; }
+    .comp-match-rival { flex: 1; font-size: 13px; color: white; font-weight: 500; }
+    .comp-match-result { font-size: 14px; font-weight: 700; padding: 4px 10px; border-radius: 6px; min-width: 50px; text-align: center; }
+    .comp-match-result.win { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .comp-match-result.draw { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .comp-match-result.loss { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .comp-match-goles { font-size: 11px; color: rgba(255,255,255,0.5); min-width: 100px; text-align: right; }
+    .comp-next { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .comp-next-info { }
+    .comp-next-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 4px; }
+    .comp-next-rival { font-size: 16px; font-weight: 600; color: white; }
+    .comp-next-fase { font-size: 12px; color: #a78bfa; }
+    .comp-next-fecha { font-size: 12px; color: rgba(255,255,255,0.6); }
+    .comp-highlight { background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.15) 100%); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+    .comp-highlight-icon { font-size: 18px; }
+    .comp-highlight-text { font-size: 13px; color: #fcd34d; font-weight: 500; }
+    .comp-empty { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.5); }
+    .comp-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .comp-empty-text { font-size: 14px; }
+    @media (max-width: 600px) { .comp-stats { grid-template-columns: repeat(4, 1fr); } .comp-match-goles { display: none; } .comp-match-fecha { display: none; } }
+
     @media (max-width: 768px) {
       .table-header, .table-row { grid-template-columns: 40px 1fr 100px 40px; }
       .table-header > *:nth-child(4), .table-header > *:nth-child(5),
@@ -592,7 +644,29 @@
 
     const canteraData = {
       "Castilla": {
-        categoria: "1ª RFEF", entrenadores: ["Álvaro Arbeloa", "Julián Carmona"], jugadores: [
+        categoria: "1ª RFEF", entrenadores: ["Álvaro Arbeloa", "Julián Carmona"],
+        competicionInternacional: {
+          nombre: "Premier League International Cup",
+          escudo: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+          fase: "Fase de Grupos - Grupo A",
+          estado: "Clasificado a Cuartos",
+          estadisticas: { pj: 4, pg: 2, pe: 2, pp: 0, gf: 5, gc: 3, pts: 8 },
+          posicion: 1,
+          clasificacion: [
+            { pos: 1, equipo: "Real Madrid Castilla", pj: 4, pg: 2, pe: 2, pp: 0, gf: 5, gc: 3, pts: 8, escudo: "🇪🇸" },
+            { pos: 2, equipo: "Southampton", pj: 4, pg: 2, pe: 1, pp: 1, gf: 4, gc: 3, pts: 7, escudo: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
+            { pos: 3, equipo: "Everton", pj: 4, pg: 1, pe: 1, pp: 2, gf: 3, gc: 4, pts: 4, escudo: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
+            { pos: 4, equipo: "Manchester City", pj: 4, pg: 0, pe: 2, pp: 2, gf: 2, gc: 4, pts: 2, escudo: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" }
+          ],
+          partidos: [
+            { jornada: 1, fecha: "10 Sep", rival: "Wolverhampton", local: false, resultado: "0-1", goles: "Bruno 84'", victoria: true },
+            { jornada: 2, fecha: "29 Oct", rival: "Southampton", local: false, resultado: "1-1", goles: "Thiago 75'", victoria: null },
+            { jornada: 3, fecha: "3 Dic", rival: "Everton", local: false, resultado: "0-2", goles: "Pol Fortuny 50', 95'", victoria: true },
+            { jornada: 4, fecha: "16 Dic", rival: "Manchester City", local: false, resultado: "1-1", goles: "Palacios 3'", victoria: null }
+          ],
+          proximoPartido: { fecha: "Feb 2026", fase: "Cuartos de Final", rival: "Por determinar", local: null },
+          destacado: "Invictos en la fase de grupos"
+        }, jugadores: [
           { nombre: "Francisco Javier González Pérez", apodo: "Fran González", posicion: "Portero", fechaNacimiento: "24/06/2005", lugarNacimiento: "León", seleccion: "Sub-21 España", dorsal: 1, trayectoriaMadrid: "Castilla (2024-)|Juvenil A (2023-2024)|Juvenil B (2022-2023)", trayectoriaPrevia: "Cultural Leonesa (2010-2022)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/francisco-javier-gonzalez-perez" },
           { nombre: "David Jiménez Corredor", apodo: "D. Jiménez", posicion: "Defensa", fechaNacimiento: "14/03/2004", lugarNacimiento: "Madrid", seleccion: "Sub-19 España", dorsal: 2, trayectoriaMadrid: "Castilla (2024-)|Real Madrid C (2023-2024)|Juvenil A (2022-2023)|Juvenil B (2021-2022)|Juvenil C (2020-2021)|Cadete A (2019-2020)|Cadete B (2018-2019)|Infantil A (2017-2018)|Infantil B (2016-2017)|Alevín A (2015-2016)|Alevín B (2014-2015)|Benjamín A (2013-2014)", trayectoriaPrevia: "Juventud URJC (2010-2013)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/david-jimenez-corredor" },
           { nombre: "Víctor Valdepeñas Talavera", apodo: "Valdepeñas", posicion: "Defensa", fechaNacimiento: "20/10/2006", lugarNacimiento: "Madrid", seleccion: "Sub-19 España", dorsal: 3, trayectoriaMadrid: "Castilla (2025-)|Juvenil A (2024-2025)|Juvenil B (2023-2024)|Juvenil C (2022-2023)|Infantil A (2019-2020)|Infantil B (2018-2019)", trayectoriaPrevia: "Leganés (2020-2023)|Rayo Vallecano (2016-2018)|Villa Rosa (2011-2016)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/castilla/victor-valdepenas-talavera" },
@@ -646,7 +720,33 @@
         ]
       },
       "Juvenil A": {
-        categoria: "Juvenil - División de Honor Juvenil", entrenadores: ["Julián López de Lerma"], jugadores: [
+        categoria: "Juvenil - División de Honor Juvenil", entrenadores: ["Julián López de Lerma"],
+        competicionInternacional: {
+          nombre: "UEFA Youth League",
+          escudo: "🇪🇺",
+          fase: "Fase Liga - Ruta Champions",
+          estado: "Clasificado (Top 6)",
+          estadisticas: { pj: 6, pg: 5, pe: 0, pp: 1, gf: 14, gc: 6, pts: 15 },
+          posicion: 4,
+          clasificacion: [
+            { pos: 1, equipo: "Sporting CP", pj: 6, pg: 6, pe: 0, pp: 0, gf: 16, gc: 3, pts: 18, escudo: "🇵🇹" },
+            { pos: 2, equipo: "Bayern Munich", pj: 6, pg: 5, pe: 1, pp: 0, gf: 18, gc: 5, pts: 16, escudo: "🇩🇪" },
+            { pos: 3, equipo: "Barcelona", pj: 6, pg: 5, pe: 1, pp: 0, gf: 15, gc: 4, pts: 16, escudo: "🇪🇸" },
+            { pos: 4, equipo: "Real Madrid", pj: 6, pg: 5, pe: 0, pp: 1, gf: 14, gc: 6, pts: 15, escudo: "🇪🇸" },
+            { pos: 5, equipo: "Borussia Dortmund", pj: 6, pg: 4, pe: 1, pp: 1, gf: 12, gc: 5, pts: 13, escudo: "🇩🇪" },
+            { pos: 6, equipo: "Inter Milan", pj: 6, pg: 4, pe: 0, pp: 2, gf: 11, gc: 7, pts: 12, escudo: "🇮🇹" }
+          ],
+          partidos: [
+            { jornada: 1, fecha: "16 Sep", rival: "Marseille", local: true, resultado: "3-2", goles: "Victoria", victoria: true },
+            { jornada: 2, fecha: "30 Sep", rival: "Kairat Almaty", local: false, resultado: "1-4", goles: "Goleada", victoria: true },
+            { jornada: 3, fecha: "22 Oct", rival: "Juventus", local: true, resultado: "1-0", goles: "Victoria", victoria: true },
+            { jornada: 4, fecha: "4 Nov", rival: "Liverpool", local: false, resultado: "0-4", goles: "Goleada", victoria: true },
+            { jornada: 5, fecha: "26 Nov", rival: "Olympiacos", local: false, resultado: "0-2", goles: "Victoria", victoria: true },
+            { jornada: 6, fecha: "10 Dic", rival: "Manchester City", local: true, resultado: "0-4", goles: "Derrota", victoria: false }
+          ],
+          proximoPartido: { fecha: "3 Feb 2026", fase: "Dieciseisavos", rival: "Marseille", local: true },
+          destacado: "5 victorias en 6 partidos - Top 6"
+        }, jugadores: [
           { nombre: "Javier Navarro Jiménez", apodo: "Javi Navarro", posicion: "Portero", fechaNacimiento: "15/01/2007", lugarNacimiento: "Valencia", trayectoriaMadrid: "Juvenil A (2025-)|Juvenil B (2024-2025)|Juvenil C (2023-2024)|Cadete A (2022-2023)|Cadete B (2021-2022)|Infantil A (2020-2021)|Infantil B (2019-2020)", trayectoriaPrevia: "Unión Adarve (2017-2019)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/javier-navarro-jimenez" },
           { nombre: "Aarón Gómez Villar", apodo: "Aarón", posicion: "Portero", fechaNacimiento: "08/02/2007", lugarNacimiento: "Illescas (Toledo)", trayectoriaMadrid: "Juvenil A (2025-)|Juvenil B (2024-2025)|Juvenil C (2023-2024)|Alevín A (2018-2019)|Alevín B (2017-2018)|Benjamín A (2016-2017)", trayectoriaPrevia: "Getafe (2021-2023)|Rayo Vallecano (2019-2021)|Illescas (2013-2016)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/aaron-gomez-villar" },
           { nombre: "Illia Voloshyn", apodo: "Illia", posicion: "Portero", fechaNacimiento: "23/03/2007", lugarNacimiento: "Ucrania", seleccion: "Sub-20 Ucrania", trayectoriaMadrid: "Juvenil A (2025-)|Juvenil B (2025)|Juvenil C (2024-2025)", trayectoriaPrevia: "Rayo Majadahonda (2023-2024)|Novelda (2022-2023)", url: "https://www.realmadrid.com/es-ES/futbol/cantera-masculina/juvenil-a/illia-voloshyn" },
@@ -2285,7 +2385,10 @@
               </div></div></div>
 
               <div className="view-toggle">
-                <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>📋 Lista</button>
+                <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>📋 Plantilla</button>
+                {currentTeam.competicionInternacional && (
+                  <button className={`view-btn ${viewMode === 'comp' ? 'active' : ''}`} onClick={() => setViewMode('comp')}>🏆 Competiciones</button>
+                )}
                 <button className={`view-btn ${viewMode === 'field' ? 'active' : ''}`} onClick={() => setViewMode('field')}>🏟️ Campo</button>
               </div>
 
@@ -2298,6 +2401,94 @@
                   user={user}
                   isCombined={false}
                 />
+              ) : viewMode === 'comp' ? (
+                <div className="comp-container">
+                  {currentTeam.competicionInternacional ? (
+                    <div className="comp-card">
+                      <div className="comp-header">
+                        <div className="comp-title">
+                          <span className="comp-escudo">{currentTeam.competicionInternacional.escudo}</span>
+                          <div>
+                            <div className="comp-nombre">{currentTeam.competicionInternacional.nombre}</div>
+                            <div className="comp-fase">{currentTeam.competicionInternacional.fase}</div>
+                          </div>
+                        </div>
+                        <span className="comp-badge">{currentTeam.competicionInternacional.estado}</span>
+                      </div>
+                      <div className="comp-body">
+                        <div className="comp-stats">
+                          <div className="comp-stat"><div className="comp-stat-value">{currentTeam.competicionInternacional.estadisticas.pj}</div><div className="comp-stat-label">PJ</div></div>
+                          <div className="comp-stat"><div className="comp-stat-value green">{currentTeam.competicionInternacional.estadisticas.pg}</div><div className="comp-stat-label">PG</div></div>
+                          <div className="comp-stat"><div className="comp-stat-value yellow">{currentTeam.competicionInternacional.estadisticas.pe}</div><div className="comp-stat-label">PE</div></div>
+                          <div className="comp-stat"><div className="comp-stat-value red">{currentTeam.competicionInternacional.estadisticas.pp}</div><div className="comp-stat-label">PP</div></div>
+                          <div className="comp-stat"><div className="comp-stat-value">{currentTeam.competicionInternacional.estadisticas.gf}</div><div className="comp-stat-label">GF</div></div>
+                          <div className="comp-stat"><div className="comp-stat-value">{currentTeam.competicionInternacional.estadisticas.gc}</div><div className="comp-stat-label">GC</div></div>
+                          <div className="comp-stat"><div className="comp-stat-value purple">{currentTeam.competicionInternacional.estadisticas.pts}</div><div className="comp-stat-label">PTS</div></div>
+                        </div>
+                        
+                        {currentTeam.competicionInternacional.clasificacion && (
+                          <div className="comp-section">
+                            <div className="comp-section-title">📊 Clasificacion</div>
+                            <table className="comp-table">
+                              <thead><tr><th>#</th><th>Equipo</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr></thead>
+                              <tbody>
+                                {currentTeam.competicionInternacional.clasificacion.map((eq, i) => (
+                                  <tr key={i} className={eq.equipo.includes('Real Madrid') || eq.equipo.includes('Castilla') ? 'highlight' : ''}>
+                                    <td>{eq.pos}</td>
+                                    <td><div className="comp-equipo"><span>{eq.escudo}</span> {eq.equipo}</div></td>
+                                    <td>{eq.pj}</td>
+                                    <td>{eq.pg}</td>
+                                    <td>{eq.pe}</td>
+                                    <td>{eq.pp}</td>
+                                    <td>{eq.gf}</td>
+                                    <td>{eq.gc}</td>
+                                    <td><strong>{eq.pts}</strong></td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                        
+                        <div className="comp-section">
+                          <div className="comp-section-title">📅 Partidos</div>
+                          {currentTeam.competicionInternacional.partidos.map((p, i) => (
+                            <div key={i} className="comp-match">
+                              <div className="comp-match-j">J{p.jornada}</div>
+                              <div className="comp-match-fecha">{p.fecha}</div>
+                              <div className="comp-match-rival">{p.local ? '🏠' : '✈️'} {p.rival}</div>
+                              <div className={`comp-match-result ${p.victoria === true ? 'win' : p.victoria === false ? 'loss' : 'draw'}`}>{p.resultado}</div>
+                              <div className="comp-match-goles">{p.goles}</div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        {currentTeam.competicionInternacional.proximoPartido && (
+                          <div className="comp-next">
+                            <div className="comp-next-info">
+                              <div className="comp-next-label">Proximo partido</div>
+                              <div className="comp-next-rival">{currentTeam.competicionInternacional.proximoPartido.local ? '🏠 vs' : '✈️ vs'} {currentTeam.competicionInternacional.proximoPartido.rival}</div>
+                              <div className="comp-next-fase">{currentTeam.competicionInternacional.proximoPartido.fase}</div>
+                            </div>
+                            <div className="comp-next-fecha">{currentTeam.competicionInternacional.proximoPartido.fecha}</div>
+                          </div>
+                        )}
+                        
+                        {currentTeam.competicionInternacional.destacado && (
+                          <div className="comp-highlight">
+                            <span className="comp-highlight-icon">⭐</span>
+                            <span className="comp-highlight-text">{currentTeam.competicionInternacional.destacado}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="comp-empty">
+                      <div className="comp-empty-icon">🏆</div>
+                      <div className="comp-empty-text">Este equipo no participa en competiciones internacionales</div>
+                    </div>
+                  )}
+                </div>
               ) : (
               <>
               <div className="table-container">
