@@ -1652,7 +1652,7 @@
       function loadTeamProyecciones(equipo) {
         var lsData = JSON.parse(localStorage.getItem("proyecciones_all") || "{}");
         if (supabaseClient) {
-          supabaseClient.from('proyecciones').select('*').eq('equipo', equipo).eq('usuario', 'SergioRguez')
+          supabaseClient.from('proyecciones').select('*').eq('equipo', equipo)
             .then(function(res) {
               if (res.error) {
                 var map = {};
@@ -1663,7 +1663,7 @@
                 setTeamProyecciones(map);
               } else {
                 var map = {};
-                (res.data || []).forEach(function(d) { map[d.jugador] = d.proyeccion; });
+                (res.data || []).forEach(function(d) { if (d.usuario === 'SergioRguez' || !map[d.jugador]) map[d.jugador] = d.proyeccion; });
                 setTeamProyecciones(map);
               }
             });
@@ -2037,23 +2037,25 @@
 
                                   {true && (
                                   <div className="proy-section" onClick={function(e){e.stopPropagation();}}>
-                                    <div className="proy-title">Proyección</div>
-                                    {proySergio.proyeccion && user !== 'SergioRguez' && (
-                                      <div className="proy-sergio">
-                                        <span className="proy-sergio-label">Sergio:</span>
-                                        <span className="proy-badge" style={{background: (PROY_COLORS[proySergio.proyeccion]||{}).bg, color: (PROY_COLORS[proySergio.proyeccion]||{}).text, border: '1px solid ' + ((PROY_COLORS[proySergio.proyeccion]||{}).border || '#ccc')}}>{getProyLabel(proySergio.proyeccion)}</span>
-                                      </div>
-                                    )}
-                                    <div style={{marginTop:'8px'}}>
+                                    <div className="proy-title">Expectativa</div>
+                                    <div style={{marginBottom:'10px'}}>
                                       <select className="proy-select" value={proyecciones[user] || ""} disabled={proySaving} onChange={function(e){ saveProyeccion(player.nombre, selectedTeam, e.target.value); }}>
-                                        <option value="">Sin proyección</option>
+                                        <option value="">Sin expectativa</option>
                                         {getHigherTeams(selectedTeam).map(function(t){ return <option key={t} value={t}>{getProyLabel(t)}</option>; })}
                                       </select>
                                     </div>
-                                    {proyecciones[user] && (
-                                      <div className="proy-mi">
-                                        <span className="proy-mi-label">Tu proyección:</span>
-                                        <span className="proy-badge" style={{background: (PROY_COLORS[proyecciones[user]]||{}).bg, color: (PROY_COLORS[proyecciones[user]]||{}).text, border: '1px solid ' + ((PROY_COLORS[proyecciones[user]]||{}).border || '#ccc')}}>{getProyLabel(proyecciones[user])}</span>
+                                    {Object.keys(proyecciones).length > 0 && (
+                                      <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                        {Object.keys(proyecciones).map(function(u) {
+                                          var val = proyecciones[u];
+                                          var col = PROY_COLORS[val] || {};
+                                          return (
+                                            <div key={u} style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                                              <span className="proy-sergio-label" style={{minWidth:'70px'}}>{u === user ? 'Tú' : u}:</span>
+                                              <span className="proy-badge" style={{background: col.bg, color: col.text, border: '1px solid ' + (col.border || '#ccc')}}>{getProyLabel(val)}</span>
+                                            </div>
+                                          );
+                                        })}
                                       </div>
                                     )}
                                   </div>
