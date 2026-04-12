@@ -274,7 +274,42 @@
       .lineup-container { flex-direction:column; padding-left:16px; padding-right:16px; }
       .lineup-roster { width:100%; max-height:300px; }
     }
-  </style>
+  
+    /* ===== PROYECCIONES ===== */
+    .proy-section { margin-top:16px; padding-top:16px; border-top:1px solid var(--border-light); }
+    .proy-title { font-size:12px; font-weight:600; color:var(--text-2); text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+    .proy-select { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; background:var(--surface); color:var(--text); cursor:pointer; outline:none; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
+    .proy-select:focus { border-color:var(--accent); }
+    .proy-sergio { margin-top:10px; display:flex; align-items:center; gap:8px; }
+    .proy-sergio-label { font-size:11px; color:var(--text-2); white-space:nowrap; }
+    .proy-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600; }
+    .proy-mi { margin-top:8px; display:flex; align-items:center; gap:8px; }
+    .proy-mi-label { font-size:11px; color:var(--text-2); }
+    .proy-row-badge { display:inline-flex; align-items:center; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:600; margin-left:6px; vertical-align:middle; }
+
+    /* ===== CAPTACION ===== */
+    .cap-form { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+    .cap-input { flex:1; min-width:120px; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; background:var(--surface); color:var(--text); outline:none; }
+    .cap-input:focus { border-color:var(--accent); }
+    .cap-select { padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; background:var(--surface); color:var(--text); outline:none; min-width:140px; }
+    .cap-btn { padding:10px 18px; background:var(--accent); color:white; border:none; border-radius:var(--radius-sm); font-size:13px; font-weight:500; cursor:pointer; white-space:nowrap; }
+    .cap-btn:hover { opacity:0.9; }
+    .cap-btn:disabled { opacity:0.5; cursor:default; }
+    .cap-list { display:grid; gap:10px; }
+    .cap-card { background:var(--surface); border-radius:var(--radius-sm); padding:14px 16px; border:1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center; }
+    .cap-card-info { display:flex; align-items:center; gap:12px; }
+    .cap-card-name { font-size:14px; font-weight:600; color:var(--text); }
+    .cap-card-team { font-size:12px; color:var(--accent); background:var(--accent-light); padding:3px 8px; border-radius:4px; font-weight:500; }
+    .cap-card-meta { font-size:12px; color:var(--text-2); }
+    .cap-card-user { font-size:11px; color:var(--text-2); background:var(--bg); padding:2px 6px; border-radius:4px; }
+    .cap-delete { background:none; border:none; color:var(--text-2); cursor:pointer; font-size:16px; padding:4px; }
+    .cap-delete:hover { color:var(--del); }
+    .cap-empty { text-align:center; padding:40px; color:var(--text-2); font-size:14px; }
+    .cap-tabs { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+    .cap-tab { padding:6px 14px; border-radius:6px; font-size:12px; font-weight:500; border:none; cursor:pointer; }
+    .cap-tab.active { background:var(--accent); color:white; }
+    .cap-tab:not(.active) { background:var(--bg); color:var(--text-2); }
+    </style>
 </head>
 <body>
 
@@ -848,6 +883,46 @@
     ];
 
     const f7Teams = ["Alevín B", "Alevín C", "Benjamín A", "Benjamín B", "Prebenjamín A", "Prebenjamín B", "Debutante"];
+    /* ===== PROYECCIONES CONFIG ===== */
+    const TEAM_HIERARCHY = ["Primer Equipo", "Castilla", "Real Madrid C", "Juvenil A", "Juvenil B", "Juvenil C", "Cadete A", "Cadete B", "Infantil A", "Infantil B", "Alevín A", "Alevín B", "Alevín C", "Benjamín A", "Benjamín B", "Prebenjamín A", "Prebenjamín B", "Debutante"];
+    const PROY_COLORS = {
+      "Primer Equipo": { bg: "#fef3c7", text: "#92400e", border: "#f59e0b" },
+      "Castilla": { bg: "#dbeafe", text: "#1e40af", border: "#3b82f6" },
+      "Real Madrid C": { bg: "#dbeafe", text: "#1e40af", border: "#3b82f6" },
+      "Juvenil A": { bg: "#ede9fe", text: "#5b21b6", border: "#8b5cf6" },
+      "Juvenil B": { bg: "#ede9fe", text: "#5b21b6", border: "#8b5cf6" },
+      "Juvenil C": { bg: "#ede9fe", text: "#5b21b6", border: "#8b5cf6" },
+      "Cadete A": { bg: "#d1fae5", text: "#065f46", border: "#10b981" },
+      "Cadete B": { bg: "#d1fae5", text: "#065f46", border: "#10b981" },
+      "Infantil A": { bg: "#fce7f3", text: "#9d174d", border: "#ec4899" },
+      "Infantil B": { bg: "#fce7f3", text: "#9d174d", border: "#ec4899" },
+      "Alevín A": { bg: "#ffedd5", text: "#9a3412", border: "#f97316" },
+      "Alevín B": { bg: "#ffedd5", text: "#9a3412", border: "#f97316" },
+      "Alevín C": { bg: "#ffedd5", text: "#9a3412", border: "#f97316" },
+      "Benjamín A": { bg: "#e0e7ff", text: "#3730a3", border: "#6366f1" },
+      "Benjamín B": { bg: "#e0e7ff", text: "#3730a3", border: "#6366f1" },
+      "Prebenjamín A": { bg: "#f0fdf4", text: "#166534", border: "#22c55e" },
+      "Prebenjamín B": { bg: "#f0fdf4", text: "#166534", border: "#22c55e" },
+      "Debutante": { bg: "#f5f5f4", text: "#44403c", border: "#a8a29e" }
+    };
+    const TEAM_GENERATION = {
+      "Cadete A": "2010", "Cadete B": "2011",
+      "Infantil A": "2012", "Infantil B": "2013",
+      "Alevín A": "2014", "Alevín B": "2015", "Alevín C": "2015",
+      "Benjamín A": "2016", "Benjamín B": "2017",
+      "Prebenjamín A": "2018", "Prebenjamín B": "2019",
+      "Debutante": "2020"
+    };
+    function getProyLabel(team) {
+      var gen = TEAM_GENERATION[team];
+      return gen ? team + " (" + gen + ")" : team;
+    }
+    function getHigherTeams(currentTeam) {
+      var idx = TEAM_HIERARCHY.indexOf(currentTeam);
+      if (idx <= 0) return [];
+      return TEAM_HIERARCHY.slice(0, idx);
+    }
+
     const isF7Team = (team) => f7Teams.includes(team);
 
     /* ===== CLASIFICACIONES ===== */
@@ -1116,7 +1191,7 @@
     }
 
     /* ===== SIDEBAR COMPONENT ===== */
-    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews }) {
+    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion }) {
       return (
         <>
           <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
@@ -1153,6 +1228,14 @@
                 <span className="sidebar-dot" style={{background: showNews ? 'var(--accent)' : '#475569'}}></span>
                 <span>Noticias</span>
               </div>
+              <div
+                className={`sidebar-item ${showCaptacion ? 'active' : ''}`}
+                onClick={() => { onShowCaptacion(); onClose(); }}
+              >
+                <span className="sidebar-dot" style={{background: showCaptacion ? 'var(--accent)' : '#475569'}}></span>
+                <span>Captación 26/27</span>
+              </div>
+
             </nav>
             <div className="sidebar-footer">
               <div className="sidebar-user">
@@ -1505,8 +1588,90 @@
       const [view, setView] = useState("list");
       const [sidebarOpen, setSidebarOpen] = useState(false);
       const [showNews, setShowNews] = useState(false);
+      const [showCaptacion, setShowCaptacion] = useState(false);
+      const [capSugerencias, setCapSugerencias] = useState([]);
+      const [capNombre, setCapNombre] = useState("");
+      const [capEquipo, setCapEquipo] = useState("");
+      const [capEquipoDest, setCapEquipoDest] = useState("");
+      const [capFilter, setCapFilter] = useState("Todas");
+      const [capLoading, setCapLoading] = useState(false);
+
+      function loadCaptacion() {
+        var lsData = JSON.parse(localStorage.getItem("captacion_all") || "[]");
+        if (supabaseClient) {
+          supabaseClient.from('captacion').select('*').order('created_at', { ascending: false })
+            .then(function(res) {
+              if (res.error) { setCapSugerencias(lsData); }
+              else { setCapSugerencias(res.data || []); }
+            });
+        } else {
+          setCapSugerencias(lsData);
+        }
+      }
+
+      function addCaptacion() {
+        if (!capNombre.trim() || !capEquipo.trim() || !capEquipoDest) return;
+        var entry = { usuario: user, nombre: capNombre.trim(), equipo_origen: capEquipo.trim(), equipo_destino: capEquipoDest, created_at: new Date().toISOString() };
+        // localStorage
+        var lsData = JSON.parse(localStorage.getItem("captacion_all") || "[]");
+        lsData.unshift(entry);
+        localStorage.setItem("captacion_all", JSON.stringify(lsData));
+        // Supabase
+        if (supabaseClient) {
+          supabaseClient.from('captacion').insert(entry)
+            .then(function() { loadCaptacion(); });
+        } else {
+          setCapSugerencias(lsData);
+        }
+        setCapNombre(""); setCapEquipo(""); setCapEquipoDest("");
+      }
+
+      function deleteCaptacion(item) {
+        if (supabaseClient && item.id) {
+          supabaseClient.from('captacion').delete().eq('id', item.id)
+            .then(function() { loadCaptacion(); });
+        } else {
+          var lsData = JSON.parse(localStorage.getItem("captacion_all") || "[]");
+          lsData = lsData.filter(function(d) { return d.nombre !== item.nombre || d.equipo_origen !== item.equipo_origen || d.usuario !== item.usuario; });
+          localStorage.setItem("captacion_all", JSON.stringify(lsData));
+          setCapSugerencias(lsData);
+        }
+      }
+
+      // === Team projections (SergioRguez visible to all) ===
+      const [teamProyecciones, setTeamProyecciones] = useState({});
+      function loadTeamProyecciones(equipo) {
+        var lsData = JSON.parse(localStorage.getItem("proyecciones_all") || "{}");
+        if (supabaseClient) {
+          supabaseClient.from('proyecciones').select('*').eq('equipo', equipo).eq('usuario', 'SergioRguez')
+            .then(function(res) {
+              if (res.error) {
+                var map = {};
+                Object.keys(lsData).forEach(function(k) {
+                  var parts = k.split("|");
+                  if (parts[1] === equipo && parts[2] === 'SergioRguez') map[parts[0]] = lsData[k];
+                });
+                setTeamProyecciones(map);
+              } else {
+                var map = {};
+                (res.data || []).forEach(function(d) { map[d.jugador] = d.proyeccion; });
+                setTeamProyecciones(map);
+              }
+            });
+        } else {
+          var map = {};
+          Object.keys(lsData).forEach(function(k) {
+            var parts = k.split("|");
+            if (parts[1] === equipo && parts[2] === 'SergioRguez') map[parts[0]] = lsData[k];
+          });
+          setTeamProyecciones(map);
+        }
+      }
+
 
       const currentTeam = canteraData[selectedTeam];
+      useEffect(function() { loadTeamProyecciones(selectedTeam); }, [selectedTeam]);
+
       const positions = ["Todas", "Portero", "Defensa", "Centrocampista", "Delantero"];
 
       const filteredPlayers = useMemo(() => {
@@ -1541,11 +1706,19 @@
         setPositionFilter("Todas");
         setView("list");
         setShowNews(false);
+        setShowCaptacion(false);
       }, []);
 
       const handleShowNews = useCallback(() => {
         setShowNews(true);
+        setShowCaptacion(false);
         setView("list");
+      }, []);
+
+      const handleShowCaptacion = useCallback(() => {
+        setShowCaptacion(true);
+        setShowNews(false);
+        loadCaptacion();
       }, []);
 
       const handleLogout = useCallback(() => {
@@ -1559,6 +1732,77 @@
       const [informeLoading, setInformeLoading] = useState(false);
       const [informeEditing, setInformeEditing] = useState(null);
       const [informeFormOpen, setInformeFormOpen] = useState(false);
+      // === Proyecciones ===
+      const [proyecciones, setProyecciones] = useState({});
+      const [proySergio, setProySergio] = useState({});
+      const [proySaving, setProySaving] = useState(false);
+
+      function loadProyecciones(jugador, equipo) {
+        var key = "proy_" + jugador + "_" + equipo;
+        var lsData = JSON.parse(localStorage.getItem("proyecciones_all") || "{}");
+        // Try Supabase
+        if (supabaseClient) {
+          supabaseClient.from('proyecciones').select('*').eq('jugador', jugador).eq('equipo', equipo)
+            .then(function(res) {
+              if (res.error) {
+                // Fallback to localStorage
+                var map = {}; var sergio = null;
+                Object.keys(lsData).forEach(function(k) {
+                  if (k.indexOf(jugador + "|" + equipo + "|") === 0) {
+                    var u = k.split("|")[2];
+                    map[u] = lsData[k];
+                    if (u === 'SergioRguez') sergio = lsData[k];
+                  }
+                });
+                setProyecciones(map);
+                setProySergio(sergio ? { proyeccion: sergio } : {});
+              } else {
+                var data = res.data || [];
+                var map = {}; var sergio = null;
+                data.forEach(function(d) {
+                  map[d.usuario] = d.proyeccion;
+                  if (d.usuario === 'SergioRguez') sergio = d.proyeccion;
+                });
+                setProyecciones(map);
+                setProySergio(sergio ? { proyeccion: sergio } : {});
+              }
+            });
+        } else {
+          var map = {}; var sergio = null;
+          Object.keys(lsData).forEach(function(k) {
+            if (k.indexOf(jugador + "|" + equipo + "|") === 0) {
+              var u = k.split("|")[2]; map[u] = lsData[k];
+              if (u === 'SergioRguez') sergio = lsData[k];
+            }
+          });
+          setProyecciones(map);
+          setProySergio(sergio ? { proyeccion: sergio } : {});
+        }
+      }
+
+      function saveProyeccion(jugador, equipo, valor) {
+        if (!user) return;
+        setProySaving(true);
+        var lsKey = jugador + "|" + equipo + "|" + user;
+        var lsData = JSON.parse(localStorage.getItem("proyecciones_all") || "{}");
+        if (!valor) { delete lsData[lsKey]; } else { lsData[lsKey] = valor; }
+        localStorage.setItem("proyecciones_all", JSON.stringify(lsData));
+
+        if (supabaseClient) {
+          var p;
+          if (!valor) {
+            p = supabaseClient.from('proyecciones').delete().eq('usuario', user).eq('jugador', jugador).eq('equipo', equipo);
+          } else {
+            p = supabaseClient.from('proyecciones').upsert({ usuario: user, jugador: jugador, equipo: equipo, proyeccion: valor }, { onConflict: 'usuario,jugador,equipo' });
+          }
+          p.then(function() { setProySaving(false); loadProyecciones(jugador, equipo); })
+           .catch(function() { setProySaving(false); loadProyecciones(jugador, equipo); });
+        } else {
+          setProySaving(false);
+          loadProyecciones(jugador, equipo);
+        }
+      }
+
 
       function loadInformes(jugador, equipo) {
         if (!supabaseClient || !user) return;
@@ -1604,6 +1848,7 @@
           var pl = filteredPlayers[expandedPlayer];
           if (pl) {
             loadInformes(pl.nombre, selectedTeam);
+            loadProyecciones(pl.nombre, selectedTeam);
             setInformeTexto("");
             setInformeEditing(null);
             setInformeFormOpen(false);
@@ -1629,6 +1874,8 @@
             onClose={() => setSidebarOpen(false)}
             showNews={showNews}
             onShowNews={handleShowNews}
+            showCaptacion={showCaptacion}
+            onShowCaptacion={handleShowCaptacion}
           />
 
           <div className="main-content">
@@ -1638,11 +1885,11 @@
                   <MenuIcon />
                 </button>
                 <div>
-                  <h1 className="team-title">{showNews ? 'Noticias' : selectedTeam}</h1>
-                  <p className="team-category">{showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <h1 className="team-title">{showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
+                  <p className="team-category">{showCaptacion ? 'Sugerencias de fichajes para la próxima temporada' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
-              {!showNews && (
+              {!showNews && !showCaptacion && (
                 <div className="header-stats">
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--por)'}}>{stats.por}</div><div className="header-stat-label">POR</div></div>
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--def)'}}>{stats.def}</div><div className="header-stat-label">DEF</div></div>
@@ -1652,7 +1899,46 @@
               )}
             </header>
 
-            {showNews ? (
+            {showCaptacion ? (
+              <div style={{padding:"0 4px"}}>
+                <div className="cap-form">
+                  <input className="cap-input" placeholder="Nombre del jugador" value={capNombre} onChange={e => setCapNombre(e.target.value)} />
+                  <input className="cap-input" placeholder="Equipo actual" value={capEquipo} onChange={e => setCapEquipo(e.target.value)} />
+                  <select className="cap-select" value={capEquipoDest} onChange={e => setCapEquipoDest(e.target.value)}>
+                    <option value="">Destino...</option>
+                    {TEAM_HIERARCHY.slice(1).map(t => <option key={t} value={t}>{getProyLabel(t)}</option>)}
+                  </select>
+                  <button className="cap-btn" disabled={!capNombre.trim() || !capEquipo.trim() || !capEquipoDest} onClick={addCaptacion}>+ Añadir</button>
+                </div>
+                <div className="cap-tabs">
+                  <button className={`cap-tab ${capFilter === "Todas" ? "active" : ""}`} onClick={() => setCapFilter("Todas")}>Todas</button>
+                  <button className={`cap-tab ${capFilter === "Mías" ? "active" : ""}`} onClick={() => setCapFilter("Mías")}>Mías</button>
+                  {Object.keys(USERS).filter(u => u !== user).map(u => (
+                    <button key={u} className={`cap-tab ${capFilter === u ? "active" : ""}`} onClick={() => setCapFilter(u)}>{u}</button>
+                  ))}
+                </div>
+                <div className="cap-list">
+                  {capSugerencias.filter(s => capFilter === "Todas" || (capFilter === "Mías" ? s.usuario === user : s.usuario === capFilter)).length === 0 ? (
+                    <div className="cap-empty">No hay sugerencias{capFilter !== "Todas" ? " de " + (capFilter === "Mías" ? "tu usuario" : capFilter) : ""}. ¡Sé el primero!</div>
+                  ) : (
+                    capSugerencias.filter(s => capFilter === "Todas" || (capFilter === "Mías" ? s.usuario === user : s.usuario === capFilter)).map((s, i) => (
+                      <div key={i} className="cap-card">
+                        <div className="cap-card-info">
+                          <div>
+                            <div className="cap-card-name">{s.nombre}</div>
+                            <div className="cap-card-meta">{s.equipo_origen} → <span className="cap-card-team">{s.equipo_destino}</span></div>
+                          </div>
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                          <span className="cap-card-user">{s.usuario}</span>
+                          {s.usuario === user && <button className="cap-delete" onClick={() => deleteCaptacion(s)}>✕</button>}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            ) : showNews ? (
               <NewsView />
             ) : (
             <>
@@ -1708,6 +1994,7 @@
                                 <span className="pos-dot" style={{background:ps.dot}}></span>
                                 {player.posicionDetalle || (player.posicion === "Centrocampista" ? "Medio" : player.posicion)}
                               </span>
+                              {teamProyecciones[player.nombre] && <span className="proy-row-badge" style={{background: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).bg, color: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).text, border: "1px solid " + ((PROY_COLORS[teamProyecciones[player.nombre]]||{}).border||"#ccc")}}>{teamProyecciones[player.nombre].replace(/Juvenil /,"J").replace(/Cadete /,"Cad").replace(/Infantil /,"Inf").replace(/Alevín /,"Ale").replace(/Benjamín /,"Ben").replace(/Prebenjamín /,"Pre").replace("Real Madrid C","RM C")}</span>}
                             </div>
                             <div className="birth-date">{player.fechaNacimiento || '-'}</div>
                             <div className="birth-place">{player.lugarNacimiento || '-'}</div>
@@ -1739,7 +2026,31 @@
                                     </a>
                                   )}
 
-                                  {supabaseClient && (
+                                  {true && (
+                                  <div className="proy-section" onClick={function(e){e.stopPropagation();}}>
+                                    <div className="proy-title">📊 Proyección</div>
+                                    {proySergio.proyeccion && user !== 'SergioRguez' && (
+                                      <div className="proy-sergio">
+                                        <span className="proy-sergio-label">Sergio:</span>
+                                        <span className="proy-badge" style={{background: (PROY_COLORS[proySergio.proyeccion]||{}).bg, color: (PROY_COLORS[proySergio.proyeccion]||{}).text, border: '1px solid ' + ((PROY_COLORS[proySergio.proyeccion]||{}).border || '#ccc')}}>{getProyLabel(proySergio.proyeccion)}</span>
+                                      </div>
+                                    )}
+                                    <div style={{marginTop:'8px'}}>
+                                      <select className="proy-select" value={proyecciones[user] || ""} disabled={proySaving} onChange={function(e){ saveProyeccion(player.nombre, selectedTeam, e.target.value); }}>
+                                        <option value="">Sin proyección</option>
+                                        {getHigherTeams(selectedTeam).map(function(t){ return <option key={t} value={t}>{getProyLabel(t)}</option>; })}
+                                      </select>
+                                    </div>
+                                    {proyecciones[user] && (
+                                      <div className="proy-mi">
+                                        <span className="proy-mi-label">Tu proyección:</span>
+                                        <span className="proy-badge" style={{background: (PROY_COLORS[proyecciones[user]]||{}).bg, color: (PROY_COLORS[proyecciones[user]]||{}).text, border: '1px solid ' + ((PROY_COLORS[proyecciones[user]]||{}).border || '#ccc')}}>{getProyLabel(proyecciones[user])}</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                  )}
+
+{supabaseClient && (
                                   <div className="informes-section" onClick={function(e){e.stopPropagation();}}>
                                     <div className="informes-header">
                                       <div className="informes-title">Mis Informes <span className="informes-count">{informes.length}</span></div>
