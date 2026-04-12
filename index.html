@@ -435,7 +435,8 @@
       "Pabli": "realmadrid",
       "RaúlRubia": "prebenjaminb",
       "JuanB": "realmadrid2026",
-      "Eneko": "realmadrid2026Bilbo"
+      "Eneko": "realmadrid2026Bilbo",
+      "PabloVega": "realmadrid2026"
     };
 
     // Supabase
@@ -908,7 +909,8 @@
       "Primer equipo": { bg: "#fef3c7", text: "#92400e", border: "#f59e0b" },
       "Primera división": { bg: "#dbeafe", text: "#1e40af", border: "#3b82f6" },
       "Segunda división": { bg: "#e0e7ff", text: "#3730a3", border: "#6366f1" },
-      "Fútbol semiprofesional / extranjero": { bg: "#f3f4f6", text: "#374151", border: "#9ca3af" }
+      "Fútbol semiprofesional / extranjero": { bg: "#f3f4f6", text: "#374151", border: "#9ca3af" },
+      "Baja": { bg: "#fee2e2", text: "#991b1b", border: "#ef4444" }
     };
     const TEAM_GENERATION = {
       "Cadete A": "2010", "Cadete B": "2011",
@@ -925,11 +927,11 @@
     function getHigherTeams(currentTeam) {
       var proTeams = ["Castilla", "Real Madrid C", "Juvenil A"];
       if (proTeams.indexOf(currentTeam) >= 0) {
-        return ["Jugador élite", "Primer equipo", "Primera división", "Segunda división", "Fútbol semiprofesional / extranjero"];
+        return ["Jugador élite", "Primer equipo", "Primera división", "Segunda división", "Fútbol semiprofesional / extranjero", "Baja"];
       }
       var idx = TEAM_HIERARCHY.indexOf(currentTeam);
       if (idx <= 0) return [];
-      return TEAM_HIERARCHY.slice(0, idx);
+      return TEAM_HIERARCHY.slice(0, idx).concat(["Baja"]);
     }
 
     const isF7Team = (team) => f7Teams.includes(team);
@@ -2003,7 +2005,7 @@
                                 <span className="pos-dot" style={{background:ps.dot}}></span>
                                 {player.posicionDetalle || (player.posicion === "Centrocampista" ? "Medio" : player.posicion)}
                               </span>
-                              {teamProyecciones[player.nombre] && <span className="proy-row-badge" style={{background: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).bg, color: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).text, border: "1px solid " + ((PROY_COLORS[teamProyecciones[player.nombre]]||{}).border||"#ccc")}}>{teamProyecciones[player.nombre].replace("Jugador élite","ÉLITE").replace("Primer equipo","1er EQ").replace("Primera división","1a DIV").replace("Segunda división","2a DIV").replace("Fútbol semiprofesional / extranjero","SEMI").replace(/Juvenil /,"J").replace(/Cadete /,"Cad").replace(/Infantil /,"Inf").replace(/Alevín /,"Ale").replace(/Benjamín /,"Ben").replace(/Prebenjamín /,"Pre").replace("Real Madrid C","RM C")}</span>}
+                              {teamProyecciones[player.nombre] && <span className="proy-row-badge" style={{background: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).bg, color: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).text, border: "1px solid " + ((PROY_COLORS[teamProyecciones[player.nombre]]||{}).border||"#ccc")}}>{teamProyecciones[player.nombre].replace("Jugador élite","ÉLITE").replace("Primer equipo","1er EQ").replace("Primera división","1a DIV").replace("Segunda división","2a DIV").replace("Fútbol semiprofesional / extranjero","SEMI").replace("Baja","BAJA").replace(/Juvenil /,"J").replace(/Cadete /,"Cad").replace(/Infantil /,"Inf").replace(/Alevín /,"Ale").replace(/Benjamín /,"Ben").replace(/Prebenjamín /,"Pre").replace("Real Madrid C","RM C")}</span>}
                             </div>
                             <div className="birth-date">{player.fechaNacimiento || '-'}</div>
                             <div className="birth-place">{player.lugarNacimiento || '-'}</div>
