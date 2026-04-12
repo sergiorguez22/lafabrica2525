@@ -924,6 +924,18 @@
       var gen = TEAM_GENERATION[team];
       return gen ? team + " (" + gen + ")" : team;
     }
+    const TEAM_GENERATION_2627 = {
+      "Cadete A": "2011", "Cadete B": "2012",
+      "Infantil A": "2013", "Infantil B": "2014",
+      "Alevín A": "2015", "Alevín B": "2016", "Alevín C": "2016",
+      "Benjamín A": "2017", "Benjamín B": "2018",
+      "Prebenjamín A": "2019", "Prebenjamín B": "2020",
+      "Debutante": "2021"
+    };
+    function getCapLabel(team) {
+      var gen = TEAM_GENERATION_2627[team];
+      return gen ? team + " (" + gen + ")" : team;
+    }
     function getHigherTeams(currentTeam) {
       var proTeams = ["Castilla", "Real Madrid C", "Juvenil A"];
       if (proTeams.indexOf(currentTeam) >= 0) {
@@ -1897,7 +1909,7 @@
                 </button>
                 <div>
                   <h1 className="team-title">{showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
-                  <p className="team-category">{showCaptacion ? 'Sugerencias de fichajes para la próxima temporada' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <p className="team-category">{showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
               {!showNews && !showCaptacion && (
@@ -1917,7 +1929,7 @@
                   <input className="cap-input" placeholder="Equipo actual" value={capEquipo} onChange={e => setCapEquipo(e.target.value)} />
                   <select className="cap-select" value={capEquipoDest} onChange={e => setCapEquipoDest(e.target.value)}>
                     <option value="">Destino...</option>
-                    {TEAM_HIERARCHY.slice(1).map(t => <option key={t} value={t}>{getProyLabel(t)}</option>)}
+                    {TEAM_HIERARCHY.slice(1).map(t => <option key={t} value={t}>{getCapLabel(t)}</option>)}
                   </select>
                   <button className="cap-btn" disabled={!capNombre.trim() || !capEquipo.trim() || !capEquipoDest} onClick={addCaptacion}>+ Añadir</button>
                 </div>
@@ -1937,7 +1949,7 @@
                         <div className="cap-card-info">
                           <div>
                             <div className="cap-card-name">{s.nombre}</div>
-                            <div className="cap-card-meta">{s.equipo_origen} → <span className="cap-card-team">{s.equipo_destino}</span></div>
+                            <div className="cap-card-meta">{s.equipo_origen} → <span className="cap-card-team">{getCapLabel(s.equipo_destino)}</span></div>
                           </div>
                         </div>
                         <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
