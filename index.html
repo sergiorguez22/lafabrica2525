@@ -1399,7 +1399,7 @@
     function LineupView({ players, teamName, user }) {
       const isF7 = isF7Team(teamName);
       const formation = isF7 ? "3-1-2" : "4-3-3";
-      const storageKey = "lf_lineups_" + user + "_" + teamName;
+      const storageKey = isRestricted(user) ? "lf_lineups_" + user + "_" + teamName : "lf_lineups_shared_" + teamName;
 
       const slots = isF7 ? [
         { id:0, role:"POR", pos:"Portero", x:50, y:87 },
@@ -1562,7 +1562,7 @@
           id: Date.now(),
           nombre: lineupName.trim(),
           fecha: new Date().toLocaleDateString('es-ES'),
-          formacion: formation,
+          formacion: formation, usuario: user,
           jugadores: assignments.map(function(a, i){ return a ? { slot: i, nombre: a.nombre, apodo: a.apodo } : null; })
         };
         var updated = savedLineups.concat([lineup]);
@@ -1646,10 +1646,10 @@
                 {savedLineups.map(function(l) { return (
                   <div key={l.id} className="lineup-saved-item" onClick={function(){handleLoad(l);}}>
                     <div>
-                      <div className="lineup-saved-name">{l.nombre}</div>
+                      <div className="lineup-saved-name">{l.nombre} {l.usuario && l.usuario !== user && <span style={{fontSize:'10px',color:'var(--accent)',background:'var(--accent-light)',padding:'1px 5px',borderRadius:'3px',marginLeft:'4px'}}>{l.usuario}</span>}</div>
                       <div className="lineup-saved-date">{l.formacion} · {l.fecha}</div>
                     </div>
-                    <button className="lineup-saved-delete" onClick={function(e){handleDelete(l.id, e);}}>Eliminar</button>
+                    {(!l.usuario || l.usuario === user) && <button className="lineup-saved-delete" onClick={function(e){handleDelete(l.id, e);}}>Eliminar</button>}
                   </div>
                 );})}
               </div>
@@ -1941,7 +1941,7 @@
       function loadInformes(jugador, equipo) {
         if (!supabaseClient || !user) return;
         setInformeLoading(true);
-        supabaseClient.from('informes').select('*').eq('usuario', user).eq('jugador', jugador).eq('equipo', equipo).order('created_at', { ascending: false })
+        supabaseClient.from('informes').select('*').eq('jugador', jugador).eq('equipo', equipo).order('created_at', { ascending: false })
           .then(function(res) { setInformes(res.data || []); setInformeLoading(false); })
           .catch(function() { setInformeLoading(false); });
       }
@@ -2189,7 +2189,7 @@
 {supabaseClient && (
                                   <div className="informes-section" onClick={function(e){e.stopPropagation();}}>
                                     <div className="informes-header">
-                                      <div className="informes-title">Mis Informes <span className="informes-count">{informes.length}</span></div>
+                                      <div className="informes-title">Informes <span className="informes-count">{informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).length}</span></div>
                                       {!informeFormOpen && <button className="informe-btn informe-btn-primary" onClick={function(){setInformeFormOpen(true);setInformeTexto("");setInformeEditing(null);}}>+ Nuevo informe</button>}
                                     </div>
                                     {informeFormOpen && (
@@ -2203,17 +2203,17 @@
                                     )}
                                     {informeLoading ? (
                                       <div className="informe-loading">Cargando informes...</div>
-                                    ) : informes.length === 0 && !informeFormOpen ? (
-                                      <div className="informe-empty">No tienes informes de este jugador</div>
+                                    ) : informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).length === 0 && !informeFormOpen ? (
+                                      <div className="informe-empty">No hay informes de este jugador</div>
                                     ) : (
-                                      informes.map(function(inf){return (
+                                      informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).map(function(inf){return (
                                         <div key={inf.id} className="informe-card">
                                           <div className="informe-card-header">
-                                            <span className="informe-card-date">{new Date(inf.created_at).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}</span>
-                                            <div style={{display:'flex',gap:'4px'}}>
+                                            <div style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{fontSize:'11px',fontWeight:600,color:'var(--accent)',background:'var(--accent-light)',padding:'1px 6px',borderRadius:'4px'}}>{inf.usuario === user ? 'Tú' : inf.usuario}</span><span className="informe-card-date">{new Date(inf.created_at).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}</span></div>
+                                            {inf.usuario === user && <div style={{display:'flex',gap:'4px'}}>
                                               <button className="informe-card-edit" onClick={function(){editInforme(inf);}}>Editar</button>
                                               <button className="informe-card-delete" onClick={function(){deleteInforme(inf.id,player.nombre,selectedTeam);}}>Eliminar</button>
-                                            </div>
+                                            </div>}
                                           </div>
                                           <div className="informe-card-text">{inf.texto}</div>
                                         </div>
