@@ -2,6 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Fábrica 25/26 - Cantera Real Madrid</title>
   <style>
@@ -447,6 +450,8 @@
       "Eneko": "realmadrid2026Bilbo",
       "PabloVega": "realmadrid2026"
     };
+    const RESTRICTED_USERS = ["PabloVega"];
+    function isRestricted(u) { return RESTRICTED_USERS.indexOf(u) >= 0; }
 
     // Supabase
     var _sb = null;
@@ -1398,18 +1403,18 @@
 
       const slots = isF7 ? [
         { id:0, role:"POR", pos:"Portero", x:50, y:87 },
-        { id:1, role:"DFC", pos:"Defensa", x:20, y:65 },
-        { id:2, role:"DFC", pos:"Defensa", x:50, y:62 },
-        { id:3, role:"DFC", pos:"Defensa", x:80, y:65 },
+        { id:1, role:"DFC", pos:"Defensa", x:20, y:63 },
+        { id:2, role:"DFC", pos:"Defensa", x:50, y:70 },
+        { id:3, role:"DFC", pos:"Defensa", x:80, y:63 },
         { id:4, role:"MC", pos:"Centrocampista", x:50, y:42 },
         { id:5, role:"DEL", pos:"Delantero", x:30, y:22 },
         { id:6, role:"DEL", pos:"Delantero", x:70, y:22 }
       ] : [
         { id:0, role:"POR", pos:"Portero", x:50, y:90 },
-        { id:1, role:"LI", pos:"Defensa", x:12, y:70 },
-        { id:2, role:"DFC", pos:"Defensa", x:35, y:68 },
-        { id:3, role:"DFC", pos:"Defensa", x:65, y:68 },
-        { id:4, role:"LD", pos:"Defensa", x:88, y:70 },
+        { id:1, role:"LI", pos:"Defensa", x:12, y:68 },
+        { id:2, role:"DFC", pos:"Defensa", x:35, y:74 },
+        { id:3, role:"DFC", pos:"Defensa", x:65, y:74 },
+        { id:4, role:"LD", pos:"Defensa", x:88, y:68 },
         { id:5, role:"MCI", pos:"Centrocampista", x:22, y:45 },
         { id:6, role:"MC", pos:"Centrocampista", x:50, y:42 },
         { id:7, role:"MCD", pos:"Centrocampista", x:78, y:45 },
@@ -1619,7 +1624,7 @@
                   <div key={i} data-slot-idx={i} className={"lineup-slot" + (dragOverSlot === i ? " drag-over" : "")} style={{left:slot.x+'%',top:slot.y+'%'}} onClick={function(){handleSlotClick(i);}} onDragOver={function(e){handleSlotDragOver(i,e);}} onDragLeave={handleSlotDragLeave} onDrop={function(e){handleSlotDrop(i,e);}}>
                     <div className={"lineup-slot-circle" + (assigned ? " filled" : "") + (selectedSlot === i ? " selected" : "") + (dragOverSlot === i ? " drag-over" : "")} draggable={!!assigned} onDragStart={assigned ? function(e){handleDragStart(assigned,e);} : undefined} onDragEnd={assigned ? handleDragEnd : undefined}
                          style={assigned ? {background:getFieldColor(assigned.posicion)} : {}}>
-                      {assigned ? assigned.apodo.split(' ')[0].substring(0,3).toUpperCase() : '+'}
+                      {assigned ? (assigned.foto ? <img src={assigned.foto} alt={assigned.apodo} style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover'}} onError={function(e){e.target.style.display='none';e.target.nextSibling.style.display='';}} /> : null) : null}{assigned ? (!assigned.foto ? assigned.apodo.split(' ')[0].substring(0,3).toUpperCase() : <span style={{display:'none'}}>{assigned.apodo.split(' ')[0].substring(0,3).toUpperCase()}</span>) : '+'}
                     </div>
                     {assigned ? (
                       <div className="lineup-slot-name">{assigned.apodo}</div>
@@ -2042,15 +2047,15 @@
                 <div className="cap-tabs">
                   <button className={`cap-tab ${capFilter === "Todas" ? "active" : ""}`} onClick={() => setCapFilter("Todas")}>Todas</button>
                   <button className={`cap-tab ${capFilter === "Mías" ? "active" : ""}`} onClick={() => setCapFilter("Mías")}>Mías</button>
-                  {Object.keys(USERS).filter(u => u !== user).map(u => (
+                  {!isRestricted(user) && Object.keys(USERS).filter(u => u !== user).map(u => (
                     <button key={u} className={`cap-tab ${capFilter === u ? "active" : ""}`} onClick={() => setCapFilter(u)}>{u}</button>
                   ))}
                 </div>
                 <div className="cap-list">
-                  {capSugerencias.filter(s => capFilter === "Todas" || (capFilter === "Mías" ? s.usuario === user : s.usuario === capFilter)).length === 0 ? (
+                  {capSugerencias.filter(s => isRestricted(user) ? s.usuario === user : (capFilter === "Todas" || (capFilter === "Mías" ? s.usuario === user : s.usuario === capFilter))).length === 0 ? (
                     <div className="cap-empty">No hay sugerencias{capFilter !== "Todas" ? " de " + (capFilter === "Mías" ? "tu usuario" : capFilter) : ""}. ¡Sé el primero!</div>
                   ) : (
-                    capSugerencias.filter(s => capFilter === "Todas" || (capFilter === "Mías" ? s.usuario === user : s.usuario === capFilter)).map((s, i) => (
+                    capSugerencias.filter(s => isRestricted(user) ? s.usuario === user : (capFilter === "Todas" || (capFilter === "Mías" ? s.usuario === user : s.usuario === capFilter))).map((s, i) => (
                       <div key={i} className="cap-card">
                         <div className="cap-card-info">
                           <div>
@@ -2123,7 +2128,7 @@
                                 <span className="pos-dot" style={{background:ps.dot}}></span>
                                 {player.posicionDetalle || (player.posicion === "Centrocampista" ? "Medio" : player.posicion)}
                               </span>
-                              {teamProyecciones[player.nombre] && <span className="proy-row-badge" style={{background: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).bg, color: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).text, border: "1px solid " + ((PROY_COLORS[teamProyecciones[player.nombre]]||{}).border||"#ccc")}}>{teamProyecciones[player.nombre].replace("Jugador élite","ÉLITE").replace("Primer equipo","1er EQ").replace("Primera división","1a DIV").replace("Segunda división","2a DIV").replace("Fútbol semiprofesional / extranjero","SEMI").replace("Baja","BAJA").replace(/Juvenil /,"J").replace(/Cadete /,"Cad").replace(/Infantil /,"Inf").replace(/Alevín /,"Ale").replace(/Benjamín /,"Ben").replace(/Prebenjamín /,"Pre").replace("Real Madrid C","RM C")}</span>}
+                              {teamProyecciones[player.nombre] && !isRestricted(user) && <span className="proy-row-badge" style={{background: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).bg, color: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).text, border: "1px solid " + ((PROY_COLORS[teamProyecciones[player.nombre]]||{}).border||"#ccc")}}>{teamProyecciones[player.nombre].replace("Jugador élite","ÉLITE").replace("Primer equipo","1er EQ").replace("Primera división","1a DIV").replace("Segunda división","2a DIV").replace("Fútbol semiprofesional / extranjero","SEMI").replace("Baja","BAJA").replace(/Juvenil /,"J").replace(/Cadete /,"Cad").replace(/Infantil /,"Inf").replace(/Alevín /,"Ale").replace(/Benjamín /,"Ben").replace(/Prebenjamín /,"Pre").replace("Real Madrid C","RM C")}</span>}
                             </div>
                             <div className="birth-date">{player.fechaNacimiento || '-'}</div>
                             <div className="birth-place">{player.lugarNacimiento || '-'}</div>
@@ -2166,7 +2171,7 @@
                                     </div>
                                     {Object.keys(proyecciones).length > 0 && (
                                       <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-                                        {Object.keys(proyecciones).map(function(u) {
+                                        {Object.keys(proyecciones).filter(function(u){ return !isRestricted(user) || u === user; }).map(function(u) {
                                           var val = proyecciones[u];
                                           var col = PROY_COLORS[val] || {};
                                           return (
