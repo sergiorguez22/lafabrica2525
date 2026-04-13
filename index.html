@@ -309,6 +309,15 @@
     .cap-tab { padding:6px 14px; border-radius:6px; font-size:12px; font-weight:500; border:none; cursor:pointer; }
     .cap-tab.active { background:var(--accent); color:white; }
     .cap-tab:not(.active) { background:var(--bg); color:var(--text-2); }
+  
+    /* ===== DRAG & DROP LINEUP ===== */
+    .lineup-roster-item[draggable="true"] { cursor:grab; user-select:none; -webkit-user-select:none; }
+    .lineup-roster-item[draggable="true"]:active { cursor:grabbing; }
+    .lineup-roster-item.dragging { opacity:0.4; }
+    .lineup-slot.drag-over .lineup-slot-circle { border:2px dashed #fbbf24; box-shadow:0 0 14px rgba(251,191,36,0.5); transform:scale(1.15); }
+    .lineup-slot-circle { transition:transform 0.15s, box-shadow 0.15s; }
+    .field-player-circle { cursor:grab; }
+    .drag-ghost { position:fixed; pointer-events:none; z-index:9999; padding:4px 10px; background:var(--accent); color:white; border-radius:6px; font-size:12px; font-weight:600; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -1425,6 +1434,103 @@
       }, [teamName]);
 
       var usedPlayers = assignments.filter(function(a){ return a !== null; }).map(function(a){ return a.nombre; });
+      var dragPlayer = React.useRef(null);
+      var [dragOverSlot, setDragOverSlot] = React.useState(null);
+
+      var handleDragStart = function(player, e) {
+        dragPlayer.current = player;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', player.apodo);
+        if (e.target.classList) e.target.classList.add('dragging');
+      };
+
+      var handleDragEnd = function(e) {
+        dragPlayer.current = null;
+        setDragOverSlot(null);
+        if (e.target.classList) e.target.classList.remove('dragging');
+      };
+
+      var handleSlotDragOver = function(idx, e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        setDragOverSlot(idx);
+      };
+
+      var handleSlotDragLeave = function() {
+        setDragOverSlot(null);
+      };
+
+      var handleSlotDrop = function(idx, e) {
+        e.preventDefault();
+        setDragOverSlot(null);
+        if (dragPlayer.current) {
+          var newA = assignments.slice();
+          // Remove player from any other slot
+          for (var j = 0; j < newA.length; j++) {
+            if (newA[j] && newA[j].nombre === dragPlayer.current.nombre) newA[j] = null;
+          }
+          newA[idx] = dragPlayer.current;
+          setAssignments(newA);
+          dragPlayer.current = null;
+        }
+      };
+
+      // Touch drag support
+      var touchRef = React.useRef(null);
+      var ghostRef = React.useRef(null);
+      var fieldRef = React.useRef(null);
+
+      var handleTouchStart = function(player, e) {
+        dragPlayer.current = player;
+        var touch = e.touches[0];
+        touchRef.current = { startX: touch.clientX, startY: touch.clientY };
+        // Create ghost
+        var ghost = document.createElement('div');
+        ghost.className = 'drag-ghost';
+        ghost.textContent = player.apodo;
+        ghost.style.left = touch.clientX + 'px';
+        ghost.style.top = (touch.clientY - 30) + 'px';
+        document.body.appendChild(ghost);
+        ghostRef.current = ghost;
+      };
+
+      var handleTouchMove = function(e) {
+        if (!ghostRef.current) return;
+        e.preventDefault();
+        var touch = e.touches[0];
+        ghostRef.current.style.left = touch.clientX + 'px';
+        ghostRef.current.style.top = (touch.clientY - 30) + 'px';
+        // Check which slot we're over
+        var el = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (el) {
+          var slotEl = el.closest('.lineup-slot');
+          if (slotEl) {
+            var slotIdx = parseInt(slotEl.dataset.slotIdx);
+            if (!isNaN(slotIdx)) setDragOverSlot(slotIdx);
+          } else {
+            setDragOverSlot(null);
+          }
+        }
+      };
+
+      var handleTouchEnd = function(e) {
+        if (ghostRef.current) {
+          document.body.removeChild(ghostRef.current);
+          ghostRef.current = null;
+        }
+        if (dragPlayer.current && dragOverSlot !== null) {
+          var newA = assignments.slice();
+          for (var j = 0; j < newA.length; j++) {
+            if (newA[j] && newA[j].nombre === dragPlayer.current.nombre) newA[j] = null;
+          }
+          newA[dragOverSlot] = dragPlayer.current;
+          setAssignments(newA);
+        }
+        dragPlayer.current = null;
+        setDragOverSlot(null);
+        touchRef.current = null;
+      };
+
 
       var handleSlotClick = function(idx) {
         if (assignments[idx]) {
@@ -1510,8 +1616,8 @@
               {slots.map(function(slot, i) {
                 var assigned = assignments[i];
                 return (
-                  <div key={i} className="lineup-slot" style={{left:slot.x+'%',top:slot.y+'%'}} onClick={function(){handleSlotClick(i);}}>
-                    <div className={"lineup-slot-circle" + (assigned ? " filled" : "") + (selectedSlot === i ? " selected" : "")}
+                  <div key={i} data-slot-idx={i} className={"lineup-slot" + (dragOverSlot === i ? " drag-over" : "")} style={{left:slot.x+'%',top:slot.y+'%'}} onClick={function(){handleSlotClick(i);}} onDragOver={function(e){handleSlotDragOver(i,e);}} onDragLeave={handleSlotDragLeave} onDrop={function(e){handleSlotDrop(i,e);}}>
+                    <div className={"lineup-slot-circle" + (assigned ? " filled" : "") + (selectedSlot === i ? " selected" : "") + (dragOverSlot === i ? " drag-over" : "")} draggable={!!assigned} onDragStart={assigned ? function(e){handleDragStart(assigned,e);} : undefined} onDragEnd={assigned ? handleDragEnd : undefined}
                          style={assigned ? {background:getFieldColor(assigned.posicion)} : {}}>
                       {assigned ? assigned.apodo.split(' ')[0].substring(0,3).toUpperCase() : '+'}
                     </div>
@@ -1560,7 +1666,7 @@
                     {posPlayers.map(function(p, i) {
                       var isUsed = usedPlayers.indexOf(p.nombre) >= 0;
                       return (
-                        <div key={i} className={"lineup-roster-item" + (isUsed ? " used" : "")} onClick={function(){handlePlayerClick(p);}}>
+                        <div key={i} className={"lineup-roster-item" + (isUsed ? " used" : "")} draggable={!isUsed} onClick={function(){handlePlayerClick(p);}} onDragStart={function(e){handleDragStart(p,e);}} onDragEnd={handleDragEnd} onTouchStart={function(e){handleTouchStart(p,e);}} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
                           <span className="pos-dot" style={{background:ps.dot}}></span>
                           <span>{p.apodo}</span>
                         </div>
