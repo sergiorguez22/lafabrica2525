@@ -1417,8 +1417,9 @@
 
     /* ===== LINEUP VIEW ===== */
     function LineupView({ players, teamName, user }) {
+      const isF5 = isF5Team(teamName);
       const isF7 = isF7Team(teamName);
-      const formation = isF7 ? "3-1-2" : "4-3-3";
+      const formation = isF5 ? "2-1-2" : isF7 ? "3-1-2" : "4-3-3";
       const storageKey = isRestricted(user) ? "lf_lineups_" + user + "_" + teamName : "lf_lineups_shared_" + teamName;
 
       const slots = isF5 ? [
