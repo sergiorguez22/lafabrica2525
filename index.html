@@ -185,6 +185,7 @@
     .field-player.selected .field-player-circle { border-color:#fbbf24; box-shadow:0 0 12px rgba(251,191,36,0.6); transform:scale(1.1); }
 
     .field-f7 { aspect-ratio:50/65; max-width:500px; }
+    .field-f5 { aspect-ratio:40/50; max-width:420px; }
 
     /* ===== PLAYER CARD ===== */
     .player-card { display:flex; gap:20px; align-items:flex-start; }
@@ -327,6 +328,16 @@
     .lineup-slot-circle { transition:transform 0.15s, box-shadow 0.15s; }
     .field-player-circle { cursor:grab; }
     .drag-ghost { position:fixed; pointer-events:none; z-index:9999; padding:4px 10px; background:var(--accent); color:white; border-radius:6px; font-size:12px; font-weight:600; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+  
+    /* ===== COLLAPSIBLE SCOUT SECTION ===== */
+    .scout-toggle { width:100%; margin-top:14px; padding:10px 14px; background:var(--bg); border:1px solid var(--border-light); border-radius:var(--radius-sm); cursor:pointer; display:flex; align-items:center; justify-content:space-between; font-size:13px; font-weight:500; color:var(--text); transition:all 0.15s; }
+    .scout-toggle:hover { background:var(--accent-light); border-color:var(--accent); color:var(--accent); }
+    .scout-toggle-left { display:flex; align-items:center; gap:8px; }
+    .scout-toggle-counts { display:flex; gap:6px; }
+    .scout-toggle-count { font-size:11px; padding:2px 7px; border-radius:4px; font-weight:600; }
+    .scout-toggle-arrow { font-size:10px; transition:transform 0.2s; color:var(--text-2); }
+    .scout-toggle-arrow.open { transform:rotate(180deg); }
+    .scout-panel { border:1px solid var(--border-light); border-top:none; border-radius:0 0 var(--radius-sm) var(--radius-sm); background:var(--surface); padding:16px; }
     </style>
 </head>
 <body>
@@ -966,7 +977,9 @@
       return TEAM_HIERARCHY.slice(0, idx).concat(["Baja"]);
     }
 
-    const isF7Team = (team) => f7Teams.includes(team);
+    const f5Teams = ["Debutante"];
+    const isF5Team = (team) => f5Teams.includes(team);
+    const isF7Team = (team) => f7Teams.includes(team) && !isF5Team(team);
 
     /* ===== CLASIFICACIONES ===== */
     const clasificaciones = {
@@ -1296,6 +1309,7 @@
 
     /* ===== FIELD VIEW COMPONENT ===== */
     function FieldView({ players, teamName, onSelectPlayer }) {
+      const isF5 = isF5Team(teamName);
       const isF7 = isF7Team(teamName);
 
       const grouped = useMemo(() => {
@@ -1327,7 +1341,7 @@
 
       return (
         <div className="field-container">
-          <div className={`field ${isF7 ? 'field-f7' : ''}`}>
+          <div className={`field ${isF5 ? 'field-f5' : isF7 ? 'field-f7' : ''}`}>
             <div className="field-lines">
               <div className="field-center-line"></div>
               <div className="field-center-circle"></div>
@@ -1407,11 +1421,18 @@
       const formation = isF7 ? "3-1-2" : "4-3-3";
       const storageKey = isRestricted(user) ? "lf_lineups_" + user + "_" + teamName : "lf_lineups_shared_" + teamName;
 
-      const slots = isF7 ? [
+      const slots = isF5 ? [
+        { id:0, role:"POR", pos:"Portero", x:50, y:88 },
+        { id:1, role:"DFC", pos:"Defensa", x:30, y:65 },
+        { id:2, role:"DFC", pos:"Defensa", x:70, y:65 },
+        { id:3, role:"MC", pos:"Centrocampista", x:50, y:42 },
+        { id:4, role:"DC", pos:"Delantero", x:30, y:20 },
+        { id:5, role:"DC", pos:"Delantero", x:70, y:20 }
+      ] : isF7 ? [
         { id:0, role:"POR", pos:"Portero", x:50, y:87 },
-        { id:1, role:"DFC", pos:"Defensa", x:20, y:63 },
+        { id:1, role:"LI", pos:"Defensa", x:20, y:63 },
         { id:2, role:"DFC", pos:"Defensa", x:50, y:70 },
-        { id:3, role:"DFC", pos:"Defensa", x:80, y:63 },
+        { id:3, role:"LD", pos:"Defensa", x:80, y:63 },
         { id:4, role:"MC", pos:"Centrocampista", x:50, y:42 },
         { id:5, role:"DEL", pos:"Delantero", x:30, y:22 },
         { id:6, role:"DEL", pos:"Delantero", x:70, y:22 }
@@ -1612,10 +1633,10 @@
         <div className="lineup-container">
           <div className="lineup-field-wrapper">
             <div style={{textAlign:'center',marginBottom:'12px',fontSize:'13px',color:'var(--text-2)'}}>
-              Formación {formation} · {isF7 ? 'Fútbol 7' : 'Fútbol 11'}
+              Formación {formation} · {isF5 ? 'Fútbol 5' : isF7 ? 'Fútbol 7' : 'Fútbol 11'}
               {selectedSlot !== null && <span style={{color:'var(--accent)',fontWeight:500}}> · Elige jugador para <b>{slots[selectedSlot].role}</b></span>}
             </div>
-            <div className={`field ${isF7 ? 'field-f7' : ''}`}>
+            <div className={`field ${isF5 ? 'field-f5' : isF7 ? 'field-f7' : ''}`}>
               <div className="field-lines">
                 <div className="field-center-line"></div>
                 <div className="field-center-circle"></div>
@@ -1876,6 +1897,7 @@
       const [proyecciones, setProyecciones] = useState({});
       const [proySergio, setProySergio] = useState({});
       const [proySaving, setProySaving] = useState(false);
+      const [scoutOpen, setScoutOpen] = useState(false);
 
       function loadProyecciones(jugador, equipo) {
         var key = "proy_" + jugador + "_" + equipo;
@@ -1992,6 +2014,7 @@
             setInformeTexto("");
             setInformeEditing(null);
             setInformeFormOpen(false);
+            setScoutOpen(false);
           }
         } else if (expandedPlayer === null) {
           prevExpanded.current = null;
@@ -2166,65 +2189,75 @@
                                     </a>
                                   )}
 
-                                  {true && (
-                                  <div className="proy-section" onClick={function(e){e.stopPropagation();}}>
-                                    <div className="proy-title">Expectativa</div>
-                                    <div style={{marginBottom:'10px'}}>
+                                  <button className="scout-toggle" onClick={function(e){e.stopPropagation();setScoutOpen(!scoutOpen);}}>
+                                    <div className="scout-toggle-left">
+                                      <span>Expectativa de crecimiento</span>
+                                      <div className="scout-toggle-counts">
+                                        {Object.keys(proyecciones).filter(function(u){ return !isRestricted(user) || u === user; }).length > 0 && <span className="scout-toggle-count" style={{background:'var(--accent-light)',color:'var(--accent)'}}>{Object.keys(proyecciones).filter(function(u){ return !isRestricted(user) || u === user; }).length} exp</span>}
+                                        {informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).length > 0 && <span className="scout-toggle-count" style={{background:'#fef3c7',color:'#92400e'}}>{informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).length} inf</span>}
+                                      </div>
+                                    </div>
+                                    <span className={"scout-toggle-arrow" + (scoutOpen ? " open" : "")}>▼</span>
+                                  </button>
+                                  {scoutOpen && (
+                                  <div className="scout-panel" onClick={function(e){e.stopPropagation();}}>
+                                    <div style={{marginBottom:'14px'}}>
+                                      <div style={{fontSize:'11px',fontWeight:600,color:'var(--text-2)',textTransform:'uppercase',marginBottom:'8px'}}>Tu expectativa</div>
                                       <select className="proy-select" value={proyecciones[user] || ""} disabled={proySaving} onChange={function(e){ saveProyeccion(player.nombre, selectedTeam, e.target.value); }}>
                                         <option value="">Sin expectativa</option>
                                         {getHigherTeams(selectedTeam).map(function(t){ return <option key={t} value={t}>{getProyLabel(t)}</option>; })}
                                       </select>
                                     </div>
-                                    {Object.keys(proyecciones).length > 0 && (
-                                      <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-                                        {Object.keys(proyecciones).filter(function(u){ return !isRestricted(user) || u === user; }).map(function(u) {
-                                          var val = proyecciones[u];
-                                          var col = PROY_COLORS[val] || {};
-                                          return (
-                                            <div key={u} style={{display:'flex',alignItems:'center',gap:'8px'}}>
-                                              <span className="proy-sergio-label" style={{minWidth:'70px'}}>{u === user ? 'Tú' : u}:</span>
-                                              <span className="proy-badge" style={{background: col.bg, color: col.text, border: '1px solid ' + (col.border || '#ccc')}}>{getProyLabel(val)}</span>
-                                            </div>
-                                          );
-                                        })}
-                                      </div>
-                                    )}
-                                  </div>
-                                  )}
-
-{supabaseClient && (
-                                  <div className="informes-section" onClick={function(e){e.stopPropagation();}}>
-                                    <div className="informes-header">
-                                      <div className="informes-title">Informes <span className="informes-count">{informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).length}</span></div>
-                                      {!informeFormOpen && <button className="informe-btn informe-btn-primary" onClick={function(){setInformeFormOpen(true);setInformeTexto("");setInformeEditing(null);}}>+ Nuevo informe</button>}
-                                    </div>
-                                    {informeFormOpen && (
-                                      <div className="informe-form">
-                                        <textarea className="informe-textarea" value={informeTexto} onChange={function(e){setInformeTexto(e.target.value);}} placeholder="Escribe tus notas sobre este jugador..." />
-                                        <div className="informe-actions">
-                                          <button className="informe-btn informe-btn-cancel" onClick={function(){setInformeFormOpen(false);setInformeTexto("");setInformeEditing(null);}}>Cancelar</button>
-                                          <button className="informe-btn informe-btn-primary" disabled={!informeTexto.trim()} onClick={function(){saveInforme(player.nombre,selectedTeam);}}>{informeEditing ? "Actualizar" : "Guardar"}</button>
+                                    {Object.keys(proyecciones).filter(function(u){ return !isRestricted(user) || u === user; }).length > 0 && (
+                                      <div style={{marginBottom:'14px'}}>
+                                        <div style={{fontSize:'11px',fontWeight:600,color:'var(--text-2)',textTransform:'uppercase',marginBottom:'8px'}}>Valoraciones</div>
+                                        <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
+                                          {Object.keys(proyecciones).filter(function(u){ return !isRestricted(user) || u === user; }).map(function(u) {
+                                            var val = proyecciones[u];
+                                            var col = PROY_COLORS[val] || {};
+                                            return (
+                                              <div key={u} style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                                                <span style={{fontSize:'12px',color:'var(--text-2)',minWidth:'70px'}}>{u === user ? 'Tú' : u}:</span>
+                                                <span className="proy-badge" style={{background: col.bg, color: col.text, border: '1px solid ' + (col.border || '#ccc')}}>{getProyLabel(val)}</span>
+                                              </div>
+                                            );
+                                          })}
                                         </div>
                                       </div>
                                     )}
-                                    {informeLoading ? (
-                                      <div className="informe-loading">Cargando informes...</div>
-                                    ) : informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).length === 0 && !informeFormOpen ? (
-                                      <div className="informe-empty">No hay informes de este jugador</div>
-                                    ) : (
-                                      informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).map(function(inf){return (
-                                        <div key={inf.id} className="informe-card">
-                                          <div className="informe-card-header">
-                                            <div style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{fontSize:'11px',fontWeight:600,color:'var(--accent)',background:'var(--accent-light)',padding:'1px 6px',borderRadius:'4px'}}>{inf.usuario === user ? 'Tú' : inf.usuario}</span><span className="informe-card-date">{new Date(inf.created_at).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}</span></div>
-                                            {inf.usuario === user && <div style={{display:'flex',gap:'4px'}}>
-                                              <button className="informe-card-edit" onClick={function(){editInforme(inf);}}>Editar</button>
-                                              <button className="informe-card-delete" onClick={function(){deleteInforme(inf.id,player.nombre,selectedTeam);}}>Eliminar</button>
-                                            </div>}
+                                    <div style={{borderTop:'1px solid var(--border-light)',paddingTop:'14px'}}>
+                                      <div className="informes-header">
+                                        <div style={{fontSize:'11px',fontWeight:600,color:'var(--text-2)',textTransform:'uppercase'}}>Informes <span className="informes-count">{informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).length}</span></div>
+                                        {!informeFormOpen && <button className="informe-btn informe-btn-primary" onClick={function(){setInformeFormOpen(true);setInformeTexto("");setInformeEditing(null);}}>+ Nuevo</button>}
+                                      </div>
+                                      {informeFormOpen && (
+                                        <div className="informe-form">
+                                          <textarea className="informe-textarea" value={informeTexto} onChange={function(e){setInformeTexto(e.target.value);}} placeholder="Escribe tus notas sobre este jugador..." />
+                                          <div className="informe-actions">
+                                            <button className="informe-btn informe-btn-cancel" onClick={function(){setInformeFormOpen(false);setInformeTexto("");setInformeEditing(null);}}>Cancelar</button>
+                                            <button className="informe-btn informe-btn-primary" disabled={!informeTexto.trim()} onClick={function(){saveInforme(player.nombre,selectedTeam);}}>{informeEditing ? "Actualizar" : "Guardar"}</button>
                                           </div>
-                                          <div className="informe-card-text">{inf.texto}</div>
                                         </div>
-                                      );})
-                                    )}
+                                      )}
+                                      {informeLoading ? (
+                                        <div className="informe-loading">Cargando...</div>
+                                      ) : informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).length === 0 && !informeFormOpen ? (
+                                        <div className="informe-empty">No hay informes</div>
+                                      ) : (
+                                        informes.filter(function(inf){ return !isRestricted(user) || inf.usuario === user; }).map(function(inf){return (
+                                          <div key={inf.id} className="informe-card">
+                                            <div className="informe-card-header">
+                                              <div style={{display:'flex',alignItems:'center',gap:'6px'}}><span style={{fontSize:'11px',fontWeight:600,color:'var(--accent)',background:'var(--accent-light)',padding:'1px 6px',borderRadius:'4px'}}>{inf.usuario === user ? 'Tú' : inf.usuario}</span><span className="informe-card-date">{new Date(inf.created_at).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}</span></div>
+                                              {inf.usuario === user && <div style={{display:'flex',gap:'4px'}}>
+                                                <button className="informe-card-edit" onClick={function(){editInforme(inf);}}>Editar</button>
+                                                <button className="informe-card-delete" onClick={function(){deleteInforme(inf.id,player.nombre,selectedTeam);}}>Eliminar</button>
+                                              </div>}
+                                            </div>
+                                            <div className="informe-card-text">{inf.texto}</div>
+                                          </div>
+                                        );})
+                                      )}
+                                    </div>
                                   </div>
                                   )}
 
