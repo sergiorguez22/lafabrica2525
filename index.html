@@ -213,9 +213,15 @@
     .empty-state { padding:48px 20px; text-align:center; color:var(--text-3); font-size:14px; }
 
     /* ===== SCROLLBAR ===== */
-    .sidebar::-webkit-scrollbar { width:4px; }
-    .sidebar::-webkit-scrollbar-track { background:transparent; }
-    .sidebar::-webkit-scrollbar-thumb { background:#334155; border-radius:2px; }
+    /* Scrollbars minimalistas */
+    * { scrollbar-width:thin; scrollbar-color:transparent transparent; }
+    *:hover { scrollbar-color:rgba(100,116,139,0.3) transparent; }
+    ::-webkit-scrollbar { width:5px; height:5px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:transparent; border-radius:10px; transition:background 0.3s; }
+    *:hover::-webkit-scrollbar-thumb { background:rgba(100,116,139,0.3); }
+    *:hover::-webkit-scrollbar-thumb:hover { background:rgba(100,116,139,0.5); }
+    .sidebar::-webkit-scrollbar { width:3px; }
     .informes-section { margin-top:16px; }
     .informes-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
     .informes-title { font-size:12px; font-weight:600; color:var(--text-2); text-transform:uppercase; display:flex; align-items:center; gap:6px; }
