@@ -1695,23 +1695,34 @@
       var pickMaleVoice = function() {
         try {
           var voices = window.speechSynthesis.getVoices() || [];
-          var maleNames = ['jorge','diego','juan','pablo','raul','raúl','enrique','carlos','miguel','javier','alvaro','álvaro','alberto'];
           var esVoices = voices.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf('es') === 0; });
-          var byName = esVoices.find(function(v){
+          var maleNames = ['jorge','diego','juan','pablo','raul','raúl','enrique','carlos','miguel','javier','alvaro','álvaro','alberto','lorenzo','damian','damián','roberto'];
+          var femaleNames = ['monica','mónica','paulina','helena','marisol','esperanza','female','mujer','lucia','lucía','sabina','laura','conchita','rosa','carmen'];
+          var isMaleName = function(n){ return maleNames.some(function(m){ return n.indexOf(m) >= 0; }); };
+          var isFemaleName = function(n){ return femaleNames.some(function(m){ return n.indexOf(m) >= 0; }); };
+          var score = function(v){
             var n = (v.name || '').toLowerCase();
-            return maleNames.some(function(m){ return n.indexOf(m) >= 0; });
-          });
-          if (byName) return byName;
-          var notFemale = esVoices.find(function(v){
-            var n = (v.name || '').toLowerCase();
-            return n.indexOf('monica') < 0 && n.indexOf('mónica') < 0 && n.indexOf('paulina') < 0 && n.indexOf('helena') < 0 && n.indexOf('marisol') < 0 && n.indexOf('female') < 0;
-          });
-          return notFemale || esVoices[0] || null;
+            var s = 0;
+            if (isMaleName(n)) s += 100;
+            if (isFemaleName(n)) s -= 200;
+            if (n.indexOf('neural') >= 0 || n.indexOf('enhanced') >= 0 || n.indexOf('premium') >= 0 || n.indexOf('natural') >= 0) s += 50;
+            if (n.indexOf('google') >= 0) s += 30;
+            if ((v.lang || '').toLowerCase() === 'es-es') s += 20;
+            if ((v.lang || '').toLowerCase() === 'es-mx') s += 10;
+            if (n.indexOf('compact') >= 0) s -= 15;
+            return s;
+          };
+          var ranked = esVoices.slice().sort(function(a,b){ return score(b) - score(a); });
+          return ranked[0] || null;
         } catch(e) { return null; }
       };
 
       var dramatize = function(text) {
-        return String(text).replace(/[0-9#\-_\/\\]+/g, ' ').replace(/\s+/g,' ').trim();
+        var s = String(text).replace(/[0-9#\-_\/\\]+/g, ' ').replace(/\s+/g,' ').trim();
+        if (!s) return '';
+        var parts = s.split(' ');
+        var joined = parts.join(', ');
+        return '¡' + joined + '!';
       };
       var speak = function(text, onEnd) {
         try {
@@ -1721,8 +1732,8 @@
           if (!phrase) { if (onEnd) onEnd(); return; }
           var u = new SpeechSynthesisUtterance(phrase);
           u.lang = 'es-ES';
-          u.rate = 0.82;
-          u.pitch = 1.2;
+          u.rate = 0.72;
+          u.pitch = 0.92;
           u.volume = 1;
           var v = pickMaleVoice();
           if (v) u.voice = v;
