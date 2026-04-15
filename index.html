@@ -1713,11 +1713,11 @@
         try {
           if (!('speechSynthesis' in window)) return;
           window.speechSynthesis.cancel();
-          var shout = '¡' + String(text).toUpperCase() + '!';
-          var u = new SpeechSynthesisUtterance(shout);
+          var phrase = '¡¡' + String(text).toUpperCase() + '!!';
+          var u = new SpeechSynthesisUtterance(phrase);
           u.lang = 'es-ES';
-          u.rate = 1.05;
-          u.pitch = 1.35;
+          u.rate = 0.78;
+          u.pitch = 1.1;
           u.volume = 1;
           var v = pickMaleVoice();
           if (v) u.voice = v;
@@ -1733,54 +1733,80 @@
           var ctx = new AC();
           crowdCtxRef.current = ctx;
           var now = ctx.currentTime;
-          var dur = 0.85;
+          var dur = 1.5;
+          var master = ctx.createGain();
+          master.gain.setValueAtTime(0, now);
+          master.gain.linearRampToValueAtTime(1, now + 0.08);
+          master.gain.linearRampToValueAtTime(0.9, now + 0.7);
+          master.gain.linearRampToValueAtTime(0, now + dur);
+          master.connect(ctx.destination);
+
           var bufSize = Math.floor(ctx.sampleRate * dur);
           var buffer = ctx.createBuffer(1, bufSize, ctx.sampleRate);
           var data = buffer.getChannelData(0);
-          for (var i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * 0.7;
-          var noise = ctx.createBufferSource();
-          noise.buffer = buffer;
-          var bp = ctx.createBiquadFilter();
-          bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 0.8;
-          var hp = ctx.createBiquadFilter();
-          hp.type = 'highpass'; hp.frequency.value = 220;
-          var nGain = ctx.createGain();
-          nGain.gain.setValueAtTime(0, now);
-          nGain.gain.linearRampToValueAtTime(0.42, now + 0.05);
-          nGain.gain.linearRampToValueAtTime(0.32, now + 0.35);
-          nGain.gain.linearRampToValueAtTime(0, now + dur);
-          noise.connect(bp); bp.connect(hp); hp.connect(nGain); nGain.connect(ctx.destination);
-          noise.start(now); noise.stop(now + dur);
+          for (var i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1);
+          var makeNoise = function() { var n = ctx.createBufferSource(); n.buffer = buffer; return n; };
 
-          var freqs = [220, 277, 330];
+          // Formant F1 "e" ~ 450 Hz
+          var n1 = makeNoise();
+          var f1 = ctx.createBiquadFilter();
+          f1.type = 'bandpass'; f1.frequency.value = 450; f1.Q.value = 7;
+          var g1 = ctx.createGain(); g1.gain.value = 0.35;
+          n1.connect(f1); f1.connect(g1); g1.connect(master);
+          n1.start(now); n1.stop(now + dur);
+
+          // Formant F2 "e" ~ 2100 Hz (lo que da el color vocal E)
+          var n2 = makeNoise();
+          var f2 = ctx.createBiquadFilter();
+          f2.type = 'bandpass'; f2.frequency.value = 2100; f2.Q.value = 9;
+          var g2 = ctx.createGain(); g2.gain.value = 0.22;
+          n2.connect(f2); f2.connect(g2); g2.connect(master);
+          n2.start(now); n2.stop(now + dur);
+
+          // Cuerpo de grada (ruido grave filtrado)
+          var n3 = makeNoise();
+          var f3 = ctx.createBiquadFilter();
+          f3.type = 'bandpass'; f3.frequency.value = 180; f3.Q.value = 1.2;
+          var g3 = ctx.createGain(); g3.gain.value = 0.18;
+          n3.connect(f3); f3.connect(g3); g3.connect(master);
+          n3.start(now); n3.stop(now + dur);
+
+          // Armónicos vocales (voces apiladas) para reforzar EEEE
+          var freqs = [165, 220, 277];
           freqs.forEach(function(f, idx){
             var osc = ctx.createOscillator();
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(f, now);
-            osc.frequency.linearRampToValueAtTime(f * 1.06, now + 0.2);
-            osc.frequency.linearRampToValueAtTime(f, now + dur);
-            var oscLp = ctx.createBiquadFilter();
-            oscLp.type = 'lowpass'; oscLp.frequency.value = 950;
+            osc.frequency.linearRampToValueAtTime(f * 1.04, now + 0.4);
+            osc.frequency.linearRampToValueAtTime(f * 0.98, now + dur);
+            var vf1 = ctx.createBiquadFilter();
+            vf1.type = 'bandpass'; vf1.frequency.value = 450; vf1.Q.value = 3;
+            var vf2 = ctx.createBiquadFilter();
+            vf2.type = 'bandpass'; vf2.frequency.value = 2100; vf2.Q.value = 4;
             var og = ctx.createGain();
             og.gain.setValueAtTime(0, now);
-            og.gain.linearRampToValueAtTime(0.04 - idx * 0.009, now + 0.08);
+            og.gain.linearRampToValueAtTime(0.06 - idx * 0.012, now + 0.15);
+            og.gain.linearRampToValueAtTime(0.04 - idx * 0.008, now + 0.9);
             og.gain.linearRampToValueAtTime(0, now + dur);
-            osc.connect(oscLp); oscLp.connect(og); og.connect(ctx.destination);
+            osc.connect(vf1); vf1.connect(og);
+            var og2 = ctx.createGain(); og2.gain.value = 0.5;
+            osc.connect(vf2); vf2.connect(og2); og2.connect(og);
+            og.connect(master);
             osc.start(now); osc.stop(now + dur);
           });
 
-          setTimeout(function(){ try { ctx.close(); } catch(e){} crowdCtxRef.current = null; }, (dur + 0.2) * 1000);
+          setTimeout(function(){ try { ctx.close(); } catch(e){} crowdCtxRef.current = null; }, (dur + 0.25) * 1000);
         } catch(e) {}
       };
 
       useEffect(function() {
         if (order.length === 0) { setFinished(true); return; }
         try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch(e) {}
-        var stepDur = 2400;
+        var stepDur = 3200;
         var announce = function(player){
           if (!player) return;
-          setTimeout(function(){ speak(player.apodo); }, 250);
-          setTimeout(function(){ playCrowd(); }, 1100);
+          setTimeout(function(){ speak(player.apodo); }, 280);
+          setTimeout(function(){ playCrowd(); }, 1200);
         };
         setCurrentIdx(0);
         playBeep(780);
