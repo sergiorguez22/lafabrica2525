@@ -1691,25 +1691,50 @@
         } catch(e) {}
       };
 
+      var speak = function(text) {
+        try {
+          if (!('speechSynthesis' in window)) return;
+          window.speechSynthesis.cancel();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = 'es-ES';
+          u.rate = 0.95;
+          u.pitch = 1;
+          u.volume = 1;
+          var voices = window.speechSynthesis.getVoices();
+          var esVoice = voices.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf('es') === 0; });
+          if (esVoice) u.voice = esVoice;
+          window.speechSynthesis.speak(u);
+        } catch(e) {}
+      };
+
       useEffect(function() {
         if (order.length === 0) { setFinished(true); return; }
+        try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch(e) {}
         setCurrentIdx(0);
         playBeep(780);
+        var firstPlayer = assignments[order[0]];
+        if (firstPlayer) setTimeout(function(){ speak(firstPlayer.apodo); }, 350);
         var step = 0;
         var timer = setInterval(function() {
           step++;
           if (step >= order.length) {
             clearInterval(timer);
             playBeep(520);
-            setTimeout(function(){ setFinished(true); }, 1400);
+            setTimeout(function(){ try { window.speechSynthesis.cancel(); } catch(e){}; speak('¡Hala Madrid!'); setFinished(true); }, 1400);
           } else {
             playBeep(660 + step * 20);
             setCurrentIdx(step);
+            var p = assignments[order[step]];
+            if (p) setTimeout(function(){ speak(p.apodo); }, 350);
           }
         }, 1600);
         var onKey = function(e){ if (e.key === 'Escape') onClose(); };
         window.addEventListener('keydown', onKey);
-        return function() { clearInterval(timer); window.removeEventListener('keydown', onKey); };
+        return function() {
+          clearInterval(timer);
+          window.removeEventListener('keydown', onKey);
+          try { window.speechSynthesis.cancel(); } catch(e) {}
+        };
       }, []);
 
       var player = currentIdx >= 0 && currentIdx < order.length ? assignments[order[currentIdx]] : null;
