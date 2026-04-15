@@ -1711,9 +1711,7 @@
       };
 
       var dramatize = function(text) {
-        var s = String(text).replace(/[0-9#\-_\/\\]+/g, ' ').replace(/\s+/g,' ').trim().toUpperCase();
-        s = s.replace(/([AEIOUÁÉÍÓÚ])(?=[^AEIOUÁÉÍÓÚ]*$)/, function(m){ return m + m + m; });
-        return s;
+        return String(text).replace(/[0-9#\-_\/\\]+/g, ' ').replace(/\s+/g,' ').trim();
       };
       var speak = function(text, onEnd) {
         try {
@@ -1737,40 +1735,65 @@
         } catch(e) { if (onEnd) onEnd(); }
       };
 
-      var crowdAudioRef = { current: null };
+      var crowdPoolRef = { current: [], idx: 0 };
       var CROWD_URLS = [
         'https://actions.google.com/sounds/v1/sports/crowd_cheer.ogg',
-        'https://actions.google.com/sounds/v1/crowds/cheering_and_clapping_crowd.ogg',
-        'https://cdn.pixabay.com/download/audio/2022/03/10/audio_8cb749cfcb.mp3'
+        'https://actions.google.com/sounds/v1/sports/crowd_cheering.ogg',
+        'https://actions.google.com/sounds/v1/crowds/cheering_and_clapping_crowd.ogg'
       ];
-      var crowdPreloaded = null;
       var preloadCrowd = function() {
-        for (var i = 0; i < CROWD_URLS.length; i++) {
-          var a = new Audio();
-          a.src = CROWD_URLS[i];
-          a.preload = 'auto';
-          a.volume = 0.85;
-          a.crossOrigin = 'anonymous';
-          if (i === 0) crowdPreloaded = a;
+        if (crowdPoolRef.current.length) return;
+        var pool = [];
+        for (var u = 0; u < CROWD_URLS.length; u++) {
+          for (var k = 0; k < 2; k++) {
+            var a = new Audio(CROWD_URLS[u]);
+            a.preload = 'auto';
+            a.volume = 0.9;
+            try { a.load(); } catch(e) {}
+            pool.push(a);
+          }
         }
+        crowdPoolRef.current = pool;
+      };
+      var synthCrowd = function() {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          var ctx = new AC();
+          var now = ctx.currentTime;
+          var dur = 1.4;
+          var bufSize = Math.floor(ctx.sampleRate * dur);
+          var buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+          var d = buf.getChannelData(0);
+          for (var i = 0; i < bufSize; i++) d[i] = (Math.random() * 2 - 1);
+          var src = ctx.createBufferSource(); src.buffer = buf;
+          var bp = ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=800; bp.Q.value=0.8;
+          var g = ctx.createGain();
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(0.45, now + 0.08);
+          g.gain.linearRampToValueAtTime(0.3, now + 0.8);
+          g.gain.linearRampToValueAtTime(0, now + dur);
+          src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+          src.start(now); src.stop(now + dur);
+          setTimeout(function(){ try{ctx.close();}catch(e){} }, (dur + 0.2) * 1000);
+        } catch(e) {}
       };
       var playCrowd = function() {
-        var tryUrl = function(idx){
-          if (idx >= CROWD_URLS.length) return;
-          var audio = new Audio(CROWD_URLS[idx]);
-          audio.volume = 0.9;
-          audio.preload = 'auto';
-          var stopped = false;
-          audio.addEventListener('loadedmetadata', function(){
-            if (stopped) return;
-            if (audio.duration > 2.4) audio.currentTime = Math.max(0, audio.duration - 2.2);
-          });
-          audio.play().then(function(){
-            crowdAudioRef.current = audio;
-            setTimeout(function(){ stopped = true; try { audio.pause(); } catch(e){} }, 2400);
-          }).catch(function(){ tryUrl(idx + 1); });
+        var pool = crowdPoolRef.current;
+        if (!pool.length) { synthCrowd(); return; }
+        var triedSynth = false;
+        var tryNext = function(attempts) {
+          if (attempts >= pool.length) { if (!triedSynth) { triedSynth = true; synthCrowd(); } return; }
+          var a = pool[crowdPoolRef.idx % pool.length];
+          crowdPoolRef.idx++;
+          try { a.currentTime = 0; } catch(e) {}
+          var p = a.play();
+          if (p && p.catch) {
+            p.catch(function(){ tryNext(attempts + 1); });
+          }
+          setTimeout(function(){ try { a.pause(); } catch(e) {} }, 2000);
         };
-        tryUrl(0);
+        tryNext(0);
       };
 
       useEffect(function() {
@@ -1810,7 +1833,7 @@
           clearInterval(timer);
           window.removeEventListener('keydown', onKey);
           try { window.speechSynthesis.cancel(); } catch(e) {}
-          try { if (crowdAudioRef.current) crowdAudioRef.current.pause(); } catch(e) {}
+          try { (crowdPoolRef.current || []).forEach(function(a){ try{a.pause();}catch(e){} }); } catch(e) {}
         };
       }, []);
 
