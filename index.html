@@ -1727,7 +1727,7 @@
           var v = pickMaleVoice();
           if (v) u.voice = v;
           var done = false;
-          var finish = function(){ if (done) return; done = true; if (onEnd) setTimeout(onEnd, 120); };
+          var finish = function(){ if (done) return; done = true; if (onEnd) onEnd(); };
           u.onend = finish;
           u.onerror = finish;
           setTimeout(finish, 4500);
