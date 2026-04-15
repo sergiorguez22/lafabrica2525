@@ -1713,10 +1713,11 @@
         try {
           if (!('speechSynthesis' in window)) return;
           window.speechSynthesis.cancel();
-          var u = new SpeechSynthesisUtterance(text);
+          var shout = '¡' + String(text).toUpperCase() + '!';
+          var u = new SpeechSynthesisUtterance(shout);
           u.lang = 'es-ES';
-          u.rate = 0.82;
-          u.pitch = 0.85;
+          u.rate = 1.05;
+          u.pitch = 1.35;
           u.volume = 1;
           var v = pickMaleVoice();
           if (v) u.voice = v;
@@ -1732,24 +1733,21 @@
           var ctx = new AC();
           crowdCtxRef.current = ctx;
           var now = ctx.currentTime;
-          var dur = 1.8;
+          var dur = 0.85;
           var bufSize = Math.floor(ctx.sampleRate * dur);
           var buffer = ctx.createBuffer(1, bufSize, ctx.sampleRate);
           var data = buffer.getChannelData(0);
-          for (var i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * 0.6;
+          for (var i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * 0.7;
           var noise = ctx.createBufferSource();
           noise.buffer = buffer;
           var bp = ctx.createBiquadFilter();
-          bp.type = 'bandpass';
-          bp.frequency.value = 650;
-          bp.Q.value = 0.9;
+          bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 0.8;
           var hp = ctx.createBiquadFilter();
-          hp.type = 'highpass';
-          hp.frequency.value = 200;
+          hp.type = 'highpass'; hp.frequency.value = 220;
           var nGain = ctx.createGain();
           nGain.gain.setValueAtTime(0, now);
-          nGain.gain.linearRampToValueAtTime(0.35, now + 0.12);
-          nGain.gain.linearRampToValueAtTime(0.28, now + 0.9);
+          nGain.gain.linearRampToValueAtTime(0.42, now + 0.05);
+          nGain.gain.linearRampToValueAtTime(0.32, now + 0.35);
           nGain.gain.linearRampToValueAtTime(0, now + dur);
           noise.connect(bp); bp.connect(hp); hp.connect(nGain); nGain.connect(ctx.destination);
           noise.start(now); noise.stop(now + dur);
@@ -1759,30 +1757,29 @@
             var osc = ctx.createOscillator();
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(f, now);
-            osc.frequency.linearRampToValueAtTime(f * 1.05, now + 0.4);
+            osc.frequency.linearRampToValueAtTime(f * 1.06, now + 0.2);
             osc.frequency.linearRampToValueAtTime(f, now + dur);
             var oscLp = ctx.createBiquadFilter();
-            oscLp.type = 'lowpass'; oscLp.frequency.value = 900;
+            oscLp.type = 'lowpass'; oscLp.frequency.value = 950;
             var og = ctx.createGain();
             og.gain.setValueAtTime(0, now);
-            og.gain.linearRampToValueAtTime(0.035 - idx * 0.008, now + 0.2);
-            og.gain.linearRampToValueAtTime(0.025 - idx * 0.006, now + 1.0);
+            og.gain.linearRampToValueAtTime(0.04 - idx * 0.009, now + 0.08);
             og.gain.linearRampToValueAtTime(0, now + dur);
             osc.connect(oscLp); oscLp.connect(og); og.connect(ctx.destination);
             osc.start(now); osc.stop(now + dur);
           });
 
-          setTimeout(function(){ try { ctx.close(); } catch(e){} crowdCtxRef.current = null; }, (dur + 0.3) * 1000);
+          setTimeout(function(){ try { ctx.close(); } catch(e){} crowdCtxRef.current = null; }, (dur + 0.2) * 1000);
         } catch(e) {}
       };
 
       useEffect(function() {
         if (order.length === 0) { setFinished(true); return; }
         try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch(e) {}
-        var stepDur = 3200;
+        var stepDur = 2400;
         var announce = function(player){
           if (!player) return;
-          setTimeout(function(){ speak(player.apodo); }, 300);
+          setTimeout(function(){ speak(player.apodo); }, 250);
           setTimeout(function(){ playCrowd(); }, 1100);
         };
         setCurrentIdx(0);
