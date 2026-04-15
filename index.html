@@ -2545,7 +2545,7 @@
                                       <div style={{fontSize:'11px',fontWeight:600,color:'var(--text-2)',textTransform:'uppercase',marginBottom:'8px'}}>Tu expectativa</div>
                                       <select className="proy-select" value={proyecciones[user] || ""} disabled={proySaving} onChange={function(e){ saveProyeccion(player.nombre, selectedTeam, e.target.value); }}>
                                         <option value="">Sin expectativa</option>
-                                        {getHigherTeams(selectedTeam).map(function(t){ return <option key={t} value={t}>{getProyLabel(t)}</option>; })}
+                                        {getHigherTeams(selectedTeam).map(function(t){ return <option key={t} value={t}>{getCapLabel(t)}</option>; })}
                                       </select>
                                     </div>
                                     {Object.keys(proyecciones).filter(function(u){ return !isRestricted(user) || u === user; }).length > 0 && (
@@ -2558,7 +2558,7 @@
                                             return (
                                               <div key={u} style={{display:'flex',alignItems:'center',gap:'8px'}}>
                                                 <span style={{fontSize:'12px',color:'var(--text-2)',minWidth:'70px'}}>{u === user ? 'Tú' : u}:</span>
-                                                <span className="proy-badge" style={{background: col.bg, color: col.text, border: '1px solid ' + (col.border || '#ccc')}}>{getProyLabel(val)}</span>
+                                                <span className="proy-badge" style={{background: col.bg, color: col.text, border: '1px solid ' + (col.border || '#ccc')}}>{getCapLabel(val)}</span>
                                               </div>
                                             );
                                           })}
