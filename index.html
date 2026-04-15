@@ -278,6 +278,39 @@
     .lineup-saved-date { font-size:11px; color:var(--text-3); }
     .lineup-saved-delete { background:none; border:none; color:#ef4444; cursor:pointer; font-size:12px; padding:2px 6px; border-radius:4px; }
     .lineup-saved-delete:hover { background:#fee2e2; }
+    .lineup-btn-play { background:linear-gradient(135deg,#E10600,#ff3b2d); color:#fff; border:none; border-radius:var(--radius-sm); padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(225,6,0,0.3); transition:transform 0.1s, box-shadow 0.1s; }
+    .lineup-btn-play:hover { transform:translateY(-1px); box-shadow:0 4px 10px rgba(225,6,0,0.4); }
+    .lineup-btn-play:active { transform:translateY(0); }
+    .lp-overlay { position:fixed; inset:0; z-index:9999; background:radial-gradient(ellipse at center, #1a1d2e 0%, #05060a 75%); display:flex; align-items:center; justify-content:center; animation:lpFade 0.4s ease; overflow:hidden; }
+    @keyframes lpFade { from { opacity:0; } to { opacity:1; } }
+    .lp-spotlights { position:absolute; inset:0; pointer-events:none; background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 40%),
+      radial-gradient(circle at 80% 30%, rgba(255,255,255,0.08) 0%, transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba(225,6,0,0.15) 0%, transparent 60%);
+      animation:lpSpot 4s ease-in-out infinite alternate;
+    }
+    @keyframes lpSpot { 0%{transform:translateX(-10px);} 100%{transform:translateX(10px);} }
+    .lp-close { position:absolute; top:16px; right:16px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; backdrop-filter:blur(8px); transition:background 0.15s; }
+    .lp-close:hover { background:rgba(255,255,255,0.2); }
+    .lp-card { position:relative; display:flex; flex-direction:column; align-items:center; color:#fff; text-align:center; animation:lpIn 0.6s cubic-bezier(0.22,1,0.36,1); will-change:transform,opacity; }
+    @keyframes lpIn {
+      0% { opacity:0; transform:translateY(80px) scale(0.85); filter:blur(12px); }
+      100% { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+    }
+    .lp-photo { width:280px; height:330px; border-radius:16px; overflow:hidden; border:3px solid rgba(225,6,0,0.6); box-shadow:0 20px 60px rgba(225,6,0,0.35), 0 0 0 8px rgba(255,255,255,0.04); background:#222; position:relative; }
+    .lp-photo img { width:100%; height:100%; object-fit:cover; }
+    .lp-photo-fallback { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:800; color:#fff; background:linear-gradient(135deg,#E10600,#7a0300); }
+    .lp-dorsal { position:absolute; top:-18px; right:-18px; width:62px; height:62px; border-radius:50%; background:#E10600; color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,0.5); border:3px solid #fff; }
+    .lp-role { margin-top:22px; font-size:13px; letter-spacing:3px; color:#E10600; font-weight:700; text-transform:uppercase; }
+    .lp-name { margin-top:6px; font-size:38px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; text-shadow:0 4px 24px rgba(0,0,0,0.6); }
+    .lp-progress { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; gap:6px; z-index:5; }
+    .lp-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25); transition:background 0.3s; }
+    .lp-dot.active { background:#E10600; box-shadow:0 0 12px #E10600; }
+    .lp-final { position:relative; text-align:center; color:#fff; animation:lpFinalIn 0.8s cubic-bezier(0.22,1,0.36,1); }
+    @keyframes lpFinalIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+    .lp-final-title { font-size:48px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; text-shadow:0 4px 24px rgba(225,6,0,0.4); }
+    .lp-final-sub { font-size:14px; color:#E10600; letter-spacing:4px; font-weight:600; text-transform:uppercase; margin-bottom:30px; }
+    .lp-final-crest { width:80px; height:auto; margin-bottom:16px; filter:drop-shadow(0 6px 18px rgba(225,6,0,0.4)); }
     .lineup-name-input { padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; outline:none; width:200px; background:var(--surface); }
     .lineup-name-input:focus { border-color:var(--accent); }
     @media (max-width:768px) {
@@ -1624,6 +1657,94 @@
     }
 
     /* ===== LINEUP VIEW ===== */
+    function LineupPresentation({ assignments, slots, teamName, onClose }) {
+      const [currentIdx, setCurrentIdx] = useState(-1);
+      const [finished, setFinished] = useState(false);
+
+      const order = useMemo(function() {
+        var posOrder = { Portero:0, Defensa:1, Centrocampista:2, Delantero:3 };
+        var idxs = [];
+        for (var i = 0; i < slots.length; i++) { if (assignments[i]) idxs.push(i); }
+        idxs.sort(function(a,b){ return posOrder[slots[a].pos] - posOrder[slots[b].pos]; });
+        return idxs;
+      }, [assignments, slots]);
+
+      var playBeep = function(freq) {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          var ctx = new AC();
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.value = freq || 660;
+          osc.connect(gain); gain.connect(ctx.destination);
+          gain.gain.setValueAtTime(0, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+          osc.start(); osc.stop(ctx.currentTime + 0.45);
+          setTimeout(function(){ try { ctx.close(); } catch(e){} }, 600);
+        } catch(e) {}
+      };
+
+      useEffect(function() {
+        if (order.length === 0) { setFinished(true); return; }
+        setCurrentIdx(0);
+        playBeep(780);
+        var step = 0;
+        var timer = setInterval(function() {
+          step++;
+          if (step >= order.length) {
+            clearInterval(timer);
+            playBeep(520);
+            setTimeout(function(){ setFinished(true); }, 1400);
+          } else {
+            playBeep(660 + step * 20);
+            setCurrentIdx(step);
+          }
+        }, 1600);
+        var onKey = function(e){ if (e.key === 'Escape') onClose(); };
+        window.addEventListener('keydown', onKey);
+        return function() { clearInterval(timer); window.removeEventListener('keydown', onKey); };
+      }, []);
+
+      var player = currentIdx >= 0 && currentIdx < order.length ? assignments[order[currentIdx]] : null;
+      var slot = currentIdx >= 0 && currentIdx < order.length ? slots[order[currentIdx]] : null;
+      var initials = player ? player.apodo.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase() : '';
+
+      return (
+        <div className="lp-overlay" onClick={function(e){ if(e.target.classList.contains('lp-overlay')) onClose(); }}>
+          <div className="lp-spotlights"></div>
+          <button className="lp-close" onClick={onClose} aria-label="Cerrar">×</button>
+          {!finished && player && (
+            <div className="lp-card" key={currentIdx}>
+              <div className="lp-photo">
+                {player.foto
+                  ? <img src={player.foto} alt={player.apodo} onError={function(e){ e.target.style.display='none'; e.target.parentNode.querySelector('.lp-photo-fallback').style.display='flex'; }} />
+                  : null}
+                <div className="lp-photo-fallback" style={{display: player.foto ? 'none' : 'flex'}}>{initials}</div>
+                <div className="lp-dorsal">{player.dorsal || '-'}</div>
+              </div>
+              <div className="lp-role">{slot.role}</div>
+              <div className="lp-name">{player.apodo}</div>
+            </div>
+          )}
+          {finished && (
+            <div className="lp-final">
+              <img src={CREST_URL} alt="Real Madrid" className="lp-final-crest" />
+              <div className="lp-final-sub">Alineación</div>
+              <div className="lp-final-title">{teamName}</div>
+              <div className="lp-final-sub">¡Hala Madrid!</div>
+            </div>
+          )}
+          {!finished && order.length > 0 && (
+            <div className="lp-progress">
+              {order.map(function(_, i){ return <div key={i} className={"lp-dot" + (i <= currentIdx ? " active" : "")}></div>; })}
+            </div>
+          )}
+        </div>
+      );
+    }
+
     function LineupView({ players, teamName, user }) {
       const isF5 = isF5Team(teamName);
       const isF7 = isF7Team(teamName);
@@ -1663,6 +1784,7 @@
       const [selectedSlot, setSelectedSlot] = useState(null);
       const [savedLineups, setSavedLineups] = useState([]);
       const [lineupName, setLineupName] = useState("");
+      const [showPresentation, setShowPresentation] = useState(false);
 
       useEffect(function() {
         try {
@@ -1875,7 +1997,16 @@
               <input className="lineup-name-input" type="text" placeholder="Nombre de la alineación..." value={lineupName} onChange={function(e){setLineupName(e.target.value);}} />
               <button className="lineup-btn lineup-btn-primary" onClick={handleSave} disabled={!lineupName.trim()}>Guardar</button>
               <button className="lineup-btn lineup-btn-secondary" onClick={handleClear}>Limpiar</button>
+              {assignments.some(function(a){ return a !== null; }) && (
+                <button className="lineup-btn-play" onClick={function(){ setShowPresentation(true); }} title="Reproducir presentación">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2 1.5v9l8-4.5z"/></svg>
+                  Reproducir
+                </button>
+              )}
             </div>
+            {showPresentation && (
+              <LineupPresentation assignments={assignments} slots={slots} teamName={teamName} onClose={function(){ setShowPresentation(false); }} />
+            )}
             {savedLineups.length > 0 && (
               <div className="lineup-saved-list">
                 <div style={{fontSize:'12px',fontWeight:600,color:'var(--text-2)',marginBottom:'8px',textTransform:'uppercase'}}>Alineaciones guardadas</div>
