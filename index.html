@@ -1711,47 +1711,72 @@
       };
 
       var dramatize = function(text) {
-        var s = String(text).toUpperCase();
+        var s = String(text).replace(/[0-9#\-_\/\\]+/g, ' ').replace(/\s+/g,' ').trim().toUpperCase();
         s = s.replace(/([AEIOUÁÉÍÓÚ])(?=[^AEIOUÁÉÍÓÚ]*$)/, function(m){ return m + m + m; });
-        return '¡¡' + s + '!!';
+        return s;
       };
       var speak = function(text, onEnd) {
         try {
           if (!('speechSynthesis' in window)) { if (onEnd) onEnd(); return; }
           window.speechSynthesis.cancel();
-          var u = new SpeechSynthesisUtterance(dramatize(text));
+          var phrase = dramatize(text);
+          if (!phrase) { if (onEnd) onEnd(); return; }
+          var u = new SpeechSynthesisUtterance(phrase);
           u.lang = 'es-ES';
           u.rate = 0.82;
-          u.pitch = 1.18;
+          u.pitch = 1.2;
           u.volume = 1;
           var v = pickMaleVoice();
           if (v) u.voice = v;
-          if (onEnd) u.onend = function(){ setTimeout(onEnd, 150); };
+          var done = false;
+          var finish = function(){ if (done) return; done = true; if (onEnd) setTimeout(onEnd, 120); };
+          u.onend = finish;
+          u.onerror = finish;
+          setTimeout(finish, 4500);
           window.speechSynthesis.speak(u);
         } catch(e) { if (onEnd) onEnd(); }
       };
 
       var crowdAudioRef = { current: null };
-      var CROWD_URL = 'https://actions.google.com/sounds/v1/sports/crowd_cheer.ogg';
+      var CROWD_URLS = [
+        'https://actions.google.com/sounds/v1/sports/crowd_cheer.ogg',
+        'https://actions.google.com/sounds/v1/crowds/cheering_and_clapping_crowd.ogg',
+        'https://cdn.pixabay.com/download/audio/2022/03/10/audio_8cb749cfcb.mp3'
+      ];
+      var crowdPreloaded = null;
+      var preloadCrowd = function() {
+        for (var i = 0; i < CROWD_URLS.length; i++) {
+          var a = new Audio();
+          a.src = CROWD_URLS[i];
+          a.preload = 'auto';
+          a.volume = 0.85;
+          a.crossOrigin = 'anonymous';
+          if (i === 0) crowdPreloaded = a;
+        }
+      };
       var playCrowd = function() {
-        try {
-          var audio = new Audio(CROWD_URL);
-          audio.volume = 0.85;
+        var tryUrl = function(idx){
+          if (idx >= CROWD_URLS.length) return;
+          var audio = new Audio(CROWD_URLS[idx]);
+          audio.volume = 0.9;
           audio.preload = 'auto';
           var stopped = false;
           audio.addEventListener('loadedmetadata', function(){
             if (stopped) return;
-            if (audio.duration > 2.2) audio.currentTime = Math.max(0, audio.duration - 2);
+            if (audio.duration > 2.4) audio.currentTime = Math.max(0, audio.duration - 2.2);
           });
-          audio.play().catch(function(){});
-          setTimeout(function(){ stopped = true; try { audio.pause(); } catch(e){} }, 2200);
-          crowdAudioRef.current = audio;
-        } catch(e) {}
+          audio.play().then(function(){
+            crowdAudioRef.current = audio;
+            setTimeout(function(){ stopped = true; try { audio.pause(); } catch(e){} }, 2400);
+          }).catch(function(){ tryUrl(idx + 1); });
+        };
+        tryUrl(0);
       };
 
       useEffect(function() {
         if (order.length === 0) { setFinished(true); return; }
         try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch(e) {}
+        try { preloadCrowd(); } catch(e) {}
         var stepDur = 3400;
         var announce = function(player){
           if (!player) return;
