@@ -286,7 +286,7 @@
     .lp-spotlights { position:absolute; inset:0; pointer-events:none; background:
       radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 40%),
       radial-gradient(circle at 80% 30%, rgba(255,255,255,0.08) 0%, transparent 40%),
-      radial-gradient(circle at 50% 100%, rgba(225,6,0,0.15) 0%, transparent 60%);
+      radial-gradient(circle at 50% 100%, rgba(26,86,219,0.18) 0%, transparent 60%);
       animation:lpSpot 4s ease-in-out infinite alternate;
     }
     @keyframes lpSpot { 0%{transform:translateX(-10px);} 100%{transform:translateX(10px);} }
@@ -297,20 +297,20 @@
       0% { opacity:0; transform:translateY(80px) scale(0.85); filter:blur(12px); }
       100% { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
     }
-    .lp-photo { width:280px; height:330px; border-radius:16px; overflow:hidden; border:3px solid rgba(225,6,0,0.6); box-shadow:0 20px 60px rgba(225,6,0,0.35), 0 0 0 8px rgba(255,255,255,0.04); background:#222; position:relative; }
+    .lp-photo { width:280px; height:330px; border-radius:16px; overflow:hidden; border:3px solid rgba(26,86,219,0.7); box-shadow:0 20px 60px rgba(26,86,219,0.4), 0 0 0 8px rgba(255,255,255,0.04); background:#222; position:relative; }
     .lp-photo img { width:100%; height:100%; object-fit:cover; }
-    .lp-photo-fallback { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:800; color:#fff; background:linear-gradient(135deg,#E10600,#7a0300); }
-    .lp-dorsal { position:absolute; top:-18px; right:-18px; width:62px; height:62px; border-radius:50%; background:#E10600; color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,0.5); border:3px solid #fff; }
-    .lp-role { margin-top:22px; font-size:13px; letter-spacing:3px; color:#E10600; font-weight:700; text-transform:uppercase; }
+    .lp-photo-fallback { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:800; color:#fff; background:linear-gradient(135deg,#1a56db,#0c2e7a); }
+    .lp-dorsal { position:absolute; top:-18px; right:-18px; width:62px; height:62px; border-radius:50%; background:#1a56db; color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,0.5); border:3px solid #fff; }
+    .lp-role { margin-top:22px; font-size:13px; letter-spacing:3px; color:#1a56db; font-weight:700; text-transform:uppercase; }
     .lp-name { margin-top:6px; font-size:38px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; text-shadow:0 4px 24px rgba(0,0,0,0.6); }
     .lp-progress { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; gap:6px; z-index:5; }
     .lp-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25); transition:background 0.3s; }
-    .lp-dot.active { background:#E10600; box-shadow:0 0 12px #E10600; }
+    .lp-dot.active { background:#1a56db; box-shadow:0 0 12px #1a56db; }
     .lp-final { position:relative; text-align:center; color:#fff; animation:lpFinalIn 0.8s cubic-bezier(0.22,1,0.36,1); }
     @keyframes lpFinalIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
-    .lp-final-title { font-size:48px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; text-shadow:0 4px 24px rgba(225,6,0,0.4); }
-    .lp-final-sub { font-size:14px; color:#E10600; letter-spacing:4px; font-weight:600; text-transform:uppercase; margin-bottom:30px; }
-    .lp-final-crest { width:80px; height:auto; margin-bottom:16px; filter:drop-shadow(0 6px 18px rgba(225,6,0,0.4)); }
+    .lp-final-title { font-size:48px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; text-shadow:0 4px 24px rgba(26,86,219,0.5); }
+    .lp-final-sub { font-size:14px; color:#1a56db; letter-spacing:4px; font-weight:600; text-transform:uppercase; margin-bottom:30px; }
+    .lp-final-crest { width:80px; height:auto; margin-bottom:16px; filter:drop-shadow(0 6px 18px rgba(26,86,219,0.5)); }
     .lineup-name-input { padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:13px; outline:none; width:200px; background:var(--surface); }
     .lineup-name-input:focus { border-color:var(--accent); }
     @media (max-width:768px) {
@@ -1660,6 +1660,7 @@
     function LineupPresentation({ assignments, slots, teamName, onClose }) {
       const [currentIdx, setCurrentIdx] = useState(-1);
       const [finished, setFinished] = useState(false);
+      const showDorsal = isF5Team(teamName) || isF7Team(teamName);
 
       const order = useMemo(function() {
         var posOrder = { Portero:0, Defensa:1, Centrocampista:2, Delantero:3 };
@@ -1722,7 +1723,7 @@
                   ? <img src={player.foto} alt={player.apodo} onError={function(e){ e.target.style.display='none'; e.target.parentNode.querySelector('.lp-photo-fallback').style.display='flex'; }} />
                   : null}
                 <div className="lp-photo-fallback" style={{display: player.foto ? 'none' : 'flex'}}>{initials}</div>
-                <div className="lp-dorsal">{player.dorsal || '-'}</div>
+                {showDorsal && <div className="lp-dorsal">{player.dorsal || '-'}</div>}
               </div>
               <div className="lp-role">{slot.role}</div>
               <div className="lp-name">{player.apodo}</div>
