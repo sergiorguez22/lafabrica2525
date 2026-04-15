@@ -278,8 +278,8 @@
     .lineup-saved-date { font-size:11px; color:var(--text-3); }
     .lineup-saved-delete { background:none; border:none; color:#ef4444; cursor:pointer; font-size:12px; padding:2px 6px; border-radius:4px; }
     .lineup-saved-delete:hover { background:#fee2e2; }
-    .lineup-btn-play { background:linear-gradient(135deg,#E10600,#ff3b2d); color:#fff; border:none; border-radius:var(--radius-sm); padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(225,6,0,0.3); transition:transform 0.1s, box-shadow 0.1s; }
-    .lineup-btn-play:hover { transform:translateY(-1px); box-shadow:0 4px 10px rgba(225,6,0,0.4); }
+    .lineup-btn-play { background:linear-gradient(135deg,#1a56db,#2563eb); color:#fff; border:none; border-radius:var(--radius-sm); padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(26,86,219,0.3); transition:transform 0.1s, box-shadow 0.1s; }
+    .lineup-btn-play:hover { transform:translateY(-1px); box-shadow:0 4px 10px rgba(26,86,219,0.4); }
     .lineup-btn-play:active { transform:translateY(0); }
     .lp-overlay { position:fixed; inset:0; z-index:9999; background:radial-gradient(ellipse at center, #1a1d2e 0%, #05060a 75%); display:flex; align-items:center; justify-content:center; animation:lpFade 0.4s ease; overflow:hidden; }
     @keyframes lpFade { from { opacity:0; } to { opacity:1; } }
@@ -1666,7 +1666,11 @@
         var posOrder = { Portero:0, Defensa:1, Centrocampista:2, Delantero:3 };
         var idxs = [];
         for (var i = 0; i < slots.length; i++) { if (assignments[i]) idxs.push(i); }
-        idxs.sort(function(a,b){ return posOrder[slots[a].pos] - posOrder[slots[b].pos]; });
+        idxs.sort(function(a,b){
+          var d = posOrder[slots[a].pos] - posOrder[slots[b].pos];
+          if (d !== 0) return d;
+          return slots[b].x - slots[a].x;
+        });
         return idxs;
       }, [assignments, slots]);
 
