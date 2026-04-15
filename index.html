@@ -260,6 +260,7 @@
     .lineup-roster-item .pos-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
     .lineup-slot { position:absolute; transform:translate(-50%,-50%); text-align:center; z-index:2; cursor:pointer; }
     .lineup-slot-circle { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:white; border:2px dashed rgba(255,255,255,0.5); background:rgba(0,0,0,0.25); margin:0 auto; transition:all 0.2s; }
+    .lineup-slot-circle img { object-position:center 18% !important; }
     .lineup-slot-circle.filled { border-style:solid; border-color:rgba(255,255,255,0.8); box-shadow:0 2px 6px rgba(0,0,0,0.3); }
     .lineup-slot-circle.selected { border-color:#fbbf24; box-shadow:0 0 12px rgba(251,191,36,0.6); transform:scale(1.1); }
     .lineup-slot-label { font-size:8px; font-weight:600; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-top:2px; letter-spacing:0.5px; }
@@ -1709,104 +1710,54 @@
         } catch(e) { return null; }
       };
 
-      var speak = function(text) {
+      var dramatize = function(text) {
+        var s = String(text).toUpperCase();
+        s = s.replace(/([AEIOUÁÉÍÓÚ])(?=[^AEIOUÁÉÍÓÚ]*$)/, function(m){ return m + m + m; });
+        return '¡¡' + s + '!!';
+      };
+      var speak = function(text, onEnd) {
         try {
-          if (!('speechSynthesis' in window)) return;
+          if (!('speechSynthesis' in window)) { if (onEnd) onEnd(); return; }
           window.speechSynthesis.cancel();
-          var phrase = '¡¡' + String(text).toUpperCase() + '!!';
-          var u = new SpeechSynthesisUtterance(phrase);
+          var u = new SpeechSynthesisUtterance(dramatize(text));
           u.lang = 'es-ES';
-          u.rate = 0.78;
-          u.pitch = 1.1;
+          u.rate = 0.82;
+          u.pitch = 1.18;
           u.volume = 1;
           var v = pickMaleVoice();
           if (v) u.voice = v;
+          if (onEnd) u.onend = function(){ setTimeout(onEnd, 150); };
           window.speechSynthesis.speak(u);
-        } catch(e) {}
+        } catch(e) { if (onEnd) onEnd(); }
       };
 
-      var crowdCtxRef = { current: null };
+      var crowdAudioRef = { current: null };
+      var CROWD_URL = 'https://actions.google.com/sounds/v1/sports/crowd_cheer.ogg';
       var playCrowd = function() {
         try {
-          var AC = window.AudioContext || window.webkitAudioContext;
-          if (!AC) return;
-          var ctx = new AC();
-          crowdCtxRef.current = ctx;
-          var now = ctx.currentTime;
-          var dur = 1.5;
-          var master = ctx.createGain();
-          master.gain.setValueAtTime(0, now);
-          master.gain.linearRampToValueAtTime(1, now + 0.08);
-          master.gain.linearRampToValueAtTime(0.9, now + 0.7);
-          master.gain.linearRampToValueAtTime(0, now + dur);
-          master.connect(ctx.destination);
-
-          var bufSize = Math.floor(ctx.sampleRate * dur);
-          var buffer = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-          var data = buffer.getChannelData(0);
-          for (var i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1);
-          var makeNoise = function() { var n = ctx.createBufferSource(); n.buffer = buffer; return n; };
-
-          // Formant F1 "e" ~ 450 Hz
-          var n1 = makeNoise();
-          var f1 = ctx.createBiquadFilter();
-          f1.type = 'bandpass'; f1.frequency.value = 450; f1.Q.value = 7;
-          var g1 = ctx.createGain(); g1.gain.value = 0.35;
-          n1.connect(f1); f1.connect(g1); g1.connect(master);
-          n1.start(now); n1.stop(now + dur);
-
-          // Formant F2 "e" ~ 2100 Hz (lo que da el color vocal E)
-          var n2 = makeNoise();
-          var f2 = ctx.createBiquadFilter();
-          f2.type = 'bandpass'; f2.frequency.value = 2100; f2.Q.value = 9;
-          var g2 = ctx.createGain(); g2.gain.value = 0.22;
-          n2.connect(f2); f2.connect(g2); g2.connect(master);
-          n2.start(now); n2.stop(now + dur);
-
-          // Cuerpo de grada (ruido grave filtrado)
-          var n3 = makeNoise();
-          var f3 = ctx.createBiquadFilter();
-          f3.type = 'bandpass'; f3.frequency.value = 180; f3.Q.value = 1.2;
-          var g3 = ctx.createGain(); g3.gain.value = 0.18;
-          n3.connect(f3); f3.connect(g3); g3.connect(master);
-          n3.start(now); n3.stop(now + dur);
-
-          // Armónicos vocales (voces apiladas) para reforzar EEEE
-          var freqs = [165, 220, 277];
-          freqs.forEach(function(f, idx){
-            var osc = ctx.createOscillator();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(f, now);
-            osc.frequency.linearRampToValueAtTime(f * 1.04, now + 0.4);
-            osc.frequency.linearRampToValueAtTime(f * 0.98, now + dur);
-            var vf1 = ctx.createBiquadFilter();
-            vf1.type = 'bandpass'; vf1.frequency.value = 450; vf1.Q.value = 3;
-            var vf2 = ctx.createBiquadFilter();
-            vf2.type = 'bandpass'; vf2.frequency.value = 2100; vf2.Q.value = 4;
-            var og = ctx.createGain();
-            og.gain.setValueAtTime(0, now);
-            og.gain.linearRampToValueAtTime(0.06 - idx * 0.012, now + 0.15);
-            og.gain.linearRampToValueAtTime(0.04 - idx * 0.008, now + 0.9);
-            og.gain.linearRampToValueAtTime(0, now + dur);
-            osc.connect(vf1); vf1.connect(og);
-            var og2 = ctx.createGain(); og2.gain.value = 0.5;
-            osc.connect(vf2); vf2.connect(og2); og2.connect(og);
-            og.connect(master);
-            osc.start(now); osc.stop(now + dur);
+          var audio = new Audio(CROWD_URL);
+          audio.volume = 0.85;
+          audio.preload = 'auto';
+          var stopped = false;
+          audio.addEventListener('loadedmetadata', function(){
+            if (stopped) return;
+            if (audio.duration > 2.2) audio.currentTime = Math.max(0, audio.duration - 2);
           });
-
-          setTimeout(function(){ try { ctx.close(); } catch(e){} crowdCtxRef.current = null; }, (dur + 0.25) * 1000);
+          audio.play().catch(function(){});
+          setTimeout(function(){ stopped = true; try { audio.pause(); } catch(e){} }, 2200);
+          crowdAudioRef.current = audio;
         } catch(e) {}
       };
 
       useEffect(function() {
         if (order.length === 0) { setFinished(true); return; }
         try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch(e) {}
-        var stepDur = 3200;
+        var stepDur = 3400;
         var announce = function(player){
           if (!player) return;
-          setTimeout(function(){ speak(player.apodo); }, 280);
-          setTimeout(function(){ playCrowd(); }, 1200);
+          setTimeout(function(){
+            speak(player.apodo, function(){ playCrowd(); });
+          }, 260);
         };
         setCurrentIdx(0);
         playBeep(780);
@@ -1819,8 +1770,7 @@
             playBeep(520);
             setTimeout(function(){
               try { window.speechSynthesis.cancel(); } catch(e){}
-              speak('¡Hala Madrid!');
-              playCrowd();
+              speak('¡Hala Madrid!', function(){ playCrowd(); });
               setFinished(true);
             }, 1400);
           } else {
@@ -1835,7 +1785,7 @@
           clearInterval(timer);
           window.removeEventListener('keydown', onKey);
           try { window.speechSynthesis.cancel(); } catch(e) {}
-          try { if (crowdCtxRef.current) crowdCtxRef.current.close(); } catch(e) {}
+          try { if (crowdAudioRef.current) crowdAudioRef.current.pause(); } catch(e) {}
         };
       }, []);
 
