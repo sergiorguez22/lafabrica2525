@@ -1691,49 +1691,128 @@
         } catch(e) {}
       };
 
+      var pickMaleVoice = function() {
+        try {
+          var voices = window.speechSynthesis.getVoices() || [];
+          var maleNames = ['jorge','diego','juan','pablo','raul','raúl','enrique','carlos','miguel','javier','alvaro','álvaro','alberto'];
+          var esVoices = voices.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf('es') === 0; });
+          var byName = esVoices.find(function(v){
+            var n = (v.name || '').toLowerCase();
+            return maleNames.some(function(m){ return n.indexOf(m) >= 0; });
+          });
+          if (byName) return byName;
+          var notFemale = esVoices.find(function(v){
+            var n = (v.name || '').toLowerCase();
+            return n.indexOf('monica') < 0 && n.indexOf('mónica') < 0 && n.indexOf('paulina') < 0 && n.indexOf('helena') < 0 && n.indexOf('marisol') < 0 && n.indexOf('female') < 0;
+          });
+          return notFemale || esVoices[0] || null;
+        } catch(e) { return null; }
+      };
+
       var speak = function(text) {
         try {
           if (!('speechSynthesis' in window)) return;
           window.speechSynthesis.cancel();
           var u = new SpeechSynthesisUtterance(text);
           u.lang = 'es-ES';
-          u.rate = 0.95;
-          u.pitch = 1;
+          u.rate = 0.82;
+          u.pitch = 0.85;
           u.volume = 1;
-          var voices = window.speechSynthesis.getVoices();
-          var esVoice = voices.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf('es') === 0; });
-          if (esVoice) u.voice = esVoice;
+          var v = pickMaleVoice();
+          if (v) u.voice = v;
           window.speechSynthesis.speak(u);
+        } catch(e) {}
+      };
+
+      var crowdCtxRef = { current: null };
+      var playCrowd = function() {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          var ctx = new AC();
+          crowdCtxRef.current = ctx;
+          var now = ctx.currentTime;
+          var dur = 1.8;
+          var bufSize = Math.floor(ctx.sampleRate * dur);
+          var buffer = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+          var data = buffer.getChannelData(0);
+          for (var i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * 0.6;
+          var noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          var bp = ctx.createBiquadFilter();
+          bp.type = 'bandpass';
+          bp.frequency.value = 650;
+          bp.Q.value = 0.9;
+          var hp = ctx.createBiquadFilter();
+          hp.type = 'highpass';
+          hp.frequency.value = 200;
+          var nGain = ctx.createGain();
+          nGain.gain.setValueAtTime(0, now);
+          nGain.gain.linearRampToValueAtTime(0.35, now + 0.12);
+          nGain.gain.linearRampToValueAtTime(0.28, now + 0.9);
+          nGain.gain.linearRampToValueAtTime(0, now + dur);
+          noise.connect(bp); bp.connect(hp); hp.connect(nGain); nGain.connect(ctx.destination);
+          noise.start(now); noise.stop(now + dur);
+
+          var freqs = [220, 277, 330];
+          freqs.forEach(function(f, idx){
+            var osc = ctx.createOscillator();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(f, now);
+            osc.frequency.linearRampToValueAtTime(f * 1.05, now + 0.4);
+            osc.frequency.linearRampToValueAtTime(f, now + dur);
+            var oscLp = ctx.createBiquadFilter();
+            oscLp.type = 'lowpass'; oscLp.frequency.value = 900;
+            var og = ctx.createGain();
+            og.gain.setValueAtTime(0, now);
+            og.gain.linearRampToValueAtTime(0.035 - idx * 0.008, now + 0.2);
+            og.gain.linearRampToValueAtTime(0.025 - idx * 0.006, now + 1.0);
+            og.gain.linearRampToValueAtTime(0, now + dur);
+            osc.connect(oscLp); oscLp.connect(og); og.connect(ctx.destination);
+            osc.start(now); osc.stop(now + dur);
+          });
+
+          setTimeout(function(){ try { ctx.close(); } catch(e){} crowdCtxRef.current = null; }, (dur + 0.3) * 1000);
         } catch(e) {}
       };
 
       useEffect(function() {
         if (order.length === 0) { setFinished(true); return; }
         try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch(e) {}
+        var stepDur = 3200;
+        var announce = function(player){
+          if (!player) return;
+          setTimeout(function(){ speak(player.apodo); }, 300);
+          setTimeout(function(){ playCrowd(); }, 1100);
+        };
         setCurrentIdx(0);
         playBeep(780);
-        var firstPlayer = assignments[order[0]];
-        if (firstPlayer) setTimeout(function(){ speak(firstPlayer.apodo); }, 350);
+        announce(assignments[order[0]]);
         var step = 0;
         var timer = setInterval(function() {
           step++;
           if (step >= order.length) {
             clearInterval(timer);
             playBeep(520);
-            setTimeout(function(){ try { window.speechSynthesis.cancel(); } catch(e){}; speak('¡Hala Madrid!'); setFinished(true); }, 1400);
+            setTimeout(function(){
+              try { window.speechSynthesis.cancel(); } catch(e){}
+              speak('¡Hala Madrid!');
+              playCrowd();
+              setFinished(true);
+            }, 1400);
           } else {
             playBeep(660 + step * 20);
             setCurrentIdx(step);
-            var p = assignments[order[step]];
-            if (p) setTimeout(function(){ speak(p.apodo); }, 350);
+            announce(assignments[order[step]]);
           }
-        }, 1600);
+        }, stepDur);
         var onKey = function(e){ if (e.key === 'Escape') onClose(); };
         window.addEventListener('keydown', onKey);
         return function() {
           clearInterval(timer);
           window.removeEventListener('keydown', onKey);
           try { window.speechSynthesis.cancel(); } catch(e) {}
+          try { if (crowdCtxRef.current) crowdCtxRef.current.close(); } catch(e) {}
         };
       }, []);
 
