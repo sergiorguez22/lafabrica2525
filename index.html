@@ -1746,70 +1746,108 @@
         } catch(e) { if (onEnd) onEnd(); }
       };
 
-      var crowdPoolRef = { current: [], idx: 0 };
+      var crowdRef = { ctx: null, buffer: null, ready: false, anthem: null };
+      var ANTHEM_URLS = [
+        '/audio/decima.mp3',
+        'https://lafabricarm2526.vercel.app/audio/decima.mp3'
+      ];
       var CROWD_URLS = [
         'https://actions.google.com/sounds/v1/sports/crowd_cheer.ogg',
         'https://actions.google.com/sounds/v1/sports/crowd_cheering.ogg',
         'https://actions.google.com/sounds/v1/crowds/cheering_and_clapping_crowd.ogg'
       ];
-      var preloadCrowd = function() {
-        if (crowdPoolRef.current.length) return;
-        var pool = [];
-        for (var u = 0; u < CROWD_URLS.length; u++) {
-          for (var k = 0; k < 2; k++) {
-            var a = new Audio(CROWD_URLS[u]);
-            a.preload = 'auto';
-            a.volume = 0.9;
-            try { a.load(); } catch(e) {}
-            pool.push(a);
-          }
+      var synthCrowdBuffer = function(ctx) {
+        var dur = 1.4;
+        var bufSize = Math.floor(ctx.sampleRate * dur);
+        var buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+        var d = buf.getChannelData(0);
+        for (var i = 0; i < bufSize; i++) {
+          var env = i < ctx.sampleRate * 0.08 ? (i / (ctx.sampleRate * 0.08)) : Math.max(0, 1 - (i - ctx.sampleRate * 0.08) / (bufSize - ctx.sampleRate * 0.08));
+          d[i] = (Math.random() * 2 - 1) * env * 0.5;
         }
-        crowdPoolRef.current = pool;
+        return buf;
       };
-      var synthCrowd = function() {
+      var preloadCrowd = function() {
+        if (crowdRef.ready || crowdRef.ctx) return;
         try {
           var AC = window.AudioContext || window.webkitAudioContext;
           if (!AC) return;
           var ctx = new AC();
-          var now = ctx.currentTime;
-          var dur = 1.4;
-          var bufSize = Math.floor(ctx.sampleRate * dur);
-          var buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-          var d = buf.getChannelData(0);
-          for (var i = 0; i < bufSize; i++) d[i] = (Math.random() * 2 - 1);
-          var src = ctx.createBufferSource(); src.buffer = buf;
-          var bp = ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=800; bp.Q.value=0.8;
-          var g = ctx.createGain();
-          g.gain.setValueAtTime(0, now);
-          g.gain.linearRampToValueAtTime(0.45, now + 0.08);
-          g.gain.linearRampToValueAtTime(0.3, now + 0.8);
-          g.gain.linearRampToValueAtTime(0, now + dur);
-          src.connect(bp); bp.connect(g); g.connect(ctx.destination);
-          src.start(now); src.stop(now + dur);
-          setTimeout(function(){ try{ctx.close();}catch(e){} }, (dur + 0.2) * 1000);
+          crowdRef.ctx = ctx;
+          var tryUrl = function(i) {
+            if (i >= CROWD_URLS.length) {
+              crowdRef.buffer = synthCrowdBuffer(ctx);
+              crowdRef.ready = true;
+              return;
+            }
+            fetch(CROWD_URLS[i]).then(function(r){
+              if (!r.ok) throw new Error('bad');
+              return r.arrayBuffer();
+            }).then(function(ab){
+              return ctx.decodeAudioData(ab);
+            }).then(function(buf){
+              crowdRef.buffer = buf;
+              crowdRef.ready = true;
+            }).catch(function(){ tryUrl(i + 1); });
+          };
+          tryUrl(0);
+          var tryAnthem = function(i){
+            if (i >= ANTHEM_URLS.length) return;
+            fetch(ANTHEM_URLS[i]).then(function(r){
+              if (!r.ok) throw new Error('bad');
+              return r.arrayBuffer();
+            }).then(function(ab){
+              return ctx.decodeAudioData(ab);
+            }).then(function(buf){ crowdRef.anthem = buf; }).catch(function(){ tryAnthem(i + 1); });
+          };
+          tryAnthem(0);
         } catch(e) {}
       };
+      var playAnthem = function(duration) {
+        try {
+          var ctx = crowdRef.ctx;
+          if (!ctx || !crowdRef.anthem) return false;
+          if (ctx.state === 'suspended') { try { ctx.resume(); } catch(e) {} }
+          var src = ctx.createBufferSource();
+          src.buffer = crowdRef.anthem;
+          var g = ctx.createGain();
+          var d = Math.min(duration || 10, crowdRef.anthem.duration);
+          var now = ctx.currentTime;
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(0.95, now + 0.4);
+          g.gain.linearRampToValueAtTime(0.9, now + d - 1.5);
+          g.gain.linearRampToValueAtTime(0, now + d);
+          src.connect(g); g.connect(ctx.destination);
+          src.start(0, 0, d);
+          return true;
+        } catch(e) { return false; }
+      };
       var playCrowd = function() {
-        var pool = crowdPoolRef.current;
-        if (!pool.length) { synthCrowd(); return; }
-        var triedSynth = false;
-        var tryNext = function(attempts) {
-          if (attempts >= pool.length) { if (!triedSynth) { triedSynth = true; synthCrowd(); } return; }
-          var a = pool[crowdPoolRef.idx % pool.length];
-          crowdPoolRef.idx++;
-          try { a.currentTime = 0; } catch(e) {}
-          var p = a.play();
-          if (p && p.catch) {
-            p.catch(function(){ tryNext(attempts + 1); });
-          }
-          setTimeout(function(){ try { a.pause(); } catch(e) {} }, 2000);
-        };
-        tryNext(0);
+        try {
+          var ctx = crowdRef.ctx;
+          if (!ctx) return;
+          if (ctx.state === 'suspended') { try { ctx.resume(); } catch(e) {} }
+          var buf = crowdRef.buffer;
+          if (!buf) { buf = synthCrowdBuffer(ctx); crowdRef.buffer = buf; }
+          var src = ctx.createBufferSource();
+          src.buffer = buf;
+          var g = ctx.createGain(); g.gain.value = 0.9;
+          var offset = buf.duration > 2.2 ? Math.max(0, buf.duration - 2) : 0;
+          src.connect(g); g.connect(ctx.destination);
+          src.start(0, offset, 2);
+        } catch(e) {}
       };
 
       useEffect(function() {
         if (order.length === 0) { setFinished(true); return; }
-        try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch(e) {}
+        try {
+          if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            var warm = new SpeechSynthesisUtterance(' ');
+            warm.volume = 0; warm.rate = 2; warm.lang = 'es-ES';
+            window.speechSynthesis.speak(warm);
+          }
+        } catch(e) {}
         try { preloadCrowd(); } catch(e) {}
         var stepDur = 3400;
         var announce = function(player){
@@ -1829,9 +1867,11 @@
             playBeep(520);
             setTimeout(function(){
               try { window.speechSynthesis.cancel(); } catch(e){}
-              speak('¡Hala Madrid!', function(){ playCrowd(); });
               setFinished(true);
-            }, 1400);
+              if (!playAnthem(10)) {
+                speak('¡Hala Madrid!', function(){ playCrowd(); });
+              }
+            }, 600);
           } else {
             playBeep(660 + step * 20);
             setCurrentIdx(step);
@@ -1844,7 +1884,8 @@
           clearInterval(timer);
           window.removeEventListener('keydown', onKey);
           try { window.speechSynthesis.cancel(); } catch(e) {}
-          try { (crowdPoolRef.current || []).forEach(function(a){ try{a.pause();}catch(e){} }); } catch(e) {}
+          try { if (crowdRef.ctx) crowdRef.ctx.close(); } catch(e) {}
+          crowdRef.ctx = null; crowdRef.buffer = null; crowdRef.ready = false;
         };
       }, []);
 
