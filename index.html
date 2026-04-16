@@ -439,13 +439,22 @@
         .then(function() { return loadScript(deps[1], 1); })
         .then(function() { return loadScript(deps[2], 2); })
         .then(function() {
-          // Cargar Supabase (no bloquea si falla)
+          // Cargar Supabase con fallback CDN
           return new Promise(function(resolve) {
-            var s = document.createElement('script');
-            s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-            s.onload = resolve;
-            s.onerror = resolve; // continuar aunque falle
-            document.head.appendChild(s);
+            var cdns = [
+              'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+              'https://unpkg.com/@supabase/supabase-js@2',
+              'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js'
+            ];
+            var tryLoad = function(i) {
+              if (i >= cdns.length) { resolve(); return; }
+              var s = document.createElement('script');
+              s.src = cdns[i];
+              s.onload = function() { if (window.supabase) resolve(); else tryLoad(i + 1); };
+              s.onerror = function() { tryLoad(i + 1); };
+              document.head.appendChild(s);
+            };
+            tryLoad(0);
           });
         })
         .then(function() {
