@@ -1978,13 +1978,27 @@
       const [showPresentation, setShowPresentation] = useState(false);
 
       useEffect(function() {
-        try {
-          var saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
-          setSavedLineups(saved);
-        } catch(e) {}
         setAssignments(Array(slots.length).fill(null));
         setSelectedSlot(null);
         setLineupName("");
+        if (supabaseClient && !isRestricted(user)) {
+          supabaseClient.from('lineups').select('*').eq('equipo', teamName).order('created_at', { ascending: false })
+            .then(function(res) {
+              if (!res.error && res.data && res.data.length > 0) {
+                var mapped = res.data.map(function(d) {
+                  return { id: d.id, nombre: d.nombre, fecha: d.fecha, formacion: d.formacion, usuario: d.usuario, jugadores: d.jugadores };
+                });
+                setSavedLineups(mapped);
+                localStorage.setItem(storageKey, JSON.stringify(mapped));
+              } else {
+                try { setSavedLineups(JSON.parse(localStorage.getItem(storageKey) || "[]")); } catch(e) { setSavedLineups([]); }
+              }
+            }).catch(function() {
+              try { setSavedLineups(JSON.parse(localStorage.getItem(storageKey) || "[]")); } catch(e) { setSavedLineups([]); }
+            });
+        } else {
+          try { setSavedLineups(JSON.parse(localStorage.getItem(storageKey) || "[]")); } catch(e) { setSavedLineups([]); }
+        }
       }, [teamName]);
 
       var usedPlayers = assignments.filter(function(a){ return a !== null; }).map(function(a){ return a.nombre; });
@@ -2107,17 +2121,29 @@
 
       var handleSave = function() {
         if (!lineupName.trim()) return;
+        var jugData = assignments.map(function(a, i){ return a ? { slot: i, nombre: a.nombre, apodo: a.apodo } : null; });
         var lineup = {
           id: Date.now(),
           nombre: lineupName.trim(),
           fecha: new Date().toLocaleDateString('es-ES'),
           formacion: formation, usuario: user,
-          jugadores: assignments.map(function(a, i){ return a ? { slot: i, nombre: a.nombre, apodo: a.apodo } : null; })
+          jugadores: jugData
         };
         var updated = savedLineups.concat([lineup]);
         setSavedLineups(updated);
         localStorage.setItem(storageKey, JSON.stringify(updated));
         setLineupName("");
+        if (supabaseClient && !isRestricted(user)) {
+          supabaseClient.from('lineups').insert({
+            equipo: teamName, nombre: lineup.nombre, fecha: lineup.fecha,
+            formacion: formation, usuario: user, jugadores: jugData
+          }).then(function(res) {
+            if (!res.error) {
+              supabaseClient.from('lineups').select('*').eq('equipo', teamName).order('created_at', { ascending: false })
+                .then(function(r2) { if (!r2.error && r2.data) { setSavedLineups(r2.data); localStorage.setItem(storageKey, JSON.stringify(r2.data)); } });
+            }
+          });
+        }
       };
 
       var handleLoad = function(lineup) {
@@ -2136,6 +2162,9 @@
         var updated = savedLineups.filter(function(l){ return l.id !== id; });
         setSavedLineups(updated);
         localStorage.setItem(storageKey, JSON.stringify(updated));
+        if (supabaseClient && !isRestricted(user)) {
+          supabaseClient.from('lineups').delete().eq('id', id);
+        }
       };
 
       var handleClear = function() {
