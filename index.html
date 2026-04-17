@@ -1866,7 +1866,7 @@
         };
         setCurrentIdx(0);
         playBeep(780);
-        announce(assignments[order[0]]);
+        setTimeout(function(){ announce(assignments[order[0]]); }, 500);
         var step = 0;
         var timer = setInterval(function() {
           step++;
