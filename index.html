@@ -1864,14 +1864,12 @@
           }, 260);
         };
         setCurrentIdx(0);
-        playBeep(780);
         setTimeout(function(){ announce(assignments[order[0]]); }, 500);
         var step = 0;
         var timer = setInterval(function() {
           step++;
           if (step >= order.length) {
             clearInterval(timer);
-            playBeep(520);
             setTimeout(function(){
               try { window.speechSynthesis.cancel(); } catch(e){}
               setFinished(true);
@@ -1880,7 +1878,6 @@
               }
             }, 600);
           } else {
-            playBeep(660 + step * 20);
             setCurrentIdx(step);
             announce(assignments[order[step]]);
           }
