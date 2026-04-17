@@ -1806,26 +1806,17 @@
       var playAnthem = function(duration) {
         try {
           var audio = new Audio('/audio/decima.mp3');
-          audio.volume = 0;
-          audio.preload = 'auto';
+          audio.volume = 0.9;
           var d = duration || 10;
-          var played = false;
-          audio.addEventListener('canplaythrough', function() {
-            if (played) return; played = true;
-            audio.play().catch(function(){});
-            var fadeIn = setInterval(function() {
-              if (audio.volume < 0.9) audio.volume = Math.min(0.9, audio.volume + 0.05);
-              else clearInterval(fadeIn);
-            }, 40);
+          anthemAudioRef.current = audio;
+          audio.play().then(function(){
             setTimeout(function() {
               var fadeOut = setInterval(function() {
-                if (audio.volume > 0.02) audio.volume = Math.max(0, audio.volume - 0.04);
+                if (audio.volume > 0.05) audio.volume = Math.max(0, audio.volume - 0.04);
                 else { clearInterval(fadeOut); try { audio.pause(); } catch(e) {} }
               }, 50);
             }, (d - 1.5) * 1000);
-          });
-          audio.load();
-          anthemAudioRef.current = audio;
+          }).catch(function(){ return; });
           return true;
         } catch(e) { return false; }
       };
