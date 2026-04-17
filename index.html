@@ -1934,16 +1934,15 @@
     function LineupView({ players, teamName, user }) {
       const isF5 = isF5Team(teamName);
       const isF7 = isF7Team(teamName);
-      const formation = isF5 ? "2-1-2" : isF7 ? "3-1-2" : "4-3-3";
+      const formation = isF5 ? "1-2-1" : isF7 ? "3-1-2" : "4-3-3";
       const storageKey = isRestricted(user) ? "lf_lineups_" + user + "_" + teamName : "lf_lineups_shared_" + teamName;
 
       const slots = isF5 ? [
         { id:0, role:"POR", pos:"Portero", x:50, y:88 },
-        { id:1, role:"DFC", pos:"Defensa", x:30, y:65 },
-        { id:2, role:"DFC", pos:"Defensa", x:70, y:65 },
-        { id:3, role:"MC", pos:"Centrocampista", x:50, y:42 },
-        { id:4, role:"DC", pos:"Delantero", x:30, y:20 },
-        { id:5, role:"DC", pos:"Delantero", x:70, y:20 }
+        { id:1, role:"LI", pos:"Defensa", x:20, y:60 },
+        { id:2, role:"DFC", pos:"Defensa", x:50, y:68 },
+        { id:3, role:"LD", pos:"Defensa", x:80, y:60 },
+        { id:4, role:"DC", pos:"Delantero", x:50, y:22 }
       ] : isF7 ? [
         { id:0, role:"POR", pos:"Portero", x:50, y:87 },
         { id:1, role:"LI", pos:"Defensa", x:20, y:63 },
