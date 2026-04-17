@@ -1805,7 +1805,8 @@
       var anthemAudioRef = { current: null };
       var playAnthem = function(duration) {
         try {
-          var audio = new Audio('/audio/decima.mp3');
+          var audio = (window._iosAudioUnlocked || [])[1] || new Audio('/audio/decima.mp3');
+          audio.currentTime = 0;
           audio.volume = 0.9;
           var d = duration || 10;
           anthemAudioRef.current = audio;
@@ -1816,12 +1817,19 @@
                 else { clearInterval(fadeOut); try { audio.pause(); } catch(e) {} }
               }, 50);
             }, (d - 1.5) * 1000);
-          }).catch(function(){ return; });
+          }).catch(function(){});
           return true;
         } catch(e) { return false; }
       };
       var playCrowd = function() {
         try {
+          var unlocked = (window._iosAudioUnlocked || [])[0];
+          if (unlocked) {
+            unlocked.currentTime = 0;
+            unlocked.volume = 0.9;
+            unlocked.play().catch(function(){});
+            return;
+          }
           var ctx = crowdRef.ctx;
           if (!ctx) return;
           if (ctx.state === 'suspended') { try { ctx.resume(); } catch(e) {} }
@@ -2205,7 +2213,19 @@
               <button className="lineup-btn lineup-btn-primary" onClick={handleSave} disabled={!lineupName.trim()}>Guardar</button>
               <button className="lineup-btn lineup-btn-secondary" onClick={handleClear}>Limpiar</button>
               {assignments.some(function(a){ return a !== null; }) && (
-                <button className="lineup-btn-play" onClick={function(){ setShowPresentation(true); }} title="Reproducir presentación">
+                <button className="lineup-btn-play" onClick={function(){
+                  window._iosAudioUnlocked = [];
+                  try {
+                    var a1 = new Audio('/audio/crowd.mp3');
+                    a1.volume = 0.01; a1.play().then(function(){ a1.pause(); a1.currentTime = 0; a1.volume = 0.9; }).catch(function(){});
+                    window._iosAudioUnlocked.push(a1);
+                    var a2 = new Audio('/audio/decima.mp3');
+                    a2.volume = 0.01; a2.play().then(function(){ a2.pause(); a2.currentTime = 0; a2.volume = 0.9; }).catch(function(){});
+                    window._iosAudioUnlocked.push(a2);
+                  } catch(e){}
+                  try { var AC = window.AudioContext || window.webkitAudioContext; if (AC) { var ctx = new AC(); ctx.resume(); } } catch(e){}
+                  setShowPresentation(true);
+                }} title="Reproducir presentación">
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2 1.5v9l8-4.5z"/></svg>
                   Reproducir
                 </button>
