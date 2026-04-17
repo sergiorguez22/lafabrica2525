@@ -2301,7 +2301,10 @@
     /* ===== MAIN APP ===== */
     function App() {
       const [user, setUser] = useState(() => sessionStorage.getItem("lfUser") || null);
-      const [selectedTeam, setSelectedTeam] = useState("Castilla");
+      const [selectedTeam, setSelectedTeam] = useState(function() {
+        var hash = window.location.hash.replace('#','').replace(/%20/g,' ');
+        return hash && canteraData[hash] ? hash : "Castilla";
+      });
       const [expandedPlayer, setExpandedPlayer] = useState(null);
       const [searchTerm, setSearchTerm] = useState("");
       const [positionFilter, setPositionFilter] = useState("Todas");
@@ -2421,6 +2424,7 @@
 
       const handleSelectTeam = useCallback((team) => {
         setSelectedTeam(team);
+        window.location.hash = team;
         setExpandedPlayer(null);
         setSearchTerm("");
         setPositionFilter("Todas");
