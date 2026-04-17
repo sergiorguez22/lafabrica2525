@@ -2302,8 +2302,10 @@
     function App() {
       const [user, setUser] = useState(() => sessionStorage.getItem("lfUser") || null);
       const [selectedTeam, setSelectedTeam] = useState(function() {
-        var hash = window.location.hash.replace('#','').replace(/%20/g,' ');
-        return hash && canteraData[hash] ? hash : "Castilla";
+        try {
+          var hash = decodeURIComponent(window.location.hash.substring(1));
+          return hash && canteraData[hash] ? hash : "Castilla";
+        } catch(e) { return "Castilla"; }
       });
       const [expandedPlayer, setExpandedPlayer] = useState(null);
       const [searchTerm, setSearchTerm] = useState("");
