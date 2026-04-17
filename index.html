@@ -301,7 +301,8 @@
     .lp-photo { width:280px; height:330px; border-radius:16px; overflow:hidden; border:3px solid rgba(26,86,219,0.7); box-shadow:0 20px 60px rgba(26,86,219,0.4), 0 0 0 8px rgba(255,255,255,0.04); background:#222; position:relative; }
     .lp-photo img { width:100%; height:100%; object-fit:cover; }
     .lp-photo-fallback { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:800; color:#fff; background:linear-gradient(135deg,#1a56db,#0c2e7a); }
-    .lp-dorsal { position:absolute; top:-18px; right:-18px; width:62px; height:62px; border-radius:50%; background:#1a56db; color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,0.5); border:3px solid #fff; }
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+    .lp-dorsal { position:absolute; top:8px; right:12px; font-family:'Bebas Neue',Impact,'Arial Black',sans-serif; font-size:54px; font-weight:400; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,0.7), 0 0 30px rgba(26,86,219,0.4); letter-spacing:2px; line-height:1; }
     .lp-role { margin-top:22px; font-size:13px; letter-spacing:3px; color:#1a56db; font-weight:700; text-transform:uppercase; }
     .lp-name { margin-top:6px; font-size:38px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; text-shadow:0 4px 24px rgba(0,0,0,0.6); }
     .lp-progress { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; gap:6px; z-index:5; }
@@ -1757,13 +1758,11 @@
 
       var crowdRef = { ctx: null, buffer: null, ready: false, anthem: null };
       var ANTHEM_URLS = [
-        '/audio/decima.mp3',
-        'https://lafabricarm2526.vercel.app/audio/decima.mp3'
+        '/audio/decima.mp3'
       ];
       var CROWD_URLS = [
-        'https://actions.google.com/sounds/v1/sports/crowd_cheer.ogg',
-        'https://actions.google.com/sounds/v1/sports/crowd_cheering.ogg',
-        'https://actions.google.com/sounds/v1/crowds/cheering_and_clapping_crowd.ogg'
+        '/audio/crowd.mp3',
+        'https://actions.google.com/sounds/v1/sports/crowd_cheer.ogg'
       ];
       var synthCrowdBuffer = function(ctx) {
         var dur = 1.4;
