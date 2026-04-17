@@ -2720,7 +2720,6 @@
                                 <span className="pos-dot" style={{background:ps.dot}}></span>
                                 {player.posicionDetalle || (player.posicion === "Centrocampista" ? "Medio" : player.posicion)}
                               </span>
-                              {teamProyecciones[player.nombre] && !isRestricted(user) && <span className="proy-row-badge" style={{background: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).bg, color: (PROY_COLORS[teamProyecciones[player.nombre]]||{}).text, border: "1px solid " + ((PROY_COLORS[teamProyecciones[player.nombre]]||{}).border||"#ccc")}}>{teamProyecciones[player.nombre].replace("Jugador élite","ÉLITE").replace("Primer equipo","1er EQ").replace("Primera división","1a DIV").replace("Segunda división","2a DIV").replace("Fútbol semiprofesional / extranjero","SEMI").replace("Baja","BAJA").replace(/Juvenil /,"J").replace(/Cadete /,"Cad").replace(/Infantil /,"Inf").replace(/Alevín /,"Ale").replace(/Benjamín /,"Ben").replace(/Prebenjamín /,"Pre").replace("Real Madrid C","RM C")}</span>}
                             </div>
                             <div className="birth-date">{player.fechaNacimiento || '-'}</div>
                             <div className="birth-place">{player.lugarNacimiento || '-'}</div>
