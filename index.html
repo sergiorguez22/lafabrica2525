@@ -1799,34 +1799,33 @@
             }).catch(function(){ tryUrl(i + 1); });
           };
           tryUrl(0);
-          var tryAnthem = function(i){
-            if (i >= ANTHEM_URLS.length) return;
-            fetch(ANTHEM_URLS[i]).then(function(r){
-              if (!r.ok) throw new Error('bad');
-              return r.arrayBuffer();
-            }).then(function(ab){
-              return ctx.decodeAudioData(ab);
-            }).then(function(buf){ crowdRef.anthem = buf; }).catch(function(){ tryAnthem(i + 1); });
-          };
-          tryAnthem(0);
+          // Anthem uses HTMLAudioElement, no preload needed here
         } catch(e) {}
       };
+      var anthemAudioRef = { current: null };
       var playAnthem = function(duration) {
         try {
-          var ctx = crowdRef.ctx;
-          if (!ctx || !crowdRef.anthem) return false;
-          if (ctx.state === 'suspended') { try { ctx.resume(); } catch(e) {} }
-          var src = ctx.createBufferSource();
-          src.buffer = crowdRef.anthem;
-          var g = ctx.createGain();
-          var d = Math.min(duration || 10, crowdRef.anthem.duration);
-          var now = ctx.currentTime;
-          g.gain.setValueAtTime(0, now);
-          g.gain.linearRampToValueAtTime(0.95, now + 0.4);
-          g.gain.linearRampToValueAtTime(0.9, now + d - 1.5);
-          g.gain.linearRampToValueAtTime(0, now + d);
-          src.connect(g); g.connect(ctx.destination);
-          src.start(0, 0, d);
+          var audio = new Audio('/audio/decima.mp3');
+          audio.volume = 0;
+          audio.preload = 'auto';
+          var d = duration || 10;
+          var played = false;
+          audio.addEventListener('canplaythrough', function() {
+            if (played) return; played = true;
+            audio.play().catch(function(){});
+            var fadeIn = setInterval(function() {
+              if (audio.volume < 0.9) audio.volume = Math.min(0.9, audio.volume + 0.05);
+              else clearInterval(fadeIn);
+            }, 40);
+            setTimeout(function() {
+              var fadeOut = setInterval(function() {
+                if (audio.volume > 0.02) audio.volume = Math.max(0, audio.volume - 0.04);
+                else { clearInterval(fadeOut); try { audio.pause(); } catch(e) {} }
+              }, 50);
+            }, (d - 1.5) * 1000);
+          });
+          audio.load();
+          anthemAudioRef.current = audio;
           return true;
         } catch(e) { return false; }
       };
@@ -1893,6 +1892,7 @@
           window.removeEventListener('keydown', onKey);
           try { window.speechSynthesis.cancel(); } catch(e) {}
           try { if (crowdRef.ctx) crowdRef.ctx.close(); } catch(e) {}
+          try { if (anthemAudioRef.current) { anthemAudioRef.current.pause(); anthemAudioRef.current = null; } } catch(e) {}
           crowdRef.ctx = null; crowdRef.buffer = null; crowdRef.ready = false;
         };
       }, []);
