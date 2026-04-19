@@ -2481,16 +2481,75 @@
 
     /* ===== NEWS VIEW ===== */
     function NewsView() {
+      const [items, setItems] = useState(noticiasData);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+
+      useEffect(function() {
+        var CACHE_KEY = 'ngc_news_cache_v1';
+        var CACHE_TTL = 60 * 60 * 1000; // 1h
+        var FEED = 'https://www.bernabeudigital.com/rss/?section=4';
+        var PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEED);
+
+        function stripHtml(s) {
+          var t = document.createElement('div'); t.innerHTML = s || '';
+          return (t.textContent || t.innerText || '').replace(/\s+/g, ' ').trim();
+        }
+        function fmtDate(s) {
+          try {
+            var d = new Date(s.replace(' ', 'T'));
+            if (isNaN(d)) return '';
+            return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+          } catch(e) { return ''; }
+        }
+        function mapItems(raw) {
+          return (raw || []).slice(0, 30).map(function(it){
+            var resumen = stripHtml(it.description || it.content || '');
+            if (resumen.length > 180) resumen = resumen.substring(0, 177) + '...';
+            return { titulo: it.title, url: it.link, fecha: fmtDate(it.pubDate), fuente: 'Bernabéu Digital', resumen: resumen };
+          });
+        }
+
+        try {
+          var cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+          if (cached && (Date.now() - cached.t) < CACHE_TTL && cached.items && cached.items.length > 0) {
+            setItems(cached.items); setLoading(false);
+          }
+        } catch(e) {}
+
+        fetch(PROXY)
+          .then(function(r){ if (!r.ok) throw new Error('http'); return r.json(); })
+          .then(function(data){
+            if (data.status !== 'ok' || !data.items) throw new Error('bad-data');
+            var mapped = mapItems(data.items);
+            if (mapped.length === 0) throw new Error('empty');
+            setItems(mapped);
+            try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), items: mapped })); } catch(e) {}
+            setLoading(false); setError(null);
+          })
+          .catch(function(){
+            setLoading(false);
+            // Si no había cache, ya estamos mostrando noticiasData hardcodeado
+            if (!localStorage.getItem(CACHE_KEY)) setError('No se pudo actualizar. Mostrando últimas guardadas.');
+          });
+      }, []);
+
       return (
         <div className="content-area">
+          {loading && (
+            <div style={{padding:'8px 0 16px',fontSize:'12px',color:'var(--text-2)'}}>Actualizando últimas noticias...</div>
+          )}
+          {error && (
+            <div style={{padding:'8px 12px',marginBottom:'12px',background:'#fef3c7',color:'#92400e',borderRadius:'6px',fontSize:'12px'}}>{error}</div>
+          )}
           <div style={{display:'grid',gap:'16px'}}>
-            {noticiasData.map((n, i) => (
+            {items.map((n, i) => (
               <a key={i} href={n.url} target="_blank" rel="noopener noreferrer" style={{textDecoration:'none',color:'inherit'}}>
                 <div className="info-card" style={{cursor:'pointer',transition:'box-shadow 0.15s',border:'1px solid var(--border-light)'}}>
                   <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'12px',flexWrap:'wrap'}}>
                     <div style={{flex:1,minWidth:'200px'}}>
                       <h3 style={{fontSize:'15px',fontWeight:600,color:'var(--text)',marginBottom:'6px',lineHeight:1.4}}>{n.titulo}</h3>
-                      <p style={{fontSize:'13px',color:'var(--text-2)',lineHeight:1.5,marginBottom:'8px'}}>{n.resumen}</p>
+                      {n.resumen && <p style={{fontSize:'13px',color:'var(--text-2)',lineHeight:1.5,marginBottom:'8px'}}>{n.resumen}</p>}
                       <div style={{display:'flex',gap:'12px',fontSize:'11px',color:'var(--text-3)'}}>
                         <span>{n.fecha}</span>
                         <span style={{color:'var(--accent)',fontWeight:500}}>{n.fuente}</span>
