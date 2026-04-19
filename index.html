@@ -261,7 +261,7 @@
     .lineup-slot { position:absolute; transform:translate(-50%,-50%); text-align:center; z-index:2; cursor:pointer; }
     .lineup-slot-circle { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; border:2px dashed rgba(255,255,255,0.5); background:rgba(0,0,0,0.25); margin:0 auto; transition:all 0.2s; position:relative; }
     .lineup-slot-circle img { object-position:center 14% !important; }
-    .lineup-slot-circle.filled { border-style:solid; border-color:rgba(255,255,255,0.8); box-shadow:0 2px 6px rgba(0,0,0,0.3); }
+    .lineup-slot-circle.filled { border-style:solid; border-color:#1a56db; box-shadow:0 2px 6px rgba(0,0,0,0.3); }
     .lineup-slot-circle.selected { border-color:#fbbf24; box-shadow:0 0 12px rgba(251,191,36,0.6); transform:scale(1.1); }
     .lineup-slot-label { font-size:8px; font-weight:600; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-top:2px; letter-spacing:0.5px; }
     .lineup-slot-name { display:inline-block; background:var(--accent); color:white; font-size:10px; font-weight:600; padding:3px 9px; border-radius:12px; margin-top:5px; white-space:nowrap; max-width:92px; overflow:hidden; text-overflow:ellipsis; box-shadow:0 1px 3px rgba(0,0,0,0.35); line-height:1.25; }
@@ -484,6 +484,8 @@
       loadScript(deps[0], 0)
         .then(function() { return loadScript(deps[1], 1); })
         .then(function() { return loadScript(deps[2], 2); })
+        .then(function() { return loadScript(deps[3], 3).catch(function(){}); })
+        .then(function() { return loadScript(deps[4], 4).catch(function(){}); })
         .then(function() {
           // Cargar Supabase con fallback CDN
           return new Promise(function(resolve) {
@@ -620,7 +622,7 @@
           { nombre: "Roberto Martin Uruel", apodo: "Roberto", posicion: "Centrocampista", fechaNacimiento: "12/08/2006", lugarNacimiento: "Monzón (Huesca)", seleccion: "Sub-19 España", origen: "Huesca (2020)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/4ld9hi9ix04aaj8hf9aam8hbo/players/roberto-martin-uruel/ROBERTO_MARTIN_380x501.png"},
           { nombre: "Álvaro Gines Hernández Sánchez", apodo: "Álvaro Gines", posicion: "Delantero", fechaNacimiento: "15/03/2005", lugarNacimiento: "Cartagena (Murcia)", seleccion: "Sub-18 España", origen: "Cartagena (2015)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/4ld9hi9ix04aaj8hf9aam8hbo/players/alvaro-gines-hernandez-sanchez/ALVARO_GINES_380x501.png"},
           { nombre: "Jacobo Ortega Conde", apodo: "Jacobo", posicion: "Delantero", fechaNacimiento: "29/05/2006", lugarNacimiento: "Madrid", origen: "Ciudad del Fútbol (2015)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/4ld9hi9ix04aaj8hf9aam8hbo/players/jacobo-ortega-conde/JACOBO_ORTEGA_380x501.png"},
-          { nombre: "Enrique Herrero García", apodo: "Enrique", posicion: "Delantero", fechaNacimiento: "28/01/2005", lugarNacimiento: "Lorqui (Murcia)", origen: "Navalcarnero (2024)" },
+          { nombre: "Enrique Herrero García", apodo: "Enrique", posicion: "Delantero", fechaNacimiento: "28/01/2005", lugarNacimiento: "Lorqui (Murcia)", origen: "Navalcarnero (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ENRIQUE_HERRERO_550x650?$Desktop$&fit=wrap&wid=288&hei=384", perfilRM: "realmadrid-c/enrique-herrero-garcia" },
           { nombre: "Iker Gil López", apodo: "Iker Gil", posicion: "Delantero", fechaNacimiento: "15/03/2005", lugarNacimiento: "Zaragoza", origen: "La Amistad (2013)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/4ld9hi9ix04aaj8hf9aam8hbo/players/antiguos-rmc/iker-gil/IKER_GIL_550x650.png"},
           { nombre: "Gabriel Castrelo Suarez", apodo: "G. Castrelo", posicion: "Delantero", fechaNacimiento: "04/08/2006", lugarNacimiento: "Gijón (Asturias)", origen: "Atlético Madrid (2025)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/4ld9hi9ix04aaj8hf9aam8hbo/players/gabriel-suarez/GABRIEL_CASTRELO_380x501.png"}
         ]
@@ -662,7 +664,7 @@
         jugadores: [
           { nombre: "Guillermo Ponce López", apodo: "Guille", posicion: "Portero", fechaNacimiento: "10/03/2009", lugarNacimiento: "Madrid", seleccion: "Sub-17 España", origen: "Alcobendas Sport (2013)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/guillermo-ponce-lopez/GUILLERMO%20PONCE_550x650.jpg"},
           { nombre: "Fernando Vega Martin", apodo: "Fernando", posicion: "Portero", fechaNacimiento: "18/12/2008", lugarNacimiento: "Madrid", origen: "Football Dreams & Experience (2021)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/fernando-vega-martin/FERNANDO%20VEGA_550x650.jpg"},
-          { nombre: "Ares Capatana García-Abad", apodo: "Ares", posicion: "Defensa", fechaNacimiento: "26/01/2009", lugarNacimiento: "Alcalá de Henares", seleccion: "Sub-16 España", origen: "Leganés (2018)" },
+          { nombre: "Ares Capatana García-Abad", apodo: "Ares", posicion: "Defensa", fechaNacimiento: "26/01/2009", lugarNacimiento: "Alcalá de Henares", seleccion: "Sub-16 España", origen: "Leganés (2018)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ARES%20CAPATANA_550x650?$Desktop$&fit=wrap&wid=288&hei=384", perfilRM: "juvenil-b/ares-capatana-garcia-abad" },
           { nombre: "Luis Paulo Quevedo", apodo: "Luis", posicion: "Defensa", fechaNacimiento: "18/02/2008", lugarNacimiento: "Vall de Uxo (Castellón)", origen: "Valencia (2024)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/luis-paulo/LUIS%20PAULO_550x650.jpg"},
           { nombre: "Juan Casado López", apodo: "Juan Casado", posicion: "Defensa", fechaNacimiento: "26/02/2008", lugarNacimiento: "Guadalajara", seleccion: "Sub-16 España", origen: "Guadalajara (2015)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/juan-casado/JUAN%20CASADO_550X650.jpg"},
           { nombre: "Mateo Garrido Calderón", apodo: "Mateo Garrido", posicion: "Defensa", fechaNacimiento: "22/05/2009", lugarNacimiento: "Valladolid", seleccion: "Sub-16 España", origen: "Real Valladolid (2024)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/mateo-garrido-calder%C3%B3n/MATEO%20GARRIDO_JT11339_550x650.jpg"},
@@ -670,7 +672,7 @@
           { nombre: "Leo Lemaitre Lezcano", apodo: "Leo", posicion: "Defensa", fechaNacimiento: "20/03/2009", lugarNacimiento: "Zaragoza", seleccion: "Sub-17 Francia", origen: "Real Zaragoza (2019)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/leo-lemaitre-lezcano/LEO%20LEMAITRE_JT11350_550x650.jpg"},
           { nombre: "Nicolás San Pío Galán", apodo: "Nico", posicion: "Defensa", fechaNacimiento: "30/04/2008", lugarNacimiento: "Madrid", origen: "Ciudad del Fútbol (2014)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/nicolas-san-pio-galan/NICOLAS%20SAN%20PIO_550x650.jpg"},
           { nombre: "Diego Lacosta Villalba", apodo: "Lacosta", posicion: "Centrocampista", fechaNacimiento: "16/02/2008", lugarNacimiento: "Zaragoza", seleccion: "Sub-17 España", origen: "Santo Domingo Juventud (2012)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/diego-lacosta-villalba/DIEGO%20LASCOSTA_JT11305_550X650.jpg"},
-          { nombre: "Bryan Bugarín Gonçalves", apodo: "Bryan", posicion: "Centrocampista", fechaNacimiento: "17/03/2009", lugarNacimiento: "Vigo", seleccion: "Sub-15 España", origen: "Celta (2017)" },
+          { nombre: "Bryan Bugarín Gonçalves", apodo: "Bryan", posicion: "Centrocampista", fechaNacimiento: "17/03/2009", lugarNacimiento: "Vigo", seleccion: "Sub-15 España", origen: "Celta (2017)", foto: "https://assets.realmadrid.com/is/image/realmadrid/BRYAN%20BUGARIN_JT11337_550x650?$Desktop$&fit=wrap&wid=288&hei=384", perfilRM: "juvenil-b/bryan-bugarin-goncalves" },
           { nombre: "Marco David Company García", apodo: "Marco", posicion: "Centrocampista", fechaNacimiento: "24/01/2009", lugarNacimiento: "Torrent (Valencia)", seleccion: "Sub-17 España", origen: "Valencia (2023)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/marco-david-company-garcia/MARCO%20COMPANY_JT11329_550x650.jpg"},
           { nombre: "Andres Corcoba Martínez", apodo: "Andres", posicion: "Centrocampista", fechaNacimiento: "25/03/2008", lugarNacimiento: "La Baña (Leon)", origen: "Atlético de Madrid (2023)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/andres-corcoba-martinez/ANDRES%20CORCOBA_JT11341_550x650.jpg"},
           { nombre: "Santiago Del Pino Nogales", apodo: "Del Pino", posicion: "Centrocampista", fechaNacimiento: "06/06/2009", lugarNacimiento: "Mejorada del Campo", seleccion: "Sub-16 España", origen: "Leganés (2023)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/1pehkyanlonhx39a6zn1c333e/players/santiago-del-pino/assets/SANTIAGO%20DEL%20PINO_550x650.jpg"},
@@ -1979,7 +1981,7 @@
       var playAnthem = function(duration) {
         try {
           var audio = (window._iosAudioUnlocked || [])[1] || new Audio('/audio/decima.mp3');
-          audio.currentTime = 0;
+          audio.currentTime = 10;
           audio.volume = 0.9;
           var d = duration || 10;
           anthemAudioRef.current = audio;
