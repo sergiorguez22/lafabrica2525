@@ -411,7 +411,7 @@
     .staff-card { display:flex; align-items:center; gap:12px; padding:12px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); transition:all 0.15s; }
     .staff-card:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(0,0,0,0.06); }
     .staff-photo { width:60px; height:60px; border-radius:50%; object-fit:cover; object-position:center 14%; background:var(--bg); flex-shrink:0; border:2px solid var(--border-light); }
-    .staff-photo-fallback { width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; color:white; background:var(--accent); flex-shrink:0; border:2px solid var(--border-light); }
+    .staff-photo-fallback { width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:600; color:#475569; background:#e5e7eb; flex-shrink:0; border:2px solid var(--border-light); letter-spacing:0.5px; }
     .staff-info { flex:1; min-width:0; }
     .staff-name { font-size:14px; font-weight:600; color:var(--text); }
     .staff-role { font-size:11.5px; color:var(--text-2); margin-top:3px; text-transform:uppercase; letter-spacing:0.4px; }
@@ -1070,23 +1070,53 @@
 
     /* ===== CUERPO TÉCNICO (scraped from realmadrid.com) ===== */
     const cuerpoTecnico = {
-      "Castilla": [{ nombre: "Julián López de Lerma", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/JULIAN_LOPEZ_DE_LERMA_380x501?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Castilla": [
+        { nombre: "Julián López de Lerma", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/JULIAN_LOPEZ_DE_LERMA_380x501?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "Miguel Barrio", rol: "Segundo entrenador", foto: null }
+      ],
       "Real Madrid C": [{ nombre: "Víctor Cea", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/VICTOR_CEA_380x501?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Juvenil A": [{ nombre: "Álvaro López", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALVARO_LOPEZ_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Juvenil A": [
+        { nombre: "Álvaro López", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALVARO_LOPEZ_550x650?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "Luis Ayllón", rol: "Segundo entrenador", foto: null }
+      ],
       "Juvenil B": [{ nombre: "Marcos Jiménez", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARCOS_JIMENEZ_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Juvenil C": [{ nombre: "Nacho Román", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/380x501_FONDO_BLANCO_0000_NACHO-ROMAN---SEGUNDO-ENTRENADOR_JT11408?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Juvenil C": [
+        { nombre: "Nacho Román", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/380x501_FONDO_BLANCO_0000_NACHO-ROMAN---SEGUNDO-ENTRENADOR_JT11408?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "David Valentín", rol: "Segundo entrenador", foto: null }
+      ],
       "Cadete A": [{ nombre: "Carlos Cura", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/CARLOS_CURA_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
       "Cadete B": [{ nombre: "Alfonso Berenguer", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/380x501_FONDO_BLANCO_0001_ALFONSO-BERENGUER_DB10335?$Desktop$&fit=wrap&wid=288&hei=384" }],
       "Infantil A": [{ nombre: "Alberto Madrid", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALBERTO%20MADRID%20INFANTIL%20A_1VC5042_550X650?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Infantil B": [{ nombre: "Juan Carlos Duque", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/JUAN_CARLOS_DUQUE_550x650-1?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Infantil B": [
+        { nombre: "Juan Carlos Duque", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/JUAN_CARLOS_DUQUE_550x650-1?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "Diego Elcoroiribe", rol: "Segundo entrenador", foto: null }
+      ],
       "Alevín A": [{ nombre: "Mario Madrid", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARIO_MADRID_380x501?$Desktop$&fit=wrap&wid=288&hei=384" }],
       "Alevín B": [{ nombre: "Mario Seguido", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Alev%C3%ADn%20B%20%E2%80%93%20Mario%20Seguido_380_501%20%E2%80%93%201?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Alevín C": [{ nombre: "Rubén Barrios", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Alev%C3%ADn%20C%20%E2%80%93%20Rub%C3%A9n%20Barrios_380_501?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Benjamín A": [{ nombre: "José Rubido", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Benjam%C3%ADn%20A%20%E2%80%93%20Jos%C3%A9%20Rubido_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Benjamín B": [{ nombre: "Víctor Carvajal", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Benjam%C3%ADn%20B%20%E2%80%93%20V%C3%ADctor%20Carvajal_380x501?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Prebenjamín A": [{ nombre: "Javier Rubio", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Javier_Rubio_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Prebenjamín B": [{ nombre: "Raúl Rubia", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Raul_Rubia_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Debutante": [{ nombre: "Juan Carlos Juárez", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Juan_Carlos_Juarez_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }]
+      "Alevín C": [
+        { nombre: "Rubén Barrios", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Alev%C3%ADn%20C%20%E2%80%93%20Rub%C3%A9n%20Barrios_380_501?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "Alberto Borreguero", rol: "Segundo entrenador", foto: null }
+      ],
+      "Benjamín A": [
+        { nombre: "José Rubido", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Benjam%C3%ADn%20A%20%E2%80%93%20Jos%C3%A9%20Rubido_550x650?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "David Jiménez", rol: "Segundo entrenador", foto: null }
+      ],
+      "Benjamín B": [
+        { nombre: "Víctor Carvajal", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Benjam%C3%ADn%20B%20%E2%80%93%20V%C3%ADctor%20Carvajal_380x501?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "Juan Guitart", rol: "Segundo entrenador", foto: null }
+      ],
+      "Prebenjamín A": [
+        { nombre: "Javier Rubio", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Javier_Rubio_550x650?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "Rubén García", rol: "Segundo entrenador", foto: null }
+      ],
+      "Prebenjamín B": [
+        { nombre: "Raúl Rubia", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Raul_Rubia_550x650?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "Sergio Rodríguez", rol: "Segundo entrenador", foto: null }
+      ],
+      "Debutante": [
+        { nombre: "Juan Carlos Juárez", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Juan_Carlos_Juarez_550x650?$Desktop$&fit=wrap&wid=288&hei=384" },
+        { nombre: "Rubén Alonso", rol: "Segundo entrenador", foto: null }
+      ]
     };
 
     /* ===== CLASIFICACIONES ===== */
