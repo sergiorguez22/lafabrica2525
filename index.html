@@ -259,12 +259,13 @@
     .lineup-roster-item.used { opacity:0.35; pointer-events:none; }
     .lineup-roster-item .pos-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
     .lineup-slot { position:absolute; transform:translate(-50%,-50%); text-align:center; z-index:2; cursor:pointer; }
-    .lineup-slot-circle { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; border:2px dashed rgba(255,255,255,0.5); background:rgba(0,0,0,0.25); margin:0 auto; transition:all 0.2s; }
+    .lineup-slot-circle { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; border:2px dashed rgba(255,255,255,0.5); background:rgba(0,0,0,0.25); margin:0 auto; transition:all 0.2s; position:relative; }
     .lineup-slot-circle img { object-position:center 14% !important; }
     .lineup-slot-circle.filled { border-style:solid; border-color:rgba(255,255,255,0.8); box-shadow:0 2px 6px rgba(0,0,0,0.3); }
     .lineup-slot-circle.selected { border-color:#fbbf24; box-shadow:0 0 12px rgba(251,191,36,0.6); transform:scale(1.1); }
     .lineup-slot-label { font-size:8px; font-weight:600; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-top:2px; letter-spacing:0.5px; }
-    .lineup-slot-name { font-size:9px; font-weight:600; color:white; text-shadow:0 1px 3px rgba(0,0,0,0.7); margin-top:2px; white-space:nowrap; max-width:70px; overflow:hidden; text-overflow:ellipsis; }
+    .lineup-slot-name { display:inline-block; background:var(--accent); color:white; font-size:10px; font-weight:600; padding:3px 9px; border-radius:12px; margin-top:5px; white-space:nowrap; max-width:92px; overflow:hidden; text-overflow:ellipsis; box-shadow:0 1px 3px rgba(0,0,0,0.35); line-height:1.25; }
+    .lineup-slot-dorsal { position:absolute; top:-6px; left:-6px; width:20px; height:20px; border-radius:50%; background:#ffffff; border:2px solid #1a56db; color:#1a56db; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,0.25); z-index:3; line-height:1; }
     .lineup-actions { display:flex; gap:8px; margin-top:16px; justify-content:center; flex-wrap:wrap; align-items:center; }
     .lineup-btn { padding:8px 20px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; border:none; cursor:pointer; transition:all 0.15s; }
     .lineup-btn-primary { background:var(--accent); color:white; }
@@ -438,9 +439,10 @@
         'https://unpkg.com/react@18/umd/react.production.min.js',
         'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
         'https://unpkg.com/@babel/standalone/babel.min.js',
-        'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js'
+        'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
+        'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js'
       ];
-      var names = ['React', 'ReactDOM', 'Babel', 'html2canvas'];
+      var names = ['React', 'ReactDOM', 'Babel', 'html2canvas', 'jsPDF'];
       var loaded = 0;
       var fill = document.getElementById('loader-fill');
       var status = document.getElementById('loader-status');
@@ -2367,6 +2369,7 @@
                   <div key={i} data-slot-idx={i} className={"lineup-slot" + (dragOverSlot === i ? " drag-over" : "")} style={{left:slot.x+'%',top:slot.y+'%'}} onClick={function(){handleSlotClick(i);}} onDragOver={function(e){handleSlotDragOver(i,e);}} onDragLeave={handleSlotDragLeave} onDrop={function(e){handleSlotDrop(i,e);}}>
                     <div className={"lineup-slot-circle" + (assigned ? " filled" : "") + (selectedSlot === i ? " selected" : "") + (dragOverSlot === i ? " drag-over" : "")} draggable={!!assigned} onDragStart={assigned ? function(e){handleDragStart(assigned,e);} : undefined} onDragEnd={assigned ? handleDragEnd : undefined}
                          style={assigned ? {background:getFieldColor(assigned.posicion)} : {}}>
+                      {assigned && assigned.dorsal ? <span className="lineup-slot-dorsal">{assigned.dorsal}</span> : null}
                       {assigned ? (assigned.foto ? <img src={assigned.foto} alt={assigned.apodo} style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover'}} onError={function(e){e.target.style.display='none';e.target.nextSibling.style.display='';}} /> : null) : null}{assigned ? (!assigned.foto ? assigned.apodo.split(' ')[0].substring(0,3).toUpperCase() : <span style={{display:'none'}}>{assigned.apodo.split(' ')[0].substring(0,3).toUpperCase()}</span>) : '+'}
                     </div>
                     {assigned ? (
@@ -2402,31 +2405,47 @@
               )}
               {assignments.some(function(a){ return a !== null; }) && (
                 <button className="lineup-btn lineup-btn-secondary" onClick={function(){
-                  if (typeof window.html2canvas === 'undefined') { alert('Cargando librería de exportación, espera 2s y vuelve a intentar.'); return; }
+                  if (typeof window.html2canvas === 'undefined' || typeof window.jspdf === 'undefined') { alert('Cargando librerías de exportación, espera 2s y vuelve a intentar.'); return; }
                   var node = document.querySelector('.lineup-field-wrapper');
                   if (!node) return;
                   var btn = this;
                   var prev = btn.textContent; btn.textContent = 'Generando...'; btn.disabled = true;
                   window.html2canvas(node, {
-                    backgroundColor: '#0f5132',
+                    backgroundColor: '#ffffff',
                     useCORS: true,
                     scale: 2,
                     logging: false,
                     imageTimeout: 5000
                   }).then(function(canvas){
-                    var url = canvas.toDataURL('image/png');
-                    var a = document.createElement('a');
+                    var imgData = canvas.toDataURL('image/png');
+                    var jsPDF = window.jspdf.jsPDF;
+                    var pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    var pageW = pdf.internal.pageSize.getWidth();
+                    var pageH = pdf.internal.pageSize.getHeight();
+                    var margin = 10;
+                    var maxW = pageW - margin * 2;
+                    var maxH = pageH - margin * 2 - 14;
+                    var ratio = canvas.width / canvas.height;
+                    var w = maxW, h = w / ratio;
+                    if (h > maxH) { h = maxH; w = h * ratio; }
+                    var x = (pageW - w) / 2;
+                    var y = margin + 14;
+                    pdf.setFontSize(14); pdf.setFont('helvetica', 'bold');
+                    pdf.text('La Fábrica · ' + teamName, margin, margin + 6);
+                    pdf.setFontSize(10); pdf.setFont('helvetica', 'normal'); pdf.setTextColor(100);
+                    pdf.text((lineupName || 'Alineación') + ' · ' + formation + ' · ' + (isF5 ? 'Fútbol 5' : isF7 ? 'Fútbol 7' : 'Fútbol 11'), margin, margin + 11);
+                    pdf.setTextColor(0);
+                    pdf.addImage(imgData, 'PNG', x, y, w, h);
                     var safeName = (lineupName || teamName || 'alineacion').replace(/[^a-zA-Z0-9_-]/g,'_');
-                    a.download = 'alineacion_' + safeName + '.png';
-                    a.href = url; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    pdf.save('alineacion_' + safeName + '.pdf');
                     btn.textContent = prev; btn.disabled = false;
                   }).catch(function(err){
-                    console.error(err); alert('No se pudo exportar la imagen.');
+                    console.error(err); alert('No se pudo exportar el PDF.');
                     btn.textContent = prev; btn.disabled = false;
                   });
-                }} title="Descargar PNG">
+                }} title="Descargar PDF">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{marginRight:'4px',verticalAlign:'-2px'}}><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
-                  PNG
+                  PDF
                 </button>
               )}
             </div>
