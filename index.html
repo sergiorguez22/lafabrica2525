@@ -402,6 +402,19 @@
     .promo-meta { font-size:11.5px; color:var(--text-2); margin-top:2px; }
     .promo-badge { display:inline-block; margin-top:4px; padding:2px 8px; background:var(--accent-light); color:var(--accent); font-size:10.5px; font-weight:600; border-radius:10px; }
     .promo-empty { padding:40px 28px; color:var(--text-2); text-align:center; font-size:14px; }
+
+    /* ===== CUERPO TÉCNICO ===== */
+    .staff-section { margin-top:32px; padding-top:24px; border-top:2px solid var(--border-light); }
+    .staff-section-title { font-size:13px; font-weight:600; color:var(--text-2); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+    .staff-section-title::before { content:''; display:inline-block; width:4px; height:14px; background:var(--accent); border-radius:2px; }
+    .staff-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:12px; }
+    .staff-card { display:flex; align-items:center; gap:12px; padding:12px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); transition:all 0.15s; }
+    .staff-card:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+    .staff-photo { width:60px; height:60px; border-radius:50%; object-fit:cover; object-position:center 14%; background:var(--bg); flex-shrink:0; border:2px solid var(--border-light); }
+    .staff-photo-fallback { width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; color:white; background:var(--accent); flex-shrink:0; border:2px solid var(--border-light); }
+    .staff-info { flex:1; min-width:0; }
+    .staff-name { font-size:14px; font-weight:600; color:var(--text); }
+    .staff-role { font-size:11.5px; color:var(--text-2); margin-top:3px; text-transform:uppercase; letter-spacing:0.4px; }
     </style>
 </head>
 <body>
@@ -694,7 +707,7 @@
           { nombre: "Beltrán Capote Aceituno", apodo: "Beltrán", posicion: "Centrocampista", fechaNacimiento: "18/11/2009", lugarNacimiento: "Madrid", origen: "Málaga (2019)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-1/players/beltran-capote-aceituno/BELTRAN%20CAPOTE_550X650.jpg"},
           { nombre: "Omar Chaoui Ousrih", apodo: "Omar", posicion: "Centrocampista", fechaNacimiento: "22/03/2009", lugarNacimiento: "Tetuán (Marruecos)", origen: "UCAM Murcia (2020)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-1/players/omar-chaoui-ousrih/OMAR%20CHAOUI_550x650.jpg"},
           { nombre: "Nils Leon Westin Bryhn", apodo: "León", posicion: "Centrocampista", fechaNacimiento: "15/08/2009", lugarNacimiento: "Estocolmo (Suecia)", origen: "Las Palmas (2024)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-1/players/nils-leon-westin/LEON%20WESTIN_550x650.jpg"},
-          { nombre: "Moctar Cherif Fofana", apodo: "Cherif", posicion: "Centrocampista", fechaNacimiento: "01/12/2009", lugarNacimiento: "Madrid", origen: "México Paracuellos (2024)" },
+          { nombre: "Moctar Cherif Fofana", apodo: "Cherif", posicion: "Centrocampista", fechaNacimiento: "01/12/2009", lugarNacimiento: "Madrid", origen: "México Paracuellos (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MOCTAR%20CHERIF_550x650?$Desktop$&fit=wrap&wid=288&hei=384", perfilRM: "juvenil-c/moctar-cherif-acacio-fofana-mesie-eyegue" },
           { nombre: "Álvaro Rivera Pizarro", apodo: "Álvaro", posicion: "Centrocampista", fechaNacimiento: "19/10/2009", lugarNacimiento: "Madrid", origen: "Calvo Sotelo Puertollano (2020)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-1/players/alvaro-rivera-pizarro/ALVARO%20RIVERA_550x650.jpg"},
           { nombre: "Guillermo López Zueco", apodo: "Guille López", posicion: "Delantero", fechaNacimiento: "28/06/2009", lugarNacimiento: "Madrid", origen: "Zaragoza (2023)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-1/players/guillermo-lopez-zueco/GUILLERMO%20LOPEZ_550x650.jpg"},
           { nombre: "Pablo Martínez Mena", apodo: "Pablo Martínez", posicion: "Delantero", fechaNacimiento: "12/03/2009", lugarNacimiento: "Madrid", origen: "Rayo Vallecano (2023)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-1/players/pablo-martinez/assets/PABLO%20MARTINEZ_550x650.jpg"},
@@ -1054,6 +1067,27 @@
     const f5Teams = ["Debutante"];
     const isF5Team = (team) => f5Teams.includes(team);
     const isF7Team = (team) => f7Teams.includes(team) && !isF5Team(team);
+
+    /* ===== CUERPO TÉCNICO (scraped from realmadrid.com) ===== */
+    const cuerpoTecnico = {
+      "Castilla": [{ nombre: "Julián López de Lerma", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/JULIAN_LOPEZ_DE_LERMA_380x501?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Real Madrid C": [{ nombre: "Víctor Cea", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/VICTOR_CEA_380x501?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Juvenil A": [{ nombre: "Álvaro López", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALVARO_LOPEZ_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Juvenil B": [{ nombre: "Marcos Jiménez", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARCOS_JIMENEZ_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Juvenil C": [{ nombre: "Nacho Román", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/380x501_FONDO_BLANCO_0000_NACHO-ROMAN---SEGUNDO-ENTRENADOR_JT11408?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Cadete A": [{ nombre: "Carlos Cura", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/CARLOS_CURA_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Cadete B": [{ nombre: "Alfonso Berenguer", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/380x501_FONDO_BLANCO_0001_ALFONSO-BERENGUER_DB10335?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Infantil A": [{ nombre: "Alberto Madrid", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALBERTO%20MADRID%20INFANTIL%20A_1VC5042_550X650?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Infantil B": [{ nombre: "Juan Carlos Duque", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/JUAN_CARLOS_DUQUE_550x650-1?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Alevín A": [{ nombre: "Mario Madrid", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARIO_MADRID_380x501?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Alevín B": [{ nombre: "Mario Seguido", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Alev%C3%ADn%20B%20%E2%80%93%20Mario%20Seguido_380_501%20%E2%80%93%201?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Alevín C": [{ nombre: "Rubén Barrios", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Alev%C3%ADn%20C%20%E2%80%93%20Rub%C3%A9n%20Barrios_380_501?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Benjamín A": [{ nombre: "José Rubido", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Benjam%C3%ADn%20A%20%E2%80%93%20Jos%C3%A9%20Rubido_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Benjamín B": [{ nombre: "Víctor Carvajal", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Benjam%C3%ADn%20B%20%E2%80%93%20V%C3%ADctor%20Carvajal_380x501?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Prebenjamín A": [{ nombre: "Javier Rubio", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Javier_Rubio_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Prebenjamín B": [{ nombre: "Raúl Rubia", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Raul_Rubia_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Debutante": [{ nombre: "Juan Carlos Juárez", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Juan_Carlos_Juarez_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }]
+    };
 
     /* ===== CLASIFICACIONES ===== */
     const clasificaciones = {
@@ -2530,6 +2564,19 @@
       const currentTeam = canteraData[selectedTeam];
       useEffect(function() { loadTeamProyecciones(selectedTeam); }, [selectedTeam]);
 
+      // Preload de fotos del equipo activo (elimina delay al abrir ficha)
+      useEffect(function() {
+        if (!currentTeam || !currentTeam.jugadores) return;
+        var imgs = [];
+        currentTeam.jugadores.forEach(function(p){
+          if (p.foto) { var img = new Image(); img.src = p.foto; imgs.push(img); }
+        });
+        (cuerpoTecnico[selectedTeam] || []).forEach(function(s){
+          if (s.foto) { var img = new Image(); img.src = s.foto; imgs.push(img); }
+        });
+        return function(){ imgs.length = 0; };
+      }, [selectedTeam]);
+
       const positions = ["Todas", "Portero", "Defensa", "Centrocampista", "Delantero"];
 
       const filteredPlayers = useMemo(() => {
@@ -3076,6 +3123,28 @@
                   <div className="results-count">
                     Mostrando {filteredPlayers.length} de {currentTeam.jugadores.length} jugadores
                   </div>
+                  {cuerpoTecnico[selectedTeam] && cuerpoTecnico[selectedTeam].length > 0 && (
+                    <div className="staff-section">
+                      <div className="staff-section-title">Cuerpo técnico</div>
+                      <div className="staff-grid">
+                        {cuerpoTecnico[selectedTeam].map(function(s, i){
+                          var initials = s.nombre.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+                          return (
+                            <div key={i} className="staff-card">
+                              {s.foto ? (
+                                <img src={s.foto} alt={s.nombre} className="staff-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+                              ) : null}
+                              <div className="staff-photo-fallback" style={{display: s.foto ? 'none' : 'flex'}}>{initials}</div>
+                              <div className="staff-info">
+                                <div className="staff-name">{s.nombre}</div>
+                                <div className="staff-role">{s.rol}</div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </>
             )}
