@@ -373,6 +373,35 @@
     .scout-toggle-arrow { font-size:10px; transition:transform 0.2s; color:var(--text-2); }
     .scout-toggle-arrow.open { transform:rotate(180deg); }
     .scout-panel { border:1px solid var(--border-light); border-top:none; border-radius:0 0 var(--radius-sm) var(--radius-sm); background:var(--surface); padding:16px; }
+
+    /* ===== GLOBAL SEARCH ===== */
+    .global-search-wrap { position:relative; padding:10px 14px; border-bottom:1px solid #1e293b; }
+    .global-search-input { width:100%; padding:8px 10px 8px 30px; background:#1e293b; border:1px solid #334155; border-radius:6px; color:#e2e8f0; font-size:12.5px; outline:none; transition:border-color 0.15s; }
+    .global-search-input::placeholder { color:#64748b; }
+    .global-search-input:focus { border-color:var(--accent); }
+    .global-search-icon { position:absolute; left:22px; top:50%; transform:translateY(-50%); color:#64748b; pointer-events:none; }
+    .global-search-results { position:absolute; left:14px; right:14px; top:calc(100% - 4px); background:#0b1220; border:1px solid #1e293b; border-radius:6px; box-shadow:0 6px 24px rgba(0,0,0,0.5); z-index:40; max-height:340px; overflow-y:auto; }
+    .global-search-result { display:flex; align-items:center; gap:10px; padding:8px 10px; cursor:pointer; border-bottom:1px solid #111827; transition:background 0.1s; }
+    .global-search-result:last-child { border-bottom:none; }
+    .global-search-result:hover { background:#1e293b; }
+    .global-search-img { width:32px; height:32px; border-radius:50%; object-fit:cover; object-position:center 14%; background:#1e293b; flex-shrink:0; }
+    .global-search-img-fallback { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white; flex-shrink:0; }
+    .global-search-info { flex:1; min-width:0; }
+    .global-search-name { color:#e2e8f0; font-size:12.5px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .global-search-meta { color:#64748b; font-size:10.5px; margin-top:1px; }
+    .global-search-empty { padding:14px; color:#64748b; font-size:12px; text-align:center; }
+
+    /* ===== PROMOCIONES VIEW ===== */
+    .promo-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:12px; padding:20px 28px 28px; }
+    .promo-card { display:flex; align-items:center; gap:12px; padding:12px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); transition:all 0.15s; cursor:pointer; }
+    .promo-card:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+    .promo-photo { width:56px; height:56px; border-radius:50%; object-fit:cover; object-position:center 14%; background:var(--bg); flex-shrink:0; border:2px solid var(--border-light); }
+    .promo-photo-fallback { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:white; flex-shrink:0; border:2px solid var(--border-light); }
+    .promo-info { flex:1; min-width:0; }
+    .promo-name { font-size:14px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .promo-meta { font-size:11.5px; color:var(--text-2); margin-top:2px; }
+    .promo-badge { display:inline-block; margin-top:4px; padding:2px 8px; background:var(--accent-light); color:var(--accent); font-size:10.5px; font-weight:600; border-radius:10px; }
+    .promo-empty { padding:40px 28px; color:var(--text-2); text-align:center; font-size:14px; }
     </style>
 </head>
 <body>
@@ -395,9 +424,10 @@
       var deps = [
         'https://unpkg.com/react@18/umd/react.production.min.js',
         'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
-        'https://unpkg.com/@babel/standalone/babel.min.js'
+        'https://unpkg.com/@babel/standalone/babel.min.js',
+        'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js'
       ];
-      var names = ['React', 'ReactDOM', 'Babel'];
+      var names = ['React', 'ReactDOM', 'Babel', 'html2canvas'];
       var loaded = 0;
       var fill = document.getElementById('loader-fill');
       var status = document.getElementById('loader-status');
@@ -1499,7 +1529,33 @@
     }
 
     /* ===== SIDEBAR COMPONENT ===== */
-    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion }) {
+    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, allPlayers, onGlobalSearchSelect }) {
+      const [searchQ, setSearchQ] = useState("");
+      const [searchOpen, setSearchOpen] = useState(false);
+
+      const searchResults = useMemo(function() {
+        var q = searchQ.trim().toLowerCase();
+        if (!q) return [];
+        return allPlayers.filter(function(p) {
+          return p.apodo.toLowerCase().indexOf(q) >= 0
+              || p.nombre.toLowerCase().indexOf(q) >= 0
+              || (p.posicion && p.posicion.toLowerCase().indexOf(q) >= 0)
+              || (p.dorsal && String(p.dorsal) === q)
+              || (p.equipo && p.equipo.toLowerCase().indexOf(q) >= 0);
+        }).slice(0, 12);
+      }, [searchQ, allPlayers]);
+
+      function handleResultClick(p) {
+        setSearchQ("");
+        setSearchOpen(false);
+        onGlobalSearchSelect(p.equipo, p.apodo);
+        onClose();
+      }
+
+      function getInitials(apodo) {
+        return apodo.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+      }
+
       return (
         <>
           <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
@@ -1507,6 +1563,38 @@
             <div className="sidebar-header">
               <img src={CREST_URL} alt="Real Madrid" className="sidebar-crest" />
               <div className="sidebar-brand">La Fábrica<span>Temporada 2025/26</span></div>
+            </div>
+            <div className="global-search-wrap">
+              <svg className="global-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+              <input
+                type="text"
+                className="global-search-input"
+                placeholder="Buscar jugador..."
+                value={searchQ}
+                onChange={function(e){ setSearchQ(e.target.value); setSearchOpen(true); }}
+                onFocus={function(){ setSearchOpen(true); }}
+                onBlur={function(){ setTimeout(function(){ setSearchOpen(false); }, 180); }}
+              />
+              {searchOpen && searchQ.trim() && (
+                <div className="global-search-results">
+                  {searchResults.length === 0 ? (
+                    <div className="global-search-empty">Sin resultados</div>
+                  ) : searchResults.map(function(p, i){
+                    return (
+                      <div key={i} className="global-search-result" onMouseDown={function(){ handleResultClick(p); }}>
+                        {p.foto ? (
+                          <img src={p.foto} alt={p.apodo} className="global-search-img" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+                        ) : null}
+                        <div className="global-search-img-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{getInitials(p.apodo)}</div>
+                        <div className="global-search-info">
+                          <div className="global-search-name">{p.apodo}{p.dorsal ? ' · #' + p.dorsal : ''}</div>
+                          <div className="global-search-meta">{p.equipo} · {p.posicion}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <nav className="sidebar-nav">
               {teamCategories.map(cat => (
@@ -1542,6 +1630,13 @@
               >
                 <span className="sidebar-dot" style={{background: showCaptacion ? 'var(--accent)' : '#475569'}}></span>
                 <span>Captación 26/27</span>
+              </div>
+              <div
+                className={`sidebar-item ${showPromociones ? 'active' : ''}`}
+                onClick={() => { onShowPromociones(); onClose(); }}
+              >
+                <span className="sidebar-dot" style={{background: showPromociones ? 'var(--accent)' : '#475569'}}></span>
+                <span>Promociones</span>
               </div>
 
             </nav>
@@ -2229,6 +2324,35 @@
                   Reproducir
                 </button>
               )}
+              {assignments.some(function(a){ return a !== null; }) && (
+                <button className="lineup-btn lineup-btn-secondary" onClick={function(){
+                  if (typeof window.html2canvas === 'undefined') { alert('Cargando librería de exportación, espera 2s y vuelve a intentar.'); return; }
+                  var node = document.querySelector('.lineup-field-wrapper');
+                  if (!node) return;
+                  var btn = this;
+                  var prev = btn.textContent; btn.textContent = 'Generando...'; btn.disabled = true;
+                  window.html2canvas(node, {
+                    backgroundColor: '#0f5132',
+                    useCORS: true,
+                    scale: 2,
+                    logging: false,
+                    imageTimeout: 5000
+                  }).then(function(canvas){
+                    var url = canvas.toDataURL('image/png');
+                    var a = document.createElement('a');
+                    var safeName = (lineupName || teamName || 'alineacion').replace(/[^a-zA-Z0-9_-]/g,'_');
+                    a.download = 'alineacion_' + safeName + '.png';
+                    a.href = url; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    btn.textContent = prev; btn.disabled = false;
+                  }).catch(function(err){
+                    console.error(err); alert('No se pudo exportar la imagen.');
+                    btn.textContent = prev; btn.disabled = false;
+                  });
+                }} title="Descargar PNG">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{marginRight:'4px',verticalAlign:'-2px'}}><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+                  PNG
+                </button>
+              )}
             </div>
             {showPresentation && (
               <LineupPresentation assignments={assignments} slots={slots} teamName={teamName} onClose={function(){ setShowPresentation(false); }} />
@@ -2321,6 +2445,8 @@
       const [sidebarOpen, setSidebarOpen] = useState(false);
       const [showNews, setShowNews] = useState(false);
       const [showCaptacion, setShowCaptacion] = useState(false);
+      const [showPromociones, setShowPromociones] = useState(false);
+      const [pendingPlayerApodo, setPendingPlayerApodo] = useState(null);
       const [capSugerencias, setCapSugerencias] = useState([]);
       const [capNombre, setCapNombre] = useState("");
       const [capEquipo, setCapEquipo] = useState("");
@@ -2431,6 +2557,42 @@
         return Object.values(canteraData).reduce((acc, t) => acc + t.jugadores.length, 0);
       }, []);
 
+      const allPlayers = useMemo(function() {
+        var arr = [];
+        Object.keys(canteraData).forEach(function(team) {
+          (canteraData[team].jugadores || []).forEach(function(p) {
+            arr.push(Object.assign({}, p, { equipo: team }));
+          });
+        });
+        return arr;
+      }, []);
+
+      // Año natural de cada equipo (extiende TEAM_GENERATION para Castilla, RM C, Juveniles)
+      const EXPECTED_YEAR_MAP = useMemo(function() {
+        var m = Object.assign({}, TEAM_GENERATION);
+        m["Castilla"] = "2002";
+        m["Real Madrid C"] = "2003";
+        m["Juvenil A"] = "2007";
+        m["Juvenil B"] = "2008";
+        m["Juvenil C"] = "2009";
+        return m;
+      }, []);
+
+      const promociones = useMemo(function() {
+        var list = [];
+        allPlayers.forEach(function(p) {
+          var expected = EXPECTED_YEAR_MAP[p.equipo];
+          if (!expected || !p.fechaNacimiento) return;
+          var parts = p.fechaNacimiento.split("/");
+          if (parts.length !== 3) return;
+          var year = parseInt(parts[2], 10);
+          var diff = year - parseInt(expected, 10);
+          if (diff > 0) list.push({ player: p, anios: diff });
+        });
+        list.sort(function(a, b) { return b.anios - a.anios; });
+        return list;
+      }, [allPlayers, EXPECTED_YEAR_MAP]);
+
       const handleSelectTeam = useCallback((team) => {
         setSelectedTeam(team);
         window.location.hash = team;
@@ -2440,19 +2602,59 @@
         setView("list");
         setShowNews(false);
         setShowCaptacion(false);
+        setShowPromociones(false);
+      }, []);
+
+      const handleGlobalSearchSelect = useCallback(function(team, apodo) {
+        setSelectedTeam(team);
+        window.location.hash = team;
+        setSearchTerm("");
+        setPositionFilter("Todas");
+        setView("list");
+        setShowNews(false);
+        setShowCaptacion(false);
+        setShowPromociones(false);
+        setPendingPlayerApodo(apodo);
       }, []);
 
       const handleShowNews = useCallback(() => {
         setShowNews(true);
         setShowCaptacion(false);
+        setShowPromociones(false);
         setView("list");
       }, []);
 
       const handleShowCaptacion = useCallback(() => {
         setShowCaptacion(true);
         setShowNews(false);
+        setShowPromociones(false);
         loadCaptacion();
       }, []);
+
+      const handleShowPromociones = useCallback(() => {
+        setShowPromociones(true);
+        setShowNews(false);
+        setShowCaptacion(false);
+      }, []);
+
+      // Expandir jugador tras búsqueda global cuando filteredPlayers se actualiza
+      useEffect(function() {
+        if (!pendingPlayerApodo) return;
+        var idx = -1;
+        for (var i = 0; i < currentTeam.jugadores.length; i++) {
+          if (currentTeam.jugadores[i].apodo === pendingPlayerApodo) { idx = i; break; }
+        }
+        if (idx >= 0) {
+          setExpandedPlayer(idx);
+          setTimeout(function() {
+            try {
+              var rows = document.querySelectorAll('.table-row');
+              if (rows[idx]) rows[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch(e) {}
+          }, 80);
+        }
+        setPendingPlayerApodo(null);
+      }, [selectedTeam, pendingPlayerApodo]);
 
       const handleLogout = useCallback(() => {
         sessionStorage.removeItem("lfUser");
@@ -2611,6 +2813,10 @@
             onShowNews={handleShowNews}
             showCaptacion={showCaptacion}
             onShowCaptacion={handleShowCaptacion}
+            showPromociones={showPromociones}
+            onShowPromociones={handleShowPromociones}
+            allPlayers={allPlayers}
+            onGlobalSearchSelect={handleGlobalSearchSelect}
           />
 
           <div className="main-content">
@@ -2620,11 +2826,11 @@
                   <MenuIcon />
                 </button>
                 <div>
-                  <h1 className="team-title">{showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
-                  <p className="team-category">{showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <h1 className="team-title">{showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
+                  <p className="team-category">{showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
-              {!showNews && !showCaptacion && (
+              {!showNews && !showCaptacion && !showPromociones && (
                 <div className="header-stats">
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--por)'}}>{stats.por}</div><div className="header-stat-label">POR</div></div>
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--def)'}}>{stats.def}</div><div className="header-stat-label">DEF</div></div>
@@ -2634,7 +2840,31 @@
               )}
             </header>
 
-            {showCaptacion ? (
+            {showPromociones ? (
+              promociones.length === 0 ? (
+                <div className="promo-empty">No hay promociones detectadas con los datos actuales.</div>
+              ) : (
+                <div className="promo-grid">
+                  {promociones.map(function(item, i){
+                    var p = item.player;
+                    var initials = p.apodo.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+                    return (
+                      <div key={i} className="promo-card" onClick={function(){ handleGlobalSearchSelect(p.equipo, p.apodo); }}>
+                        {p.foto ? (
+                          <img src={p.foto} alt={p.apodo} className="promo-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+                        ) : null}
+                        <div className="promo-photo-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{initials}</div>
+                        <div className="promo-info">
+                          <div className="promo-name">{p.apodo}</div>
+                          <div className="promo-meta">{p.equipo} · {p.posicion} · {p.fechaNacimiento ? p.fechaNacimiento.split('/')[2] : ''}</div>
+                          <span className="promo-badge">+{item.anios} {item.anios === 1 ? 'año' : 'años'}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            ) : showCaptacion ? (
               <div style={{padding:"20px 28px 28px"}}>
                 <div className="cap-form">
                   <input className="cap-input" placeholder="Nombre del jugador" value={capNombre} onChange={e => setCapNombre(e.target.value)} />
