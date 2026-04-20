@@ -1028,7 +1028,7 @@
           { dorsal: 9, nombre: "Nicolás Carrasco Alonso", apodo: "Nico", posicion: "Delantero", posicionDetalle: "Delantero", fechaNacimiento: "13/01/2018", lugarNacimiento: "Argés (Toledo)", origen: "Argés (2023)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-11/players/nico-carrasco-alonso/NICO%20CARRASCO_550X650.jpg", perfilRM: "prebenjamin-a/nicolas-carrasco-alonso" },
           { dorsal: 10, nombre: "Enzo Muñoz Herráiz", apodo: "Enzo", posicion: "Delantero", posicionDetalle: "Delantero", fechaNacimiento: "16/01/2018", lugarNacimiento: "Madrid", origen: "Torrejón de Velasco (2023)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-11/players/enzo-munoz-herraiz/ENZO%20MU%C3%91OZ_550X650.jpg", perfilRM: "prebenjamin-a/enzo-munoz-herraiz" },
           { dorsal: 11, nombre: "Rubén Ramos López", apodo: "Rubén", posicion: "Defensa", posicionDetalle: "Lateral izquierdo", fechaNacimiento: "13/02/2018", lugarNacimiento: "Fuenlabrada", origen: "Dux Academy (2022)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-11/players/ruben-ramos-lopez/RUBEN%20RAMOS_550X650.jpg", perfilRM: "prebenjamin-a/ruben-ramos-lopez" },
-          { dorsal: 12, nombre: "Porlán", apodo: "Porlán", posicion: "Delantero", posicionDetalle: "Delantero", fechaNacimiento: "", lugarNacimiento: "", origen: "Santa Ana (2025)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-11/players/luca-porl%C3%A1n-bennett/LUCA%20PORLAN_550X650.jpg"},
+          { dorsal: 12, nombre: "Luca Porlán Bennett", apodo: "Porlán", posicion: "Delantero", posicionDetalle: "Delantero", fechaNacimiento: "08/07/2018", lugarNacimiento: "Houston (Estados Unidos)", origen: "Santa Ana (2025)" , foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-11/players/luca-porl%C3%A1n-bennett/LUCA%20PORLAN_550X650.jpg"},
           { dorsal: 13, nombre: "Alejandro Brihuega Barrios", apodo: "Álex", posicion: "Defensa", posicionDetalle: "Lateral derecho", fechaNacimiento: "15/01/2018", lugarNacimiento: "Madrid", origen: "Liceo Europeo (2024)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-11/players/alejandro-brihuega/ALEJANDRO%20BRIGUEGA_550X650.jpg", perfilRM: "prebenjamin-a/alejandro-brihuega-barrios" },
           { dorsal: 16, nombre: "Uziel Benoit Ndom Payano", apodo: "Uziel", posicion: "Defensa", posicionDetalle: "Lateral derecho", fechaNacimiento: "25/02/2018", lugarNacimiento: "Valdemoro", origen: "Ciudad de Getafe (2024)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-11/players/uziel-ndom/UZIEL%20BENOIT_550X650.jpg", perfilRM: "prebenjamin-a/uziel-benoit-ndom-payano" }
         ]
@@ -3382,31 +3382,45 @@
         return arr;
       }, []);
 
-      // Año natural de cada equipo (extiende TEAM_GENERATION para Castilla, RM C, Juveniles)
-      const EXPECTED_YEAR_MAP = useMemo(function() {
-        var m = Object.assign({}, TEAM_GENERATION);
-        m["Castilla"] = "2002";
-        m["Real Madrid C"] = "2003";
-        m["Juvenil A"] = "2007";
-        m["Juvenil B"] = "2008";
-        m["Juvenil C"] = "2009";
-        return m;
-      }, []);
+      // Categorías (tiers) — Castilla/RMC son Sénior, los Juveniles A/B/C son Juveniles, etc.
+      const TEAM_TIER = {
+        "Castilla": "Sénior", "Real Madrid C": "Sénior",
+        "Juvenil A": "Juveniles", "Juvenil B": "Juveniles", "Juvenil C": "Juveniles",
+        "Cadete A": "Cadetes", "Cadete B": "Cadetes",
+        "Infantil A": "Infantiles", "Infantil B": "Infantiles",
+        "Alevín A": "Alevines", "Alevín B": "Alevines", "Alevín C": "Alevines",
+        "Benjamín A": "Benjamines", "Benjamín B": "Benjamines",
+        "Prebenjamín A": "Prebenjamines", "Prebenjamín B": "Prebenjamines",
+        "Debutante": "Debutantes"
+      };
+      const TIER_ORDER = ["Sénior", "Juveniles", "Cadetes", "Infantiles", "Alevines", "Benjamines", "Prebenjamines", "Debutantes"];
+      function getTierForYear(year) {
+        if (year <= 2006) return "Sénior";
+        if (year <= 2009) return "Juveniles";
+        if (year <= 2011) return "Cadetes";
+        if (year <= 2013) return "Infantiles";
+        if (year <= 2015) return "Alevines";
+        if (year <= 2017) return "Benjamines";
+        if (year <= 2019) return "Prebenjamines";
+        return "Debutantes";
+      }
 
       const promociones = useMemo(function() {
         var list = [];
         allPlayers.forEach(function(p) {
-          var expected = EXPECTED_YEAR_MAP[p.equipo];
-          if (!expected || !p.fechaNacimiento) return;
+          if (!p.fechaNacimiento) return;
           var parts = p.fechaNacimiento.split("/");
           if (parts.length !== 3) return;
           var year = parseInt(parts[2], 10);
-          var diff = year - parseInt(expected, 10);
-          if (diff > 0) list.push({ player: p, anios: diff });
+          var naturalTier = getTierForYear(year);
+          var currentTier = TEAM_TIER[p.equipo];
+          if (!currentTier || !naturalTier) return;
+          var diff = TIER_ORDER.indexOf(naturalTier) - TIER_ORDER.indexOf(currentTier);
+          if (diff > 0) list.push({ player: p, escalones: diff, naturalTier: naturalTier });
         });
-        list.sort(function(a, b) { return b.anios - a.anios; });
+        list.sort(function(a, b) { return b.escalones - a.escalones; });
         return list;
-      }, [allPlayers, EXPECTED_YEAR_MAP]);
+      }, [allPlayers]);
 
       const handleSelectTeam = useCallback((team) => {
         setSelectedTeam(team);
@@ -3672,7 +3686,7 @@
                         <div className="promo-info">
                           <div className="promo-name">{p.apodo}</div>
                           <div className="promo-meta">{p.equipo} · {p.posicion} · {p.fechaNacimiento ? p.fechaNacimiento.split('/')[2] : ''}</div>
-                          <span className="promo-badge">+{item.anios} {item.anios === 1 ? 'año' : 'años'}</span>
+                          <span className="promo-badge">+{item.escalones} {item.escalones === 1 ? 'categoría' : 'categorías'}</span>
                         </div>
                       </div>
                     );
