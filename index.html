@@ -1218,6 +1218,7 @@
     const premierIntCup = {
       competicion: "Premier League International Cup",
       temporada: "2025/26",
+      equipo: "Real Madrid Castilla",
       partidos: [
         {
           jornada: "J1", fase: "Fase de grupos · Grupo A", fecha: "10/09/2025",
@@ -1231,7 +1232,7 @@
             { min: 67, sale: "Valdepeñas", entra: "Joan Martínez" },
             { min: 67, sale: "Roberto", entra: "G. Castrelo" }
           ],
-          goles: [{ min: 84, jugador: "Bruno", castilla: true }]
+          goles: [{ min: 84, jugador: "Bruno", rm: true }]
         },
         {
           jornada: "J2", fase: "Fase de grupos · Grupo A", fecha: "29/10/2025",
@@ -1240,7 +1241,7 @@
           titulares: ["Mestre","Fortea","Mario Rivas","Lamini","Diego Aguado","Cristian David","Mesonero","Bruno","Yáñez","G. Castrelo","Álvaro Ginés"],
           cambios: [],
           goles: [
-            { min: 75, jugador: "Thiago", castilla: true },
+            { min: 75, jugador: "Thiago", rm: true },
             { min: 94, jugador: "Okunola", castilla: false }
           ]
         },
@@ -1257,8 +1258,8 @@
             { min: 77, sale: "Loren Zúñiga", entra: "Palacios" }
           ],
           goles: [
-            { min: 51, jugador: "Pol Fortuny", castilla: true },
-            { min: 95, jugador: "Pol Fortuny", castilla: true }
+            { min: 51, jugador: "Pol Fortuny", rm: true },
+            { min: 95, jugador: "Pol Fortuny", rm: true }
           ]
         },
         {
@@ -1268,7 +1269,7 @@
           titulares: ["Mestre","Fortea","Lezcano","Lamini","Liberto","Cristian David","Mesonero","Manuel Ángel","Pol Fortuny","Á. Leiva","Palacios"],
           cambios: [],
           goles: [
-            { min: 3, jugador: "Palacios", castilla: true },
+            { min: 3, jugador: "Palacios", rm: true },
             { min: 28, jugador: "Lawrence", castilla: false }
           ],
           notas: "Castilla acabó con 10 (expulsión Pol Fortuny min. 64). Cierra fase de grupos invicto, 2º de grupo."
@@ -1286,10 +1287,10 @@
             { min: 98, sale: "Mario Rivas", entra: "Mateo Garrido" }
           ],
           goles: [
-            { min: 46, jugador: "G. Castrelo", castilla: true },
-            { min: 66, jugador: "Bruno", castilla: true },
-            { min: 108, jugador: "Barroso", castilla: true },
-            { min: 118, jugador: "Mesonero", castilla: true }
+            { min: 46, jugador: "G. Castrelo", rm: true },
+            { min: 66, jugador: "Bruno", rm: true },
+            { min: 108, jugador: "Barroso", rm: true },
+            { min: 118, jugador: "Mesonero", rm: true }
           ],
           notas: "Remontada del 2-0 en contra. Pase a semifinales."
         },
@@ -1299,6 +1300,132 @@
           gl: null, gv: null,
           titulares: [], cambios: [], goles: [],
           notas: "Pendiente de jugarse."
+        }
+      ]
+    };
+
+    /* ===== UEFA YOUTH LEAGUE 2025/26 (Juvenil A) ===== */
+    const youthLeague = {
+      competicion: "UEFA Youth League",
+      temporada: "2025/26",
+      equipo: "Real Madrid Juvenil A",
+      campeon: true,
+      partidos: [
+        {
+          jornada: "J1", fase: "Fase liga", fecha: "16/09/2025",
+          rival: "Olympique de Marsella", local: true, estadio: "Alfredo Di Stéfano",
+          gl: 3, gv: 2,
+          titulares: [], cambios: [], goles: []
+        },
+        {
+          jornada: "J2", fase: "Fase liga", fecha: "30/09/2025",
+          rival: "Kairat Almaty", local: false, estadio: "Kazajistán",
+          gl: 1, gv: 4,
+          titulares: [], cambios: [], goles: []
+        },
+        {
+          jornada: "J3", fase: "Fase liga", fecha: "21/10/2025",
+          rival: "Juventus", local: true, estadio: "Alfredo Di Stéfano",
+          gl: 1, gv: 0,
+          titulares: [], cambios: [], goles: []
+        },
+        {
+          jornada: "J4", fase: "Fase liga", fecha: "04/11/2025",
+          rival: "Liverpool", local: false, estadio: "Anfield",
+          gl: 0, gv: 4,
+          titulares: [], cambios: [], goles: []
+        },
+        {
+          jornada: "J5", fase: "Fase liga", fecha: "25/11/2025",
+          rival: "Olympiacos", local: false, estadio: "Grecia",
+          gl: 0, gv: 2,
+          titulares: [], cambios: [], goles: []
+        },
+        {
+          jornada: "J6", fase: "Fase liga", fecha: "10/12/2025",
+          rival: "Manchester City", local: true, estadio: "Alfredo Di Stéfano",
+          gl: 0, gv: 4,
+          titulares: ["Illia Voloshyn","Fortea","Mateo Garrido","Leo","Lezcano","Izan","Ignacio Gascón","Reyes","Lacosta","Liberto","Enzo"],
+          cambios: [],
+          goles: [
+            { min: 23, jugador: "Gray", rm: false },
+            { min: 70, jugador: "McAidoo", rm: false },
+            { min: 84, jugador: "R. Heskey", rm: false },
+            { min: 89, jugador: "R. Heskey (pen)", rm: false }
+          ],
+          notas: "Clasificación ya asegurada desde la J4, rotación del once."
+        },
+        {
+          jornada: "R32", fase: "Play-off eliminatoria", fecha: "03/02/2026",
+          rival: "Olympique de Marsella", local: true, estadio: "Alfredo Di Stéfano",
+          gl: 5, gv: 2,
+          titulares: ["Illia Voloshyn","Fortea","Joan Martínez","Mario Rivas","Diego Aguado","Cestero","Thiago","Carlos Díez","Yáñez","Alexis Ciria","Arnu"],
+          cambios: [
+            { min: 59, sale: "Mario Rivas", entra: "Valdepeñas" },
+            { min: 59, sale: "Cestero", entra: "Diego" },
+            { min: 71, sale: "Yáñez", entra: "Gabri Valero" },
+            { min: 83, sale: "Alexis Ciria", entra: "Adri Pérez" },
+            { min: 83, sale: "Arnu", entra: "Jacobo" }
+          ],
+          goles: [
+            { min: 17, jugador: "Thiago", rm: true },
+            { min: 25, jugador: "Baradji", rm: false },
+            { min: 27, jugador: "Doubal (en propia)", rm: true },
+            { min: 52, jugador: "Yáñez (pen)", rm: true },
+            { min: 80, jugador: "Diego (falta)", rm: true },
+            { min: 90, jugador: "Adri Pérez", rm: true }
+          ]
+        },
+        {
+          jornada: "R16", fase: "Eliminatoria a partido único", fecha: "25/02/2026",
+          rival: "Chelsea", local: true, estadio: "Alfredo Di Stéfano",
+          gl: 1, gv: 0,
+          titulares: ["Illia Voloshyn","Fortea","Mario Rivas","Diego Aguado","Lezcano","Diego","Roberto","Carlos Díez","Yáñez","Alexis Ciria","Arnu"],
+          cambios: [
+            { min: 62, sale: "Diego", entra: "Ignacio Gascón" },
+            { min: 72, sale: "Roberto", entra: "Viega" },
+            { min: 72, sale: "Arnu", entra: "Jacobo" },
+            { min: 85, sale: "Fortea", entra: "Melvin" },
+            { min: 85, sale: "Alexis Ciria", entra: "Liberto" }
+          ],
+          goles: [{ min: 15, jugador: "Yáñez", rm: true }]
+        },
+        {
+          jornada: "QF", fase: "Eliminatoria a partido único", fecha: "18/03/2026",
+          rival: "Sporting CP", local: true, estadio: "Alfredo Di Stéfano",
+          gl: 2, gv: 1,
+          titulares: ["Illia Voloshyn","Fortea","Mario Rivas","Diego Aguado","Lezcano","Cestero","Roberto","Carlos Díez","Yáñez","Alexis Ciria","Jacobo"],
+          cambios: [],
+          goles: [
+            { min: 40, jugador: "Gonçalves", rm: false },
+            { min: 55, jugador: "Jacobo", rm: true },
+            { min: 63, jugador: "Roberto", rm: true }
+          ],
+          notas: "Remontada 0-1 → 2-1. Pase a Final Four en Nyon."
+        },
+        {
+          jornada: "SF", fase: "Final Four", fecha: "17/04/2026",
+          rival: "PSG", local: false, estadio: "Lausana",
+          gl: 1, gv: 1, penaltis: true, penaltis_rm: 5, penaltis_riv: 4,
+          titulares: ["Javi Navarro","Fortea","Joan Martínez","Valdepeñas","Diego Aguado","Cestero","Diego","Carlos Díez","Yáñez","Alexis Ciria","Jacobo"],
+          cambios: [],
+          goles: [
+            { min: 30, jugador: "Ly", rm: false },
+            { min: 83, jugador: "Liberto", rm: true }
+          ],
+          notas: "Penaltis 5-4. Javi Navarro paró 3 lanzamientos (Assab, Khafi y Mbemba). Anotaron Yáñez, Barroso, Jacobo, Liberto y Joan Martínez."
+        },
+        {
+          jornada: "F", fase: "Final", fecha: "20/04/2026",
+          rival: "Club Brujas", local: false, estadio: "Stade de la Tuilière, Lausana",
+          gl: 1, gv: 1, penaltis: true, penaltis_rm: 4, penaltis_riv: 2,
+          titulares: ["Javi Navarro","Fortea","Joan Martínez","Diego Aguado","Lezcano","Cestero","Diego","Carlos Díez","Yáñez","Alexis Ciria","Jacobo"],
+          cambios: [],
+          goles: [
+            { min: 23, jugador: "Jacobo", rm: true },
+            { min: 64, jugador: "T. Jensen", rm: false }
+          ],
+          notas: "🏆 ¡Campeones! Penaltis 4-2. Javi Navarro paró dos lanzamientos (Amengai y Koren). Anotaron Liberto, Yáñez, Carlos Díez y Diego Aguado. 2º título de Youth League en la historia del club."
         }
       ]
     };
@@ -2815,8 +2942,8 @@
       );
     }
 
-    /* ===== PREMIER LEAGUE INTERNATIONAL CUP VIEW ===== */
-    function PremierIntCupView({ allPlayers }) {
+    /* ===== CUP VIEW (genérico: PIC, Youth League, etc) ===== */
+    function CupView({ allPlayers, cupData, rmLabel }) {
       const [selected, setSelected] = useState(null);
 
       // Construye múltiples índices. Prioriza Castilla > RM C > Juvenil A > resto
@@ -2893,8 +3020,8 @@
 
       function MatchDetail({ m }) {
         var pending = m.gl === null || m.gv === null;
-        var localName = m.local ? "Castilla" : m.rival;
-        var visitName = m.local ? m.rival : "Castilla";
+        var localName = m.local ? rmLabel : m.rival;
+        var visitName = m.local ? m.rival : rmLabel;
 
         // Asigna posiciones tipo 4-3-3 — orden recibido del titulares
         var slotted = m.titulares.map(function(name, i) {
@@ -2966,7 +3093,7 @@
                   ) : m.goles.map(function(g, i) {
                     return (
                       <div key={i} className="pic-event">
-                        <span className={g.castilla ? "pic-event-rm" : ""}>⚽ {g.castilla ? nameFor(g.jugador) : g.jugador + " (" + m.rival + ")"}</span>
+                        <span className={g.rm ? "pic-event-rm" : ""}>⚽ {g.rm ? nameFor(g.jugador) : g.jugador + " (" + m.rival + ")"}</span>
                         <span className="pic-event-min">{g.min}'</span>
                       </div>
                     );
@@ -2994,7 +3121,7 @@
       if (selected !== null) {
         return (
           <div className="pic-wrap">
-            <MatchDetail m={premierIntCup.partidos[selected]} />
+            <MatchDetail m={cupData.partidos[selected]} />
           </div>
         );
       }
@@ -3003,15 +3130,15 @@
         <div className="pic-wrap">
           <div className="pic-header">
             <div>
-              <div className="pic-title">{premierIntCup.competicion}</div>
-              <div className="pic-sub">Temporada {premierIntCup.temporada} · Real Madrid Castilla</div>
+              <div className="pic-title">{cupData.competicion}{cupData.campeon ? ' 🏆' : ''}</div>
+              <div className="pic-sub">Temporada {cupData.temporada} · {cupData.equipo || rmLabel}</div>
             </div>
           </div>
           <div className="pic-list">
-            {premierIntCup.partidos.map(function(m, i) {
+            {cupData.partidos.map(function(m, i) {
               var pending = m.gl === null || m.gv === null;
-              var localName = m.local ? "Castilla" : m.rival;
-              var visitName = m.local ? m.rival : "Castilla";
+              var localName = m.local ? rmLabel : m.rival;
+              var visitName = m.local ? m.rival : rmLabel;
               return (
                 <div key={i} className="pic-row" onClick={function(){ setSelected(i); }}>
                   <div className="pic-row-jor">{m.jornada}</div>
@@ -3532,6 +3659,9 @@
                 {selectedTeam === "Castilla" && (
                   <button className={`view-btn ${view === 'plicup' ? 'active' : ''}`} onClick={() => setView('plicup')}>Premier Int.</button>
                 )}
+                {selectedTeam === "Juvenil A" && (
+                  <button className={`view-btn ${view === 'youth' ? 'active' : ''}`} onClick={() => setView('youth')}>Youth League 🏆</button>
+                )}
               </div>
             </div>
 
@@ -3732,7 +3862,11 @@
             )}
 
             {view === 'plicup' && selectedTeam === "Castilla" && (
-              <PremierIntCupView allPlayers={allPlayers} />
+              <CupView allPlayers={allPlayers} cupData={premierIntCup} rmLabel="Castilla" />
+            )}
+
+            {view === 'youth' && selectedTeam === "Juvenil A" && (
+              <CupView allPlayers={allPlayers} cupData={youthLeague} rmLabel="Real Madrid" />
             )}
 
             </>
