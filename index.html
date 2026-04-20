@@ -1668,11 +1668,19 @@
       if (!nombre) return apodo;
       var parts = nombre.split(/\s+/);
       if (parts.length === 1) return apodo || parts[0];
-      if (parts.length === 2) return (apodo || parts[0]) + ' ' + parts[1];
-      // 3+ palabras: apodo + primer apellido (parts[1] por convención española estándar)
+      // Si el apodo coincide con el primer apellido (parts[1]) → apodo es un apellido, no un nombre
+      // Ej: nombre "Guillermo Súnico Alonso", apodo "Súnico" → mostrar nombre completo "Guillermo Súnico"
+      var primerNombre = parts[0];
+      var primerApellido = parts[1];
+      var norm = function(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); };
+      if (apodo && norm(apodo) === norm(primerApellido)) {
+        return primerNombre + ' ' + primerApellido;
+      }
+      if (parts.length === 2) return (apodo || primerNombre) + ' ' + primerApellido;
+      // 3+ palabras: apodo (o primerNombre) + primer apellido
       // "Daniel Rodríguez Pérez" + apodo "Dani" → "Dani Rodríguez"
       // "Alberto Gómez de Benito" + apodo "Alberto" → "Alberto Gómez"
-      return (apodo || parts[0]) + ' ' + parts[1];
+      return (apodo || primerNombre) + ' ' + primerApellido;
     }
 
     function buildPhotoNameAlt(nombre) {
