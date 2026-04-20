@@ -3347,12 +3347,45 @@
 
       const positions = ["Todas", "Portero", "Defensa", "Centrocampista", "Delantero"];
 
+      const POSITION_ORDER = {
+        // Por posicionDetalle (orden de plantilla del usuario)
+        "Portero": 1,
+        "Lateral derecho": 2,
+        "Central": 3, "Defensa central": 3,
+        "Lateral izquierdo": 4,
+        "Pivote": 5,
+        "Interior defensivo": 6,
+        "Mediocentro": 6.5, "Medio": 6.5, "Interior": 6.5,
+        "Interior ofensivo": 7,
+        "Extremo derecho": 8,
+        "Extremo izquierdo": 9,
+        "Delantero centro": 10, "Delantero": 10
+      };
+      function positionRank(p) {
+        var detail = p.posicionDetalle;
+        if (detail && POSITION_ORDER[detail] !== undefined) return POSITION_ORDER[detail];
+        // Fallback por categoría general → ubicar al final del bloque correspondiente
+        if (p.posicion === "Portero") return 1.5;
+        if (p.posicion === "Defensa") return 4.5;
+        if (p.posicion === "Centrocampista") return 7.5;
+        if (p.posicion === "Delantero") return 10.5;
+        return 99;
+      }
+
       const filteredPlayers = useMemo(() => {
-        return currentTeam.jugadores.filter(p => {
+        var arr = currentTeam.jugadores.filter(p => {
           const term = searchTerm.toLowerCase();
           const matchesSearch = !term || p.nombre.toLowerCase().includes(term) || p.apodo.toLowerCase().includes(term) || (p.lugarNacimiento && p.lugarNacimiento.toLowerCase().includes(term));
           const matchesPos = positionFilter === "Todas" || p.posicion === positionFilter;
           return matchesSearch && matchesPos;
+        });
+        // Orden táctico: POR → LD → DFC → LI → Pivote → MCD → MC → MCO → ED → EI → DC
+        return arr.slice().sort(function(a, b) {
+          var ra = positionRank(a), rb = positionRank(b);
+          if (ra !== rb) return ra - rb;
+          // Desempate por dorsal (si existe), luego por apodo
+          if (a.dorsal != null && b.dorsal != null) return a.dorsal - b.dorsal;
+          return (a.apodo || '').localeCompare(b.apodo || '');
         });
       }, [currentTeam, searchTerm, positionFilter]);
 
