@@ -2819,30 +2819,33 @@
     function PremierIntCupView({ allPlayers }) {
       const [selected, setSelected] = useState(null);
 
-      // Construye múltiples índices de jugadores para matching robusto cross-equipos
+      // Construye múltiples índices. Prioriza Castilla > RM C > Juvenil A > resto
+      // para ambigüedades (ej: hay 4 "Bruno" en distintos equipos; el del Castilla es el que va en PIC)
       const playerIndex = useMemo(function() {
-        var byApodo = {}, byApellido = {}, byApodoLower = {};
+        var byApodo = {}, byApellido = {};
         function norm(s) { return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
-        (allPlayers || []).forEach(function(p) {
+        var priorityOrder = ["Castilla", "Real Madrid C", "Juvenil A", "Juvenil B", "Juvenil C"];
+        var sorted = (allPlayers || []).slice().sort(function(a, b) {
+          var ai = priorityOrder.indexOf(a.equipo); if (ai < 0) ai = 99;
+          var bi = priorityOrder.indexOf(b.equipo); if (bi < 0) bi = 99;
+          return ai - bi;
+        });
+        // First-wins: no sobrescribir claves ya existentes
+        sorted.forEach(function(p) {
           var ap = norm(p.apodo);
           var nm = norm(p.nombre);
-          if (ap) byApodo[ap] = p;
-          // Apodo sin prefijo "X. "
+          if (ap && !byApodo[ap]) byApodo[ap] = p;
           var apClean = ap.replace(/^[a-z]\.\s*/, '');
           if (apClean && !byApodo[apClean]) byApodo[apClean] = p;
-          // Última palabra del apodo (apellido)
           var apParts = ap.split(/\s+/);
           var lastApodo = apParts[apParts.length - 1];
           if (lastApodo && !byApellido[lastApodo]) byApellido[lastApodo] = p;
-          // Penúltima palabra del nombre (primer apellido convención española)
           var nmParts = nm.split(/\s+/);
           if (nmParts.length >= 3) {
             var firstSurname = nmParts[nmParts.length - 2];
             if (firstSurname && !byApellido[firstSurname]) byApellido[firstSurname] = p;
           }
-          if (nmParts.length === 2) {
-            if (!byApellido[nmParts[1]]) byApellido[nmParts[1]] = p;
-          }
+          if (nmParts.length === 2 && !byApellido[nmParts[1]]) byApellido[nmParts[1]] = p;
         });
         return { byApodo: byApodo, byApellido: byApellido, norm: norm };
       }, [allPlayers]);
