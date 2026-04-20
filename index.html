@@ -447,9 +447,9 @@
     .pic-empty { color:var(--text-3); font-size:12px; font-style:italic; padding:6px 0; }
 
     /* ===== PIC: lista compacta + detalle ===== */
-    .pic-row { display:grid; grid-template-columns:60px 90px 1fr auto; gap:14px; align-items:center; padding:12px 14px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.15s; }
+    .pic-row { display:grid; grid-template-columns:56px 90px 1fr auto; gap:14px; align-items:center; padding:12px 14px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.15s; }
     .pic-row:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(0,0,0,0.08); transform:translateY(-1px); }
-    .pic-row-jor { font-size:11px; font-weight:700; color:#fbbf24; background:#0f172a; padding:4px 8px; border-radius:6px; text-align:center; letter-spacing:0.3px; }
+    .pic-row-jor { font-size:11px; font-weight:700; color:#fbbf24; background:#0f172a; padding:5px 0; border-radius:6px; text-align:center; letter-spacing:0.3px; width:100%; box-sizing:border-box; }
     .pic-row-fecha { font-size:12px; color:var(--text-2); font-variant-numeric:tabular-nums; }
     .pic-row-match { display:flex; align-items:center; gap:10px; min-width:0; }
     .pic-row-team { font-size:13.5px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -1274,7 +1274,7 @@
           notas: "Castilla acabó con 10 (expulsión Pol Fortuny min. 64). Cierra fase de grupos invicto, 2º de grupo."
         },
         {
-          jornada: "Cuartos", fase: "Eliminatoria a partido único", fecha: "07/04/2026",
+          jornada: "QF", fase: "Eliminatoria a partido único", fecha: "07/04/2026",
           rival: "Manchester United", local: false, estadio: "Old Trafford",
           gl: 2, gv: 4, prorroga: true,
           titulares: ["Súnico","D. Jiménez","Manu Serrano","Mario Rivas","Lamini","Cherif","Mesonero","Lacosta","Loren Zúñiga","Bruno","G. Castrelo"],
@@ -1294,7 +1294,7 @@
           notas: "Remontada del 2-0 en contra. Pase a semifinales."
         },
         {
-          jornada: "Semifinal", fase: "Eliminatoria a partido único", fecha: "Por confirmar",
+          jornada: "SF", fase: "Eliminatoria a partido único", fecha: "Por confirmar",
           rival: "Dinamo Zagreb", local: false, estadio: "Por confirmar",
           gl: null, gv: null,
           titulares: [], cambios: [], goles: [],
