@@ -1840,24 +1840,37 @@
       if (!player) return '';
       var nombre = player.nombre || '';
       var apodo = player.apodo || '';
-      // Si el apodo ya tiene 2+ palabras → es nombre+apellido completo, úsalo
+      // 1. Apodo ya completo (2+ palabras) → usar tal cual
       if (apodo && apodo.split(/\s+/).length >= 2) return apodo;
       if (!nombre) return apodo;
       var parts = nombre.split(/\s+/);
       if (parts.length === 1) return apodo || parts[0];
-      // Si el apodo coincide con el primer apellido (parts[1]) → apodo es un apellido, no un nombre
-      // Ej: nombre "Guillermo Súnico Alonso", apodo "Súnico" → mostrar nombre completo "Guillermo Súnico"
-      var primerNombre = parts[0];
-      var primerApellido = parts[1];
+      if (parts.length === 2) return (apodo || parts[0]) + ' ' + parts[1];
+
       var norm = function(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); };
-      if (apodo && norm(apodo) === norm(primerApellido)) {
-        return primerNombre + ' ' + primerApellido;
+      // 2. Detectar índice del primer apellido
+      // 3 palabras: parts[1]
+      // 4+ palabras: si parts[2] es partícula ("de", "del", "la"…) → apellido compuesto, primer apellido = parts[1]
+      //              si no → nombre compuesto, primer apellido = parts[2]
+      var particles = ['de','del','la','los','las','y','da','di','van','von'];
+      var firstApellidoIdx = 1;
+      if (parts.length >= 4 && particles.indexOf(norm(parts[2])) < 0) {
+        firstApellidoIdx = 2;
       }
-      if (parts.length === 2) return (apodo || primerNombre) + ' ' + primerApellido;
-      // 3+ palabras: apodo (o primerNombre) + primer apellido
-      // "Daniel Rodríguez Pérez" + apodo "Dani" → "Dani Rodríguez"
-      // "Alberto Gómez de Benito" + apodo "Alberto" → "Alberto Gómez"
-      return (apodo || primerNombre) + ' ' + primerApellido;
+      var firstApellido = parts[firstApellidoIdx];
+
+      // 3. Si apodo coincide con el primer apellido → apodo es un apellido, mostrar último nombre + apellido
+      // Ej: "Guillermo Súnico Alonso" apodo "Súnico" → "Guillermo Súnico"
+      // Ej: "Francisco Javier Bailón Álvarez" apodo "Bailón" → "Javier Bailón"
+      if (apodo && norm(apodo) === norm(firstApellido)) {
+        return parts[firstApellidoIdx - 1] + ' ' + firstApellido;
+      }
+
+      // 4. Caso normal: apodo (o primer nombre) + primer apellido
+      // Ej: "Liberto Raul Navascués Vicente" apodo "Liberto" → "Liberto Navascués"
+      // Ej: "Daniel Rodríguez Pérez" apodo "Dani" → "Dani Rodríguez"
+      // Ej: "Alberto Gómez de Benito" apodo "Alberto" → "Alberto Gómez"
+      return (apodo || parts[0]) + ' ' + firstApellido;
     }
 
     function buildPhotoNameAlt(nombre) {
