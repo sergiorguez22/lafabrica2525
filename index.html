@@ -416,6 +416,85 @@
     .staff-info { flex:1; min-width:0; }
     .staff-name { font-size:14px; font-weight:600; color:var(--text); }
     .staff-role { font-size:11.5px; color:var(--text-2); margin-top:3px; text-transform:uppercase; letter-spacing:0.4px; }
+
+    /* ===== PREMIER INT CUP ===== */
+    .pic-wrap { padding:20px 28px 28px; }
+    .pic-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border-light); }
+    .pic-title { font-size:15px; font-weight:600; color:var(--text); }
+    .pic-sub { font-size:12px; color:var(--text-2); margin-top:3px; }
+    .pic-list { display:grid; gap:14px; }
+    .pic-card { background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); overflow:hidden; }
+    .pic-card-head { background:#0f172a; color:#e2e8f0; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:12px; }
+    .pic-card-jor { font-weight:600; color:#fbbf24; letter-spacing:0.3px; }
+    .pic-card-fase { color:#94a3b8; font-size:11px; }
+    .pic-card-fecha { color:#cbd5e1; font-size:11.5px; }
+    .pic-score { display:flex; align-items:center; justify-content:center; gap:18px; padding:18px 14px; background:linear-gradient(180deg, #f8fafc, #ffffff); border-bottom:1px solid var(--border-light); }
+    .pic-team { flex:1; text-align:center; min-width:0; }
+    .pic-team-name { font-size:14.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pic-team-rm { color:var(--accent); }
+    .pic-num { font-size:32px; font-weight:700; color:var(--text); line-height:1; padding:0 6px; min-width:32px; text-align:center; }
+    .pic-num.pending { color:var(--text-3); font-size:22px; font-weight:500; }
+    .pic-vs { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; }
+    .pic-card-body { padding:14px; display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; }
+    .pic-section-title { font-size:11px; font-weight:600; color:var(--text-2); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:8px; }
+    .pic-list-item { font-size:13px; color:var(--text); padding:5px 0; border-bottom:1px solid var(--border-light); display:flex; justify-content:space-between; gap:10px; }
+    .pic-list-item:last-child { border-bottom:none; }
+    .pic-min { font-size:11px; color:var(--text-3); font-variant-numeric:tabular-nums; flex-shrink:0; }
+    .pic-goal-rm { color:var(--accent); font-weight:600; }
+    .pic-stadium { padding:8px 14px; background:var(--bg); font-size:11.5px; color:var(--text-2); border-top:1px solid var(--border-light); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+    .pic-stadium .pic-prorroga { color:#92400e; background:#fef3c7; padding:2px 8px; border-radius:10px; font-size:10.5px; font-weight:600; text-transform:uppercase; }
+    .pic-notas { padding:8px 14px; background:#fef3c7; color:#92400e; font-size:12px; border-top:1px solid var(--border-light); }
+    .pic-empty { color:var(--text-3); font-size:12px; font-style:italic; padding:6px 0; }
+
+    /* ===== PIC: lista compacta + detalle ===== */
+    .pic-row { display:grid; grid-template-columns:60px 90px 1fr auto; gap:14px; align-items:center; padding:12px 14px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.15s; }
+    .pic-row:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(0,0,0,0.08); transform:translateY(-1px); }
+    .pic-row-jor { font-size:11px; font-weight:700; color:#fbbf24; background:#0f172a; padding:4px 8px; border-radius:6px; text-align:center; letter-spacing:0.3px; }
+    .pic-row-fecha { font-size:12px; color:var(--text-2); font-variant-numeric:tabular-nums; }
+    .pic-row-match { display:flex; align-items:center; gap:10px; min-width:0; }
+    .pic-row-team { font-size:13.5px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pic-row-team.rm { color:var(--accent); font-weight:600; }
+    .pic-row-score { font-size:14px; font-weight:700; color:var(--text); padding:3px 9px; background:#f3f4f6; border-radius:6px; min-width:48px; text-align:center; font-variant-numeric:tabular-nums; }
+    .pic-row-score.pending { color:var(--text-3); font-weight:500; font-size:12px; }
+    .pic-row-arrow { color:var(--text-3); font-size:14px; }
+
+    .pic-back { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12.5px; color:var(--text-2); background:var(--bg); border:1px solid var(--border-light); border-radius:6px; cursor:pointer; margin-bottom:14px; transition:all 0.15s; }
+    .pic-back:hover { color:var(--accent); border-color:var(--accent); }
+
+    .pic-detail-head { background:#0f172a; color:#e2e8f0; padding:18px 20px; border-radius:var(--radius-sm); margin-bottom:16px; }
+    .pic-detail-meta { display:flex; gap:16px; font-size:12px; color:#94a3b8; flex-wrap:wrap; margin-bottom:12px; }
+    .pic-detail-meta .pic-jor-badge { color:#fbbf24; font-weight:700; }
+    .pic-detail-score { display:flex; align-items:center; justify-content:center; gap:24px; }
+    .pic-detail-team { flex:1; text-align:center; min-width:0; }
+    .pic-detail-team-name { font-size:18px; font-weight:600; color:#e2e8f0; }
+    .pic-detail-team-name.rm { color:#fbbf24; }
+    .pic-detail-num { font-size:42px; font-weight:700; line-height:1; }
+    .pic-detail-vs { font-size:12px; color:#64748b; text-transform:uppercase; }
+    .pic-detail-stadium { text-align:center; margin-top:10px; font-size:11.5px; color:#94a3b8; }
+    .pic-detail-prorroga { display:inline-block; margin-left:8px; padding:2px 8px; background:#fbbf24; color:#0f172a; border-radius:10px; font-size:10px; font-weight:700; text-transform:uppercase; }
+
+    .pic-detail-body { display:grid; grid-template-columns:minmax(280px, 1.4fr) minmax(240px, 1fr); gap:18px; }
+    @media (max-width: 760px) { .pic-detail-body { grid-template-columns:1fr; } }
+    .pic-events { background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:14px; }
+    .pic-events h4 { font-size:11px; font-weight:600; color:var(--text-2); text-transform:uppercase; letter-spacing:0.6px; margin:0 0 8px 0; }
+    .pic-events h4:not(:first-child) { margin-top:14px; }
+    .pic-event { display:flex; justify-content:space-between; gap:10px; padding:6px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+    .pic-event:last-child { border-bottom:none; }
+    .pic-event-rm { color:var(--accent); font-weight:600; }
+    .pic-event-min { color:var(--text-3); font-size:11.5px; font-variant-numeric:tabular-nums; }
+    .pic-event-arrow { color:#10b981; margin-right:4px; }
+    .pic-event-out { color:var(--text-3); font-size:12px; }
+
+    /* ===== Mini-field para alineación de partido ===== */
+    .pic-field-wrap { background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:14px; }
+    .pic-field-title { font-size:11px; font-weight:600; color:var(--text-2); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; }
+    .pic-mini-field { position:relative; width:100%; max-width:420px; aspect-ratio:68/105; margin:0 auto; background:linear-gradient(180deg,#2d8c3c 0%,#339944 8%,#2d8c3c 8%,#339944 16%,#2d8c3c 16%,#339944 24%,#2d8c3c 24%,#339944 32%,#2d8c3c 32%,#339944 40%,#2d8c3c 40%,#339944 48%,#2d8c3c 48%,#339944 56%,#2d8c3c 56%,#339944 64%,#2d8c3c 64%,#339944 72%,#2d8c3c 72%,#339944 80%,#2d8c3c 80%,#339944 88%,#2d8c3c 88%,#339944 96%,#2d8c3c 96%); border-radius:8px; overflow:hidden; }
+    .pic-mini-field::before { content:''; position:absolute; inset:3%; border:2px solid rgba(255,255,255,0.7); border-radius:4px; }
+    .pic-mini-field::after { content:''; position:absolute; left:50%; top:50%; width:18%; aspect-ratio:1; border:2px solid rgba(255,255,255,0.7); border-radius:50%; transform:translate(-50%,-50%); }
+    .pic-mini-slot { position:absolute; transform:translate(-50%,-50%); text-align:center; }
+    .pic-mini-circle { width:46px; height:46px; border-radius:50%; border:2px solid #1a56db; background:#1a56db; display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:700; margin:0 auto; box-shadow:0 2px 5px rgba(0,0,0,0.3); overflow:hidden; }
+    .pic-mini-circle img { width:100%; height:100%; object-fit:cover; object-position:center 14%; }
+    .pic-mini-name { display:inline-block; margin-top:4px; padding:2px 7px; background:var(--accent); color:white; font-size:9.5px; font-weight:600; border-radius:10px; max-width:88px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-shadow:0 1px 2px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -1132,6 +1211,95 @@
       "Debutante": [
         { nombre: "Juan Carlos Juárez", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Juan_Carlos_Juarez_550x650?$Desktop$&fit=wrap&wid=288&hei=384" },
         { nombre: "Rubén Alonso", rol: "Segundo entrenador", foto: null }
+      ]
+    };
+
+    /* ===== PREMIER LEAGUE INTERNATIONAL CUP (Castilla) ===== */
+    const premierIntCup = {
+      competicion: "Premier League International Cup",
+      temporada: "2025/26",
+      partidos: [
+        {
+          jornada: "J1", fase: "Fase de grupos · Grupo A", fecha: "10/09/2025",
+          rival: "Wolverhampton", local: false, estadio: "Molineux Stadium",
+          gl: 0, gv: 1,
+          titulares: ["Mestre","D. Jiménez","Diego Aguado","Manu Serrano","Valdepeñas","Cristian David","Manuel Ángel","Bruno","Pol Fortuny","Roberto","Jacobo"],
+          cambios: [
+            { min: 61, sale: "Cristian David", entra: "Cestero" },
+            { min: 61, sale: "Manuel Ángel", entra: "Pol Durán" },
+            { min: 61, sale: "Jacobo", entra: "Loren Zúñiga" },
+            { min: 67, sale: "Valdepeñas", entra: "Joan Martínez" },
+            { min: 67, sale: "Roberto", entra: "G. Castrelo" }
+          ],
+          goles: [{ min: 84, jugador: "Bruno", castilla: true }]
+        },
+        {
+          jornada: "J2", fase: "Fase de grupos · Grupo A", fecha: "29/10/2025",
+          rival: "Southampton", local: false, estadio: "St. Mary's Stadium",
+          gl: 1, gv: 1,
+          titulares: ["Mestre","Fortea","Mario Rivas","Lamini","Diego Aguado","Cristian David","Mesonero","Bruno","Yáñez","G. Castrelo","Álvaro Ginés"],
+          cambios: [],
+          goles: [
+            { min: 75, jugador: "Thiago", castilla: true },
+            { min: 94, jugador: "Okunola", castilla: false }
+          ]
+        },
+        {
+          jornada: "J3", fase: "Fase de grupos · Grupo A", fecha: "03/12/2025",
+          rival: "Everton", local: false, estadio: "Goodison Park",
+          gl: 0, gv: 2,
+          titulares: ["Mestre","D. Jiménez","Mario Rivas","Lamini","Diego Aguado","Cristian David","Mesonero","Manuel Ángel","Pol Fortuny","Á. Leiva","Loren Zúñiga"],
+          cambios: [
+            { min: 66, sale: "D. Jiménez", entra: "Fortea" },
+            { min: 66, sale: "Manuel Ángel", entra: "Thiago" },
+            { min: 73, sale: "Mesonero", entra: "G. Castrelo" },
+            { min: 74, sale: "Diego Aguado", entra: "Manu Serrano" },
+            { min: 77, sale: "Loren Zúñiga", entra: "Palacios" }
+          ],
+          goles: [
+            { min: 51, jugador: "Pol Fortuny", castilla: true },
+            { min: 95, jugador: "Pol Fortuny", castilla: true }
+          ]
+        },
+        {
+          jornada: "J4", fase: "Fase de grupos · Grupo A", fecha: "16/12/2025",
+          rival: "Manchester City", local: false, estadio: "Manchester",
+          gl: 1, gv: 1,
+          titulares: ["Mestre","Fortea","Lezcano","Lamini","Liberto","Cristian David","Mesonero","Manuel Ángel","Pol Fortuny","Á. Leiva","Palacios"],
+          cambios: [],
+          goles: [
+            { min: 3, jugador: "Palacios", castilla: true },
+            { min: 28, jugador: "Lawrence", castilla: false }
+          ],
+          notas: "Castilla acabó con 10 (expulsión Pol Fortuny min. 64). Cierra fase de grupos invicto, 2º de grupo."
+        },
+        {
+          jornada: "Cuartos", fase: "Eliminatoria a partido único", fecha: "07/04/2026",
+          rival: "Manchester United", local: false, estadio: "Old Trafford",
+          gl: 2, gv: 4, prorroga: true,
+          titulares: ["Súnico","D. Jiménez","Manu Serrano","Mario Rivas","Lamini","Cherif","Mesonero","Lacosta","Loren Zúñiga","Bruno","G. Castrelo"],
+          cambios: [
+            { min: 57, sale: "Loren Zúñiga", entra: "Barroso" },
+            { min: 57, sale: "G. Castrelo", entra: "Mascaró" },
+            { min: 87, sale: "Manu Serrano", entra: "Óscar Mesa" },
+            { min: 98, sale: "D. Jiménez", entra: "Rubén Martínez" },
+            { min: 98, sale: "Mario Rivas", entra: "Mateo Garrido" }
+          ],
+          goles: [
+            { min: 46, jugador: "G. Castrelo", castilla: true },
+            { min: 66, jugador: "Bruno", castilla: true },
+            { min: 108, jugador: "Barroso", castilla: true },
+            { min: 118, jugador: "Mesonero", castilla: true }
+          ],
+          notas: "Remontada del 2-0 en contra. Pase a semifinales."
+        },
+        {
+          jornada: "Semifinal", fase: "Eliminatoria a partido único", fecha: "Por confirmar",
+          rival: "Dinamo Zagreb", local: false, estadio: "Por confirmar",
+          gl: null, gv: null,
+          titulares: [], cambios: [], goles: [],
+          notas: "Pendiente de jugarse."
+        }
       ]
     };
 
@@ -2585,6 +2753,192 @@
       );
     }
 
+    /* ===== PREMIER LEAGUE INTERNATIONAL CUP VIEW ===== */
+    function PremierIntCupView({ allPlayers }) {
+      const [selected, setSelected] = useState(null);
+
+      // Mapa apodo → player (para foto/dorsal). Manejo variantes de nombre.
+      const playerMap = useMemo(function() {
+        var m = {};
+        (allPlayers || []).forEach(function(p) {
+          if (p.apodo) m[p.apodo.toLowerCase()] = p;
+          // Variantes (Á.Leiva → Leiva, etc.)
+          var key2 = p.apodo.replace(/^[A-ZÁÉÍÓÚ]\.\s*/, '').toLowerCase();
+          if (key2 && !m[key2]) m[key2] = p;
+        });
+        return m;
+      }, [allPlayers]);
+
+      function findPlayer(name) {
+        if (!name) return null;
+        var k = name.toLowerCase();
+        if (playerMap[k]) return playerMap[k];
+        // Quita prefijo "X."
+        var k2 = k.replace(/^[a-záéíóú]\.\s*/, '');
+        if (playerMap[k2]) return playerMap[k2];
+        // Última palabra (apellido)
+        var parts = k.split(/\s+/);
+        var last = parts[parts.length - 1];
+        return playerMap[last] || null;
+      }
+
+      function initials(name) {
+        return name.split(/\s+/).map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+      }
+
+      // Slots 4-3-3 (mismo layout que el lineup builder F-11 single pivot)
+      var slotsF11 = [
+        { x:50, y:90 },   // POR
+        { x:88, y:68 },   // LD
+        { x:62, y:74 },   // DFC
+        { x:38, y:74 },   // DFC
+        { x:12, y:68 },   // LI
+        { x:50, y:55 },   // MCD
+        { x:25, y:40 },   // MC
+        { x:75, y:40 },   // MC
+        { x:85, y:22 },   // ED
+        { x:15, y:22 },   // EI
+        { x:50, y:16 }    // DC
+      ];
+
+      function MatchDetail({ m }) {
+        var pending = m.gl === null || m.gv === null;
+        var localName = m.local ? "Castilla" : m.rival;
+        var visitName = m.local ? m.rival : "Castilla";
+
+        // Asigna posiciones tipo 4-3-3 — orden recibido del titulares
+        var slotted = m.titulares.map(function(name, i) {
+          var slot = slotsF11[i] || { x: 50, y: 50 };
+          return { name: name, x: slot.x, y: slot.y, player: findPlayer(name) };
+        });
+
+        return (
+          <div>
+            <button className="pic-back" onClick={function(){ setSelected(null); }}>← Volver al listado</button>
+
+            <div className="pic-detail-head">
+              <div className="pic-detail-meta">
+                <span className="pic-jor-badge">{m.jornada}</span>
+                <span>{m.fase}</span>
+                <span>{m.fecha}</span>
+              </div>
+              <div className="pic-detail-score">
+                <div className="pic-detail-team">
+                  <div className={"pic-detail-team-name" + (!m.local ? "" : " rm")}>{localName}</div>
+                </div>
+                {pending ? (
+                  <div className="pic-detail-num" style={{color:'#64748b',fontSize:'24px'}}>vs</div>
+                ) : (
+                  <>
+                    <div className="pic-detail-num">{m.gl}</div>
+                    <div className="pic-detail-vs">·</div>
+                    <div className="pic-detail-num">{m.gv}</div>
+                  </>
+                )}
+                <div className="pic-detail-team">
+                  <div className={"pic-detail-team-name" + (m.local ? "" : " rm")}>{visitName}</div>
+                </div>
+              </div>
+              <div className="pic-detail-stadium">
+                {m.estadio}
+                {m.prorroga && <span className="pic-detail-prorroga">Prórroga</span>}
+              </div>
+            </div>
+
+            {m.notas && <div className="pic-notas" style={{borderRadius:'6px',marginBottom:'14px',border:'1px solid #fde68a'}}>{m.notas}</div>}
+
+            {pending ? (
+              <div className="pic-empty" style={{textAlign:'center',padding:'30px'}}>Partido pendiente de jugarse — sin alineación todavía.</div>
+            ) : (
+              <div className="pic-detail-body">
+                <div className="pic-field-wrap">
+                  <div className="pic-field-title">Titulares Castilla · 4-3-3</div>
+                  <div className="pic-mini-field">
+                    {slotted.map(function(p, i) {
+                      return (
+                        <div key={i} className="pic-mini-slot" style={{left:p.x+'%',top:p.y+'%'}}>
+                          <div className="pic-mini-circle">
+                            {p.player && p.player.foto ? (
+                              <img src={p.player.foto} alt={p.name} onError={function(e){ e.target.style.display='none'; e.target.parentNode.appendChild(document.createTextNode(initials(p.name))); }} />
+                            ) : initials(p.name)}
+                          </div>
+                          <div className="pic-mini-name">{p.name}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="pic-events">
+                  <h4>Goles</h4>
+                  {m.goles.length === 0 ? (
+                    <div className="pic-empty">Sin goles</div>
+                  ) : m.goles.map(function(g, i) {
+                    return (
+                      <div key={i} className="pic-event">
+                        <span className={g.castilla ? "pic-event-rm" : ""}>⚽ {g.jugador}{g.castilla ? "" : " (" + m.rival + ")"}</span>
+                        <span className="pic-event-min">{g.min}'</span>
+                      </div>
+                    );
+                  })}
+                  {m.cambios.length > 0 && (
+                    <>
+                      <h4>Cambios</h4>
+                      {m.cambios.map(function(c, i) {
+                        return (
+                          <div key={i} className="pic-event">
+                            <span><span className="pic-event-arrow">↑</span>{c.entra} <span className="pic-event-out">↓ {c.sale}</span></span>
+                            <span className="pic-event-min">{c.min}'</span>
+                          </div>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      if (selected !== null) {
+        return (
+          <div className="pic-wrap">
+            <MatchDetail m={premierIntCup.partidos[selected]} />
+          </div>
+        );
+      }
+
+      return (
+        <div className="pic-wrap">
+          <div className="pic-header">
+            <div>
+              <div className="pic-title">{premierIntCup.competicion}</div>
+              <div className="pic-sub">Temporada {premierIntCup.temporada} · Real Madrid Castilla</div>
+            </div>
+          </div>
+          <div className="pic-list">
+            {premierIntCup.partidos.map(function(m, i) {
+              var pending = m.gl === null || m.gv === null;
+              var localName = m.local ? "Castilla" : m.rival;
+              var visitName = m.local ? m.rival : "Castilla";
+              return (
+                <div key={i} className="pic-row" onClick={function(){ setSelected(i); }}>
+                  <div className="pic-row-jor">{m.jornada}</div>
+                  <div className="pic-row-fecha">{m.fecha}</div>
+                  <div className="pic-row-match">
+                    <div className={"pic-row-team" + (!m.local ? "" : " rm")} style={{textAlign:'right'}}>{localName}</div>
+                    <div className={"pic-row-score" + (pending ? " pending" : "")}>{pending ? "vs" : (m.gl + " - " + m.gv)}</div>
+                    <div className={"pic-row-team" + (m.local ? "" : " rm")}>{visitName}</div>
+                  </div>
+                  <div className="pic-row-arrow">›</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
     /* ===== MAIN APP ===== */
     function App() {
       const [user, setUser] = useState(() => sessionStorage.getItem("lfUser") || null);
@@ -3084,6 +3438,9 @@
                 {clasificaciones[selectedTeam] && (
                   <button className={`view-btn ${view === 'table' ? 'active' : ''}`} onClick={() => setView('table')}>Clasificación</button>
                 )}
+                {selectedTeam === "Castilla" && (
+                  <button className={`view-btn ${view === 'plicup' ? 'active' : ''}`} onClick={() => setView('plicup')}>Premier Int.</button>
+                )}
               </div>
             </div>
 
@@ -3281,6 +3638,10 @@
 
             {view === 'table' && (
               <ClassificationView teamName={selectedTeam} />
+            )}
+
+            {view === 'plicup' && selectedTeam === "Castilla" && (
+              <PremierIntCupView allPlayers={allPlayers} />
             )}
 
             </>
