@@ -1659,6 +1659,21 @@
       return parts[0].toUpperCase();
     }
 
+    function getDisplayName(player) {
+      if (!player) return '';
+      var nombre = player.nombre || '';
+      var apodo = player.apodo || '';
+      // Si el apodo tiene 2+ palabras, ya es nombre+apellido — úsalo
+      if (apodo && apodo.split(/\s+/).length >= 2) return apodo;
+      // Si solo hay 1 palabra de apodo, deriva del nombre completo
+      if (!nombre) return apodo;
+      var parts = nombre.split(/\s+/);
+      if (parts.length === 1) return parts[0];
+      if (parts.length === 2) return nombre;
+      // Convención española: NombreCompuesto Apellido1 Apellido2 → Nombre + Apellido1
+      return parts[0] + ' ' + parts[parts.length - 2];
+    }
+
     function buildPhotoNameAlt(nombre) {
       var parts = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z\s]/g, '').trim().split(/\s+/);
       if (parts.length >= 2) return (parts[0] + '_' + parts[1]).toUpperCase();
@@ -2543,7 +2558,7 @@
                       {assigned ? (assigned.foto ? <img src={assigned.foto} alt={assigned.apodo} style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover'}} onError={function(e){e.target.style.display='none';e.target.nextSibling.style.display='';}} /> : null) : null}{assigned ? (!assigned.foto ? assigned.apodo.split(' ')[0].substring(0,3).toUpperCase() : <span style={{display:'none'}}>{assigned.apodo.split(' ')[0].substring(0,3).toUpperCase()}</span>) : '+'}
                     </div>
                     {assigned ? (
-                      <div className="lineup-slot-name">{assigned.apodo}</div>
+                      <div className="lineup-slot-name">{getDisplayName(assigned)}</div>
                     ) : (
                       <div className="lineup-slot-label">{slot.role}</div>
                     )}
@@ -2574,18 +2589,55 @@
                 </button>
               )}
               {assignments.some(function(a){ return a !== null; }) && (
-                <button className="lineup-btn lineup-btn-secondary" onClick={function(){
+                <button className="lineup-btn lineup-btn-secondary" onClick={function(e){
                   if (typeof window.html2canvas === 'undefined' || typeof window.jspdf === 'undefined') { alert('Cargando librerías de exportación, espera 2s y vuelve a intentar.'); return; }
-                  var node = document.querySelector('.lineup-field-wrapper');
-                  if (!node) return;
-                  var btn = this;
+                  var fieldEl = document.querySelector('.lineup-field-wrapper .field');
+                  if (!fieldEl) return;
+                  var btn = e.currentTarget;
                   var prev = btn.textContent; btn.textContent = 'Generando...'; btn.disabled = true;
-                  window.html2canvas(node, {
-                    backgroundColor: '#ffffff',
-                    useCORS: true,
-                    scale: 2,
-                    logging: false,
-                    imageTimeout: 5000
+
+                  // Preload fotos vía proxy CORS (images.weserv.nl) → data URL para que html2canvas las pueda capturar
+                  function preloadImages() {
+                    var imgs = Array.prototype.slice.call(fieldEl.querySelectorAll('img'));
+                    var originals = imgs.map(function(img){ return { img: img, src: img.src }; });
+                    return Promise.all(imgs.map(function(img){
+                      var orig = img.src;
+                      if (!orig || orig.indexOf('data:') === 0) return Promise.resolve();
+                      var proxy = 'https://images.weserv.nl/?url=' + encodeURIComponent(orig.replace(/^https?:\/\//, ''));
+                      return fetch(proxy).then(function(r){ if (!r.ok) throw new Error('proxy'); return r.blob(); })
+                        .then(function(blob){
+                          return new Promise(function(resolve){
+                            var reader = new FileReader();
+                            reader.onloadend = function(){ resolve(reader.result); };
+                            reader.onerror = function(){ resolve(null); };
+                            reader.readAsDataURL(blob);
+                          });
+                        })
+                        .then(function(dataUrl){
+                          if (!dataUrl) return;
+                          return new Promise(function(resolve){
+                            var test = new Image();
+                            test.onload = function(){ img.src = dataUrl; resolve(); };
+                            test.onerror = function(){ resolve(); };
+                            test.src = dataUrl;
+                          });
+                        })
+                        .catch(function(){});
+                    })).then(function(){ return originals; });
+                  }
+
+                  preloadImages().then(function(originals){
+                    return window.html2canvas(fieldEl, {
+                      backgroundColor: null,
+                      useCORS: true,
+                      scale: 2,
+                      logging: false,
+                      imageTimeout: 8000
+                    }).then(function(canvas){
+                      // Restaurar srcs originales
+                      originals.forEach(function(o){ o.img.src = o.src; });
+                      return canvas;
+                    });
                   }).then(function(canvas){
                     var imgData = canvas.toDataURL('image/png');
                     var jsPDF = window.jspdf.jsPDF;
@@ -2593,17 +2645,18 @@
                     var pageW = pdf.internal.pageSize.getWidth();
                     var pageH = pdf.internal.pageSize.getHeight();
                     var margin = 10;
+                    var headerH = 16;
                     var maxW = pageW - margin * 2;
-                    var maxH = pageH - margin * 2 - 14;
+                    var maxH = pageH - margin * 2 - headerH;
                     var ratio = canvas.width / canvas.height;
                     var w = maxW, h = w / ratio;
                     if (h > maxH) { h = maxH; w = h * ratio; }
                     var x = (pageW - w) / 2;
-                    var y = margin + 14;
+                    var y = margin + headerH;
                     pdf.setFontSize(14); pdf.setFont('helvetica', 'bold');
                     pdf.text('La Fábrica · ' + teamName, margin, margin + 6);
                     pdf.setFontSize(10); pdf.setFont('helvetica', 'normal'); pdf.setTextColor(100);
-                    pdf.text((lineupName || 'Alineación') + ' · ' + formation + ' · ' + (isF5 ? 'Fútbol 5' : isF7 ? 'Fútbol 7' : 'Fútbol 11'), margin, margin + 11);
+                    pdf.text((lineupName || 'Alineación') + ' · ' + formation + ' · ' + (isF5 ? 'Fútbol 5' : isF7 ? 'Fútbol 7' : 'Fútbol 11'), margin, margin + 12);
                     pdf.setTextColor(0);
                     pdf.addImage(imgData, 'PNG', x, y, w, h);
                     var safeName = (lineupName || teamName || 'alineacion').replace(/[^a-zA-Z0-9_-]/g,'_');
@@ -2757,29 +2810,54 @@
     function PremierIntCupView({ allPlayers }) {
       const [selected, setSelected] = useState(null);
 
-      // Mapa apodo → player (para foto/dorsal). Manejo variantes de nombre.
-      const playerMap = useMemo(function() {
-        var m = {};
+      // Construye múltiples índices de jugadores para matching robusto cross-equipos
+      const playerIndex = useMemo(function() {
+        var byApodo = {}, byApellido = {}, byApodoLower = {};
+        function norm(s) { return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); }
         (allPlayers || []).forEach(function(p) {
-          if (p.apodo) m[p.apodo.toLowerCase()] = p;
-          // Variantes (Á.Leiva → Leiva, etc.)
-          var key2 = p.apodo.replace(/^[A-ZÁÉÍÓÚ]\.\s*/, '').toLowerCase();
-          if (key2 && !m[key2]) m[key2] = p;
+          var ap = norm(p.apodo);
+          var nm = norm(p.nombre);
+          if (ap) byApodo[ap] = p;
+          // Apodo sin prefijo "X. "
+          var apClean = ap.replace(/^[a-z]\.\s*/, '');
+          if (apClean && !byApodo[apClean]) byApodo[apClean] = p;
+          // Última palabra del apodo (apellido)
+          var apParts = ap.split(/\s+/);
+          var lastApodo = apParts[apParts.length - 1];
+          if (lastApodo && !byApellido[lastApodo]) byApellido[lastApodo] = p;
+          // Penúltima palabra del nombre (primer apellido convención española)
+          var nmParts = nm.split(/\s+/);
+          if (nmParts.length >= 3) {
+            var firstSurname = nmParts[nmParts.length - 2];
+            if (firstSurname && !byApellido[firstSurname]) byApellido[firstSurname] = p;
+          }
+          if (nmParts.length === 2) {
+            if (!byApellido[nmParts[1]]) byApellido[nmParts[1]] = p;
+          }
         });
-        return m;
+        return { byApodo: byApodo, byApellido: byApellido, norm: norm };
       }, [allPlayers]);
 
       function findPlayer(name) {
         if (!name) return null;
-        var k = name.toLowerCase();
-        if (playerMap[k]) return playerMap[k];
-        // Quita prefijo "X."
-        var k2 = k.replace(/^[a-záéíóú]\.\s*/, '');
-        if (playerMap[k2]) return playerMap[k2];
-        // Última palabra (apellido)
+        var k = playerIndex.norm(name);
+        if (playerIndex.byApodo[k]) return playerIndex.byApodo[k];
+        // Quita prefijo "X. "
+        var k2 = k.replace(/^[a-z]\.\s*/, '');
+        if (playerIndex.byApodo[k2]) return playerIndex.byApodo[k2];
+        if (playerIndex.byApellido[k2]) return playerIndex.byApellido[k2];
+        // Última palabra como apellido
         var parts = k.split(/\s+/);
         var last = parts[parts.length - 1];
-        return playerMap[last] || null;
+        if (playerIndex.byApellido[last]) return playerIndex.byApellido[last];
+        if (playerIndex.byApodo[last]) return playerIndex.byApodo[last];
+        return null;
+      }
+
+      function nameFor(rawName) {
+        var p = findPlayer(rawName);
+        if (p) return getDisplayName(p);
+        return rawName;
       }
 
       function initials(name) {
@@ -2855,14 +2933,15 @@
                   <div className="pic-field-title">Titulares Castilla · 4-3-3</div>
                   <div className="pic-mini-field">
                     {slotted.map(function(p, i) {
+                      var displayName = p.player ? getDisplayName(p.player) : p.name;
                       return (
                         <div key={i} className="pic-mini-slot" style={{left:p.x+'%',top:p.y+'%'}}>
                           <div className="pic-mini-circle">
                             {p.player && p.player.foto ? (
-                              <img src={p.player.foto} alt={p.name} onError={function(e){ e.target.style.display='none'; e.target.parentNode.appendChild(document.createTextNode(initials(p.name))); }} />
-                            ) : initials(p.name)}
+                              <img src={p.player.foto} alt={displayName} onError={function(e){ e.target.style.display='none'; e.target.parentNode.appendChild(document.createTextNode(initials(displayName))); }} />
+                            ) : initials(displayName)}
                           </div>
-                          <div className="pic-mini-name">{p.name}</div>
+                          <div className="pic-mini-name">{displayName}</div>
                         </div>
                       );
                     })}
@@ -2875,7 +2954,7 @@
                   ) : m.goles.map(function(g, i) {
                     return (
                       <div key={i} className="pic-event">
-                        <span className={g.castilla ? "pic-event-rm" : ""}>⚽ {g.jugador}{g.castilla ? "" : " (" + m.rival + ")"}</span>
+                        <span className={g.castilla ? "pic-event-rm" : ""}>⚽ {g.castilla ? nameFor(g.jugador) : g.jugador + " (" + m.rival + ")"}</span>
                         <span className="pic-event-min">{g.min}'</span>
                       </div>
                     );
@@ -2886,7 +2965,7 @@
                       {m.cambios.map(function(c, i) {
                         return (
                           <div key={i} className="pic-event">
-                            <span><span className="pic-event-arrow">↑</span>{c.entra} <span className="pic-event-out">↓ {c.sale}</span></span>
+                            <span><span className="pic-event-arrow">↑</span>{nameFor(c.entra)} <span className="pic-event-out">↓ {nameFor(c.sale)}</span></span>
                             <span className="pic-event-min">{c.min}'</span>
                           </div>
                         );
