@@ -1139,11 +1139,11 @@
     function getHigherTeams(currentTeam) {
       var proTeams = ["Castilla", "Real Madrid C", "Juvenil A"];
       if (proTeams.indexOf(currentTeam) >= 0) {
-        return ["Jugador élite", "Primer equipo", "Primera división", "Segunda división", "Fútbol semiprofesional / extranjero"];
+        return ["Jugador élite", "Primer equipo", "Primera división", "Segunda división", "Fútbol semiprofesional / extranjero", "Baja"];
       }
       var idx = TEAM_HIERARCHY.indexOf(currentTeam);
-      if (idx <= 0) return [];
-      return TEAM_HIERARCHY.slice(0, idx);
+      if (idx <= 0) return ["Baja"];
+      return TEAM_HIERARCHY.slice(0, idx).concat(["Baja"]);
     }
 
     const f5Teams = ["Debutante"];
