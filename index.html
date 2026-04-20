@@ -1310,6 +1310,7 @@
       temporada: "2025/26",
       equipo: "Real Madrid Juvenil A",
       campeon: true,
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/UEFA_Youth_League.svg/250px-UEFA_Youth_League.svg.png",
       partidos: [
         {
           jornada: "J1", fase: "Fase liga", fecha: "16/09/2025",
@@ -3178,9 +3179,14 @@
       return (
         <div className="pic-wrap">
           <div className="pic-header">
-            <div>
-              <div className="pic-title">{cupData.competicion}{cupData.campeon ? ' 🏆' : ''}</div>
-              <div className="pic-sub">Temporada {cupData.temporada} · {cupData.equipo || rmLabel}</div>
+            <div style={{display:'flex',alignItems:'center',gap:'14px'}}>
+              {cupData.logo && (
+                <img src={cupData.logo} alt={cupData.competicion} style={{width:'44px',height:'44px',objectFit:'contain',flexShrink:0}} />
+              )}
+              <div>
+                <div className="pic-title">{cupData.competicion}</div>
+                <div className="pic-sub">Temporada {cupData.temporada} · {cupData.equipo || rmLabel}{cupData.campeon ? ' · Campeón' : ''}</div>
+              </div>
             </div>
           </div>
           <div className="pic-list">
@@ -3709,7 +3715,10 @@
                   <button className={`view-btn ${view === 'plicup' ? 'active' : ''}`} onClick={() => setView('plicup')}>Premier Int.</button>
                 )}
                 {selectedTeam === "Juvenil A" && (
-                  <button className={`view-btn ${view === 'youth' ? 'active' : ''}`} onClick={() => setView('youth')}>Youth League 🏆</button>
+                  <button className={`view-btn ${view === 'youth' ? 'active' : ''}`} onClick={() => setView('youth')}>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/UEFA_Youth_League.svg/250px-UEFA_Youth_League.svg.png" alt="" style={{width:'14px',height:'14px',verticalAlign:'-2px',marginRight:'5px',objectFit:'contain'}} />
+                    Youth League
+                  </button>
                 )}
               </div>
             </div>
