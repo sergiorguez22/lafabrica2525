@@ -523,6 +523,20 @@
     .home-team-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
     .home-team-name { font-size:13px; font-weight:500; color:var(--text); flex:1; }
     .home-team-count { font-size:11px; color:var(--text-3); font-variant-numeric:tabular-nums; }
+
+    /* ===== CUMPLEAÑOS ===== */
+    .home-bdays { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:10px; }
+    .bday-card { display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.15s; position:relative; overflow:hidden; }
+    .bday-card.today { background:linear-gradient(135deg, #fef3c7, #fde68a); border-color:#f59e0b; }
+    .bday-card.today::before { content:'HOY'; position:absolute; top:6px; right:8px; font-size:9px; font-weight:700; color:#92400e; letter-spacing:0.5px; }
+    .bday-card:hover { border-color:var(--accent); box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+    .bday-photo { width:44px; height:44px; border-radius:50%; object-fit:cover; object-position:center 14%; background:var(--bg); flex-shrink:0; border:2px solid var(--border-light); }
+    .bday-photo-fallback { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:white; flex-shrink:0; border:2px solid var(--border-light); }
+    .bday-info { flex:1; min-width:0; }
+    .bday-name { font-size:13.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bday-meta { font-size:11px; color:var(--text-2); margin-top:2px; }
+    .bday-date { font-size:11px; color:var(--accent); font-weight:600; margin-top:2px; }
+    .bday-date.today-text { color:#92400e; }
     </style>
 </head>
 <body>
@@ -3313,7 +3327,17 @@
     }
 
     /* ===== HOME / MENÚ ===== */
-    function HomeView({ allPlayers, promociones, onSelectTeam, onShowNews, onShowCaptacion, onShowPromociones }) {
+    function HomeView({ allPlayers, promociones, upcomingBirthdays, onSelectTeam, onShowNews, onShowCaptacion, onShowPromociones, onGlobalSearchSelect }) {
+      var MONTHS_ES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+      function formatBdayDate(item) {
+        if (item.daysUntil === 0) return "Hoy";
+        if (item.daysUntil === 1) return "Mañana";
+        var d = item.date;
+        return "En " + item.daysUntil + " días · " + d.getDate() + " " + MONTHS_ES[d.getMonth()];
+      }
+      function bdayInitials(name) {
+        return name.split(/\s+/).map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+      }
       const totalEquipos = Object.keys(canteraData).length;
       const totalJugadores = allPlayers.length;
       const totalIntl = allPlayers.filter(function(p){ return p.seleccion; }).length;
@@ -3353,6 +3377,32 @@
               <div className="home-card-sub">Castilla · Semifinal vs Dinamo Zagreb (por confirmar)</div>
             </div>
           </div>
+
+          {upcomingBirthdays && upcomingBirthdays.length > 0 && (
+            <>
+              <div className="home-section-title">Próximos cumpleaños</div>
+              <div className="home-bdays">
+                {upcomingBirthdays.slice(0, 10).map(function(item, i){
+                  var p = item.player;
+                  var isToday = item.daysUntil === 0;
+                  var displayName = getDisplayName(p);
+                  return (
+                    <div key={i} className={"bday-card" + (isToday ? " today" : "")} onClick={function(){ if (onGlobalSearchSelect) onGlobalSearchSelect(p.equipo, p.apodo); else onSelectTeam(p.equipo); }}>
+                      {p.foto ? (
+                        <img src={p.foto} alt={displayName} className="bday-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+                      ) : null}
+                      <div className="bday-photo-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{bdayInitials(displayName)}</div>
+                      <div className="bday-info">
+                        <div className="bday-name">{displayName}</div>
+                        <div className="bday-meta">{p.equipo} · cumple {item.newAge}</div>
+                        <div className={"bday-date" + (isToday ? " today-text" : "")}>{formatBdayDate(item)}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
 
           <div className="home-section-title">Acceso rápido</div>
           <div className="home-grid">
@@ -3614,6 +3664,40 @@
           if (diff > 0) list.push({ player: p, escalones: diff, naturalTier: naturalTier });
         });
         list.sort(function(a, b) { return b.escalones - a.escalones; });
+        return list;
+      }, [allPlayers]);
+
+      // Cumpleaños próximos (hoy + 14 días adelante)
+      const upcomingBirthdays = useMemo(function() {
+        var DAYS_AHEAD = 14;
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var list = [];
+        allPlayers.forEach(function(p) {
+          if (!p.fechaNacimiento) return;
+          var parts = p.fechaNacimiento.split("/");
+          if (parts.length !== 3) return;
+          var day = parseInt(parts[0], 10);
+          var month = parseInt(parts[1], 10) - 1;
+          var birthYear = parseInt(parts[2], 10);
+          if (isNaN(day) || isNaN(month) || isNaN(birthYear)) return;
+          var target = new Date(today.getFullYear(), month, day);
+          target.setHours(0, 0, 0, 0);
+          if (target < today) {
+            target = new Date(today.getFullYear() + 1, month, day);
+            target.setHours(0, 0, 0, 0);
+          }
+          var days = Math.round((target.getTime() - today.getTime()) / 86400000);
+          if (days <= DAYS_AHEAD) {
+            list.push({
+              player: p,
+              daysUntil: days,
+              newAge: target.getFullYear() - birthYear,
+              date: target
+            });
+          }
+        });
+        list.sort(function(a, b) { return a.daysUntil - b.daysUntil; });
         return list;
       }, [allPlayers]);
 
@@ -3889,10 +3973,12 @@
               <HomeView
                 allPlayers={allPlayers}
                 promociones={promociones}
+                upcomingBirthdays={upcomingBirthdays}
                 onSelectTeam={handleSelectTeam}
                 onShowNews={handleShowNews}
                 onShowCaptacion={handleShowCaptacion}
                 onShowPromociones={handleShowPromociones}
+                onGlobalSearchSelect={handleGlobalSearchSelect}
               />
             ) : showPromociones ? (
               promociones.length === 0 ? (
