@@ -3613,6 +3613,7 @@
         setShowCaptacion(false);
         setShowPromociones(false);
         setShowHome(false);
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
       const handleGlobalSearchSelect = useCallback(function(team, apodo) {
@@ -3634,6 +3635,7 @@
         setShowPromociones(false);
         setShowHome(false);
         setView("list");
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
       const handleShowCaptacion = useCallback(() => {
@@ -3642,6 +3644,7 @@
         setShowPromociones(false);
         setShowHome(false);
         loadCaptacion();
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
       const handleShowPromociones = useCallback(() => {
@@ -3649,6 +3652,7 @@
         setShowNews(false);
         setShowCaptacion(false);
         setShowHome(false);
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
       const handleGoHome = useCallback(() => {
@@ -3657,6 +3661,7 @@
         setShowCaptacion(false);
         setShowPromociones(false);
         try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch(e) {}
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
       // Expandir jugador tras búsqueda global cuando filteredPlayers se actualiza
