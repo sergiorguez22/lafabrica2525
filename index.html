@@ -544,6 +544,34 @@
     .intl-group-title { display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border-light); }
     .intl-group-name { font-size:15px; font-weight:600; color:var(--text); }
     .intl-group-count { font-size:11px; font-weight:600; padding:2px 9px; background:var(--accent-light); color:var(--accent); border-radius:10px; }
+
+    /* ===== CALENDARIO ===== */
+    .cal-wrap { padding:20px 28px 28px; }
+    .cal-day { margin-bottom:20px; }
+    .cal-day-header { position:sticky; top:0; z-index:2; display:flex; align-items:center; gap:10px; padding:10px 14px; background:#0f172a; color:#e2e8f0; border-radius:var(--radius-sm); margin-bottom:10px; font-size:13px; }
+    .cal-day-header.today { background:linear-gradient(135deg, var(--accent), #b91c1c); }
+    .cal-day-header.tomorrow { background:linear-gradient(135deg, #1a56db, #1e40af); }
+    .cal-day-date { font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+    .cal-day-tag { font-size:10.5px; padding:2px 8px; background:rgba(255,255,255,0.2); border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; }
+    .cal-day-count { margin-left:auto; font-size:11px; color:rgba(255,255,255,0.7); }
+    .cal-matches { display:grid; gap:8px; }
+    .cal-match { display:grid; grid-template-columns:56px 56px 1fr auto auto; gap:12px; align-items:center; padding:10px 14px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.15s; }
+    .cal-match:hover { border-color:var(--accent); box-shadow:0 2px 6px rgba(0,0,0,0.06); transform:translateX(2px); }
+    .cal-match-time { font-size:13px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; }
+    .cal-match-time.tbd { color:var(--text-3); font-weight:500; font-size:11px; }
+    .cal-match-loc { font-size:10.5px; font-weight:700; padding:3px 6px; border-radius:4px; text-align:center; letter-spacing:0.4px; }
+    .cal-match-loc.home { background:#dbeafe; color:#1e40af; }
+    .cal-match-loc.away { background:#fee2e2; color:#991b1b; }
+    .cal-match-info { min-width:0; }
+    .cal-match-teams { font-size:13.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cal-match-teams .rm { color:var(--accent); }
+    .cal-match-comp { font-size:11px; color:var(--text-2); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cal-match-jor { font-size:10.5px; color:var(--text-3); font-weight:500; }
+    .cal-match-arrow { color:var(--text-3); font-size:14px; }
+    @media (max-width:600px) {
+      .cal-match { grid-template-columns:48px 1fr auto; }
+      .cal-match-loc, .cal-match-arrow { display:none; }
+    }
     </style>
 </head>
 <body>
@@ -1260,6 +1288,81 @@
       "Debutante": [
         { nombre: "Juan Carlos Juárez", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Juan_Carlos_Juarez_550x650?$Desktop$&fit=wrap&wid=288&hei=384" },
         { nombre: "Rubén Alonso", rol: "Segundo entrenador", foto: null }
+      ]
+    };
+
+    /* ===== CALENDARIO CANTERA (scraped realmadrid.com) ===== */
+    const calendario = {
+      actualizado: "23/04/2026",
+      partidos: [
+        { equipo: "Prebenjamín A", rival: "Dosa", competicion: "Primera Div. Autonómica · Subgrupo 4A", jornada: "7", fecha: "23/04/2026", hora: "19:00", local: true },
+        { equipo: "Benjamín A", rival: "Arroyofresno", competicion: "División de Honor Grupo 1", jornada: "21", fecha: "23/04/2026", hora: "19:00", local: false },
+        { equipo: "Prebenjamín B", rival: "San Blas", competicion: "Primera Div. Autonómica · Subgrupo 5A", jornada: "8", fecha: "24/04/2026", hora: "18:30", local: false },
+        { equipo: "Debutante", rival: "Sporting Hortaleza 'B'", competicion: "Debutante F5 · Grupo 6", jornada: "15", fecha: "24/04/2026", hora: "18:45", local: true },
+        { equipo: "Benjamín A", rival: "Municipal Arroyomolinos", competicion: "División de Honor Grupo 1", jornada: "23", fecha: "25/04/2026", hora: "09:00", local: false },
+        { equipo: "Alevín B", rival: "Atlético A", competicion: "División de Honor F-7 Grupo 1", jornada: "24", fecha: "25/04/2026", hora: "09:45", local: true },
+        { equipo: "Cadete B", rival: "Galapagar", competicion: "División de Honor Grupo 1", jornada: "27", fecha: "25/04/2026", hora: "10:00", local: false },
+        { equipo: "Benjamín B", rival: "Tres Cantos", competicion: "División de Honor Grupo 3", jornada: "23", fecha: "25/04/2026", hora: "11:30", local: false },
+        { equipo: "Prebenjamín A", rival: "Unión Zona Norte A", competicion: "Primera Div. Autonómica · Subgrupo 4A", jornada: "8", fecha: "25/04/2026", hora: "11:30", local: true },
+        { equipo: "Infantil B", rival: "Football Dreams Experience", competicion: "División de Honor Grupo 1", jornada: "27", fecha: "25/04/2026", hora: "12:15", local: false },
+        { equipo: "Infantil A", rival: "Torrejón", competicion: "Superliga Infantil", jornada: "27", fecha: "25/04/2026", hora: "12:45", local: true },
+        { equipo: "Alevín A", rival: "Unión Adarve", competicion: "Superliga Alevín", jornada: "27", fecha: "25/04/2026", hora: "15:30", local: false },
+        { equipo: "Alevín C", rival: "Móstoles", competicion: "División de Honor F-7 Grupo 2", jornada: "24", fecha: "25/04/2026", hora: "16:00", local: true },
+        { equipo: "Cadete A", rival: "Parla Escuela-Fair Play", competicion: "Superliga Cadete", jornada: "27", fecha: "25/04/2026", hora: "18:00", local: false },
+        { equipo: "Castilla", rival: "Talavera", competicion: "Primera Federación · Grupo 1", jornada: "34", fecha: "25/04/2026", hora: "21:00", local: false, estadio: "Estadio El Prado" },
+        { equipo: "Juvenil C", rival: "Juventud Sanse", competicion: "1ª Div. Autonómica Grupo 1", jornada: "29", fecha: "26/04/2026", hora: "11:00", local: false },
+        { equipo: "Real Madrid C", rival: "Getafe B", competicion: "Segunda División RFEF", jornada: "33", fecha: "26/04/2026", hora: "12:00", local: false, estadio: "Estadio Municipal Nuevo Matapiñonera" },
+        { equipo: "Juvenil B", rival: "Atlético Madrid", competicion: "División Nacional Grupo XII", jornada: "29", fecha: "26/04/2026", hora: "16:00", local: false },
+        { equipo: "Juvenil A", rival: "Atlético Madrid", competicion: "División de Honor Juvenil", jornada: "29", fecha: "26/04/2026", hora: "16:30", local: false },
+        { equipo: "Castilla", rival: "Dínamo de Zagreb", competicion: "Premier League International Cup", jornada: "Semifinales", fecha: "28/04/2026", hora: "20:00", local: true, estadio: "The Laithwaite Community Stadium" },
+        { equipo: "Juvenil A", rival: "Leganés", competicion: "División de Honor Juvenil", jornada: "28", fecha: "29/04/2026", hora: "12:00", local: true },
+        { equipo: "Infantil B", rival: "FPA Las Rozas", competicion: "División de Honor Grupo 1", jornada: "26", fecha: "29/04/2026", hora: "18:30", local: false },
+        { equipo: "Castilla", rival: "Unionistas de Salamanca", competicion: "Primera Federación · Grupo 1", jornada: "35", fecha: "02/05/2026", hora: "21:00", local: true, estadio: "Alfredo Di Stéfano" },
+        { equipo: "Real Madrid C", rival: "Conquense", competicion: "Segunda División RFEF", jornada: "34", fecha: "03/05/2026", hora: "12:00", local: true, estadio: "Ciudad Real Madrid Campo 7" },
+        { equipo: "Juvenil A", rival: "Las Rozas", competicion: "División de Honor Juvenil", jornada: "30", fecha: "03/05/2026", hora: "16:30", local: false },
+        { equipo: "Alevín A", rival: "Rayo Vallecano", competicion: "Superliga Alevín", jornada: "24", fecha: "07/05/2026", hora: "", local: false },
+        { equipo: "Debutante", rival: "Sporting Hortaleza 'B'", competicion: "Debutante F5 · Grupo 6", jornada: "16", fecha: "08/05/2026", hora: "", local: true },
+        { equipo: "Prebenjamín A", rival: "Canillas", competicion: "Primera Div. Autonómica · Subgrupo 4A", jornada: "9", fecha: "09/05/2026", hora: "", local: true },
+        { equipo: "Prebenjamín B", rival: "Concepción", competicion: "Primera Div. Autonómica · Subgrupo 5A", jornada: "9", fecha: "09/05/2026", hora: "", local: false },
+        { equipo: "Alevín B", rival: "Leganés B", competicion: "División de Honor F-7 Grupo 1", jornada: "25", fecha: "09/05/2026", hora: "", local: false },
+        { equipo: "Alevín C", rival: "Illescas", competicion: "División de Honor F-7 Grupo 2", jornada: "25", fecha: "09/05/2026", hora: "", local: true },
+        { equipo: "Benjamín B", rival: "Sporting Hortaleza", competicion: "División de Honor Grupo 3", jornada: "24", fecha: "09/05/2026", hora: "", local: false },
+        { equipo: "Alevín A", rival: "Atlético Chopera Alcobendas", competicion: "Superliga Alevín", jornada: "28", fecha: "09/05/2026", hora: "", local: false },
+        { equipo: "Cadete B", rival: "Fuenlabrada", competicion: "División de Honor Grupo 1", jornada: "28", fecha: "09/05/2026", hora: "", local: false },
+        { equipo: "Infantil B", rival: "Aravaca-Ceiba", competicion: "División de Honor Grupo 1", jornada: "28", fecha: "09/05/2026", hora: "", local: false },
+        { equipo: "Castilla", rival: "Cacereño", competicion: "Primera Federación · Grupo 1", jornada: "36", fecha: "10/05/2026", hora: "", local: true, estadio: "Estadio Príncipe Felipe" },
+        { equipo: "Infantil A", rival: "Atlético Chopera Alcobendas", competicion: "Superliga Infantil", jornada: "28", fecha: "10/05/2026", hora: "", local: false },
+        { equipo: "Cadete A", rival: "Torrejón", competicion: "Superliga Cadete", jornada: "28", fecha: "10/05/2026", hora: "", local: false },
+        { equipo: "Juvenil B", rival: "Torrejón", competicion: "División Nacional Grupo XII", jornada: "30", fecha: "10/05/2026", hora: "", local: false },
+        { equipo: "Juvenil C", rival: "Torrejón B", competicion: "1ª Div. Autonómica Grupo 1", jornada: "30", fecha: "10/05/2026", hora: "", local: false },
+        { equipo: "Debutante", rival: "Club Alameda de Osuna", competicion: "Debutante F5 · Grupo 6", jornada: "17", fecha: "15/05/2026", hora: "", local: false },
+        { equipo: "Benjamín A", rival: "San Fernando Escolapios", competicion: "División de Honor Grupo 1", jornada: "25", fecha: "15/05/2026", hora: "", local: false },
+        { equipo: "Prebenjamín A", rival: "Club San Agustín", competicion: "Primera Div. Autonómica · Subgrupo 4A", jornada: "10", fecha: "16/05/2026", hora: "", local: false },
+        { equipo: "Prebenjamín B", rival: "Fundación Rayo Vallecano", competicion: "Primera Div. Autonómica · Subgrupo 5A", jornada: "10", fecha: "16/05/2026", hora: "", local: false },
+        { equipo: "Alevín B", rival: "Aravaca", competicion: "División de Honor F-7 Grupo 1", jornada: "26", fecha: "16/05/2026", hora: "", local: false },
+        { equipo: "Alevín C", rival: "Rayo Majadahonda B", competicion: "División de Honor F-7 Grupo 2", jornada: "26", fecha: "16/05/2026", hora: "", local: false },
+        { equipo: "Alevín A", rival: "Atlético", competicion: "Superliga Alevín", jornada: "29", fecha: "16/05/2026", hora: "", local: false },
+        { equipo: "Cadete B", rival: "Rayo Majadahonda", competicion: "División de Honor Grupo 1", jornada: "29", fecha: "16/05/2026", hora: "", local: false },
+        { equipo: "Infantil B", rival: "Colmenar Viejo", competicion: "División de Honor Grupo 1", jornada: "29", fecha: "16/05/2026", hora: "", local: false },
+        { equipo: "Castilla", rival: "Arenas Getxo", competicion: "Primera Federación · Grupo 1", jornada: "37", fecha: "17/05/2026", hora: "", local: true, estadio: "Alfredo Di Stéfano" },
+        { equipo: "Infantil A", rival: "Rayo Majadahonda", competicion: "Superliga Infantil", jornada: "29", fecha: "17/05/2026", hora: "", local: false },
+        { equipo: "Cadete A", rival: "Real Carabanchel", competicion: "Superliga Cadete", jornada: "29", fecha: "17/05/2026", hora: "", local: false },
+        { equipo: "Juvenil B", rival: "Fuenlabrada", competicion: "División Nacional Grupo XII", jornada: "31", fecha: "17/05/2026", hora: "", local: false },
+        { equipo: "Juvenil C", rival: "Atlético Chopera Alcobendas B", competicion: "1ª Div. Autonómica Grupo 1", jornada: "31", fecha: "17/05/2026", hora: "", local: false },
+        { equipo: "Benjamín A", rival: "Alcorcón", competicion: "División de Honor Grupo 1", jornada: "26", fecha: "22/05/2026", hora: "", local: false },
+        { equipo: "Benjamín B", rival: "Rayo Vallecano B", competicion: "División de Honor Grupo 3", jornada: "26", fecha: "23/05/2026", hora: "", local: false },
+        { equipo: "Alevín A", rival: "Leganés", competicion: "Superliga Alevín", jornada: "30", fecha: "23/05/2026", hora: "", local: false },
+        { equipo: "Cadete B", rival: "Unión Adarve", competicion: "División de Honor Grupo 1", jornada: "30", fecha: "23/05/2026", hora: "", local: false },
+        { equipo: "Infantil B", rival: "C.D. Chamartín Vergara-Alcobendas", competicion: "División de Honor Grupo 1", jornada: "30", fecha: "23/05/2026", hora: "", local: false },
+        { equipo: "Castilla", rival: "Guadalajara", competicion: "Primera Federación · Grupo 1", jornada: "38", fecha: "24/05/2026", hora: "", local: false, estadio: "Estadio Pedro Escartín" },
+        { equipo: "Infantil A", rival: "Parla Escuela Fair-Play", competicion: "Superliga Infantil", jornada: "30", fecha: "24/05/2026", hora: "", local: false },
+        { equipo: "Cadete A", rival: "Unión Adarve", competicion: "Superliga Cadete", jornada: "30", fecha: "24/05/2026", hora: "", local: false },
+        { equipo: "Juvenil B", rival: "Leganés B", competicion: "División Nacional Grupo XII", jornada: "32", fecha: "24/05/2026", hora: "", local: false },
+        { equipo: "Juvenil C", rival: "Nuevo Boadilla", competicion: "1ª Div. Autonómica Grupo 1", jornada: "32", fecha: "24/05/2026", hora: "", local: false },
+        { equipo: "Juvenil B", rival: "Móstoles", competicion: "División Nacional Grupo XII", jornada: "33", fecha: "31/05/2026", hora: "", local: true },
+        { equipo: "Juvenil C", rival: "Rayo Majadahonda B", competicion: "1ª Div. Autonómica Grupo 1", jornada: "33", fecha: "31/05/2026", hora: "", local: false },
+        { equipo: "Juvenil B", rival: "Alcalá", competicion: "División Nacional Grupo XII", jornada: "34", fecha: "07/06/2026", hora: "", local: false },
+        { equipo: "Juvenil C", rival: "México Paracuellos", competicion: "1ª Div. Autonómica Grupo 1", jornada: "34", fecha: "07/06/2026", hora: "", local: false }
       ]
     };
 
@@ -2075,7 +2178,7 @@
     }
 
     /* ===== SIDEBAR COMPONENT ===== */
-    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
+    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, showCalendario, onShowCalendario, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
       const [searchQ, setSearchQ] = useState("");
       const [searchOpen, setSearchOpen] = useState(false);
 
@@ -2148,7 +2251,7 @@
                   <div className="sidebar-category">{cat.name}</div>
                   {cat.teams.map(team => {
                     const data = canteraData[team];
-                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && selectedTeam === team;
+                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && !showCalendario && selectedTeam === team;
                     return (
                       <div
                         key={team}
@@ -2191,6 +2294,13 @@
               >
                 <span className="sidebar-dot" style={{background: showInternacionales ? 'var(--accent)' : '#475569'}}></span>
                 <span>Internacionales</span>
+              </div>
+              <div
+                className={`sidebar-item ${showCalendario ? 'active' : ''}`}
+                onClick={() => { onShowCalendario(); onClose(); }}
+              >
+                <span className="sidebar-dot" style={{background: showCalendario ? 'var(--accent)' : '#475569'}}></span>
+                <span>Calendario</span>
               </div>
 
             </nav>
@@ -3469,6 +3579,7 @@
       const [showCaptacion, setShowCaptacion] = useState(false);
       const [showPromociones, setShowPromociones] = useState(false);
       const [showInternacionales, setShowInternacionales] = useState(false);
+      const [showCalendario, setShowCalendario] = useState(false);
       const [showHome, setShowHome] = useState(function(){
         try {
           var hash = decodeURIComponent(window.location.hash.substring(1));
@@ -3755,6 +3866,7 @@
         setShowCaptacion(false);
         setShowPromociones(false);
         setShowInternacionales(false);
+        setShowCalendario(false);
         setShowHome(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -3769,6 +3881,7 @@
         setShowCaptacion(false);
         setShowPromociones(false);
         setShowInternacionales(false);
+        setShowCalendario(false);
         setShowHome(false);
         setPendingPlayerApodo(apodo);
       }, []);
@@ -3778,6 +3891,7 @@
         setShowCaptacion(false);
         setShowPromociones(false);
         setShowInternacionales(false);
+        setShowCalendario(false);
         setShowHome(false);
         setView("list");
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
@@ -3788,6 +3902,7 @@
         setShowNews(false);
         setShowPromociones(false);
         setShowInternacionales(false);
+        setShowCalendario(false);
         setShowHome(false);
         loadCaptacion();
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
@@ -3807,6 +3922,7 @@
         setShowCaptacion(false);
         setShowPromociones(false);
         setShowInternacionales(false);
+        setShowCalendario(false);
         try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch(e) {}
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -3816,6 +3932,17 @@
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
+        setShowCalendario(false);
+        setShowHome(false);
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
+      }, []);
+
+      const handleShowCalendario = useCallback(() => {
+        setShowCalendario(true);
+        setShowNews(false);
+        setShowCaptacion(false);
+        setShowPromociones(false);
+        setShowInternacionales(false);
         setShowHome(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -4001,6 +4128,8 @@
             onShowPromociones={handleShowPromociones}
             showInternacionales={showInternacionales}
             onShowInternacionales={handleShowInternacionales}
+            showCalendario={showCalendario}
+            onShowCalendario={handleShowCalendario}
             allPlayers={allPlayers}
             onGlobalSearchSelect={handleGlobalSearchSelect}
             onGoHome={handleGoHome}
@@ -4014,11 +4143,11 @@
                   <MenuIcon />
                 </button>
                 <div>
-                  <h1 className="team-title">{showHome ? 'Inicio' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
-                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <h1 className="team-title">{showHome ? 'Inicio' : showCalendario ? 'Calendario' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
+                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showCalendario ? `${calendario.partidos.length} partidos programados · actualizado ${calendario.actualizado}` : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
-              {!showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && (
+              {!showHome && !showCalendario && !showNews && !showCaptacion && !showPromociones && !showInternacionales && (
                 <div className="header-stats">
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--por)'}}>{stats.por}</div><div className="header-stat-label">POR</div></div>
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--def)'}}>{stats.def}</div><div className="header-stat-label">DEF</div></div>
@@ -4028,7 +4157,85 @@
               )}
             </header>
 
-            {showInternacionales ? (
+            {showCalendario ? (
+              (function(){
+                var MONTHS_ES_LONG = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+                var DAYS_ES = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+                var today = new Date(); today.setHours(0,0,0,0);
+                var tomorrow = new Date(today.getTime() + 86400000); tomorrow.setHours(0,0,0,0);
+                function parseDate(ddmmyyyy) {
+                  var p = ddmmyyyy.split('/');
+                  var d = new Date(parseInt(p[2],10), parseInt(p[1],10)-1, parseInt(p[0],10));
+                  d.setHours(0,0,0,0);
+                  return d;
+                }
+                // Agrupar por fecha (futuros o hoy)
+                var groups = {};
+                calendario.partidos.forEach(function(m){
+                  var d = parseDate(m.fecha);
+                  if (d < today) return;
+                  var key = m.fecha;
+                  if (!groups[key]) groups[key] = { date: d, matches: [] };
+                  groups[key].matches.push(m);
+                });
+                var keys = Object.keys(groups).sort(function(a,b){ return groups[a].date - groups[b].date; });
+                // Ordenar dentro por hora
+                keys.forEach(function(k){
+                  groups[k].matches.sort(function(a,b){
+                    if (!a.hora && !b.hora) return 0;
+                    if (!a.hora) return 1; if (!b.hora) return -1;
+                    return a.hora.localeCompare(b.hora);
+                  });
+                });
+                if (keys.length === 0) {
+                  return <div className="promo-empty">No hay partidos programados.</div>;
+                }
+                return (
+                  <div className="cal-wrap">
+                    {keys.map(function(k){
+                      var g = groups[k];
+                      var isToday = g.date.getTime() === today.getTime();
+                      var isTomorrow = g.date.getTime() === tomorrow.getTime();
+                      var dayLabel = DAYS_ES[g.date.getDay()];
+                      var dateLabel = g.date.getDate() + " de " + MONTHS_ES_LONG[g.date.getMonth()];
+                      return (
+                        <div key={k} className="cal-day">
+                          <div className={"cal-day-header" + (isToday ? " today" : isTomorrow ? " tomorrow" : "")}>
+                            <span className="cal-day-date">{dayLabel}, {dateLabel}</span>
+                            {isToday && <span className="cal-day-tag">Hoy</span>}
+                            {isTomorrow && <span className="cal-day-tag">Mañana</span>}
+                            <span className="cal-day-count">{g.matches.length} partido{g.matches.length === 1 ? '' : 's'}</span>
+                          </div>
+                          <div className="cal-matches">
+                            {g.matches.map(function(m, i){
+                              var rival = m.rival, equipo = m.equipo;
+                              var localName = m.local ? equipo : rival;
+                              var visitName = m.local ? rival : equipo;
+                              return (
+                                <div key={i} className="cal-match" onClick={function(){ if (canteraData[m.equipo]) handleSelectTeam(m.equipo); }}>
+                                  <div className={m.hora ? "cal-match-time" : "cal-match-time tbd"}>{m.hora || "Por confirmar"}</div>
+                                  <div className={"cal-match-loc " + (m.local ? "home" : "away")}>{m.local ? 'Casa' : 'Fuera'}</div>
+                                  <div className="cal-match-info">
+                                    <div className="cal-match-teams">
+                                      <span className={m.local ? 'rm' : ''}>{localName}</span>
+                                      <span style={{color:'var(--text-3)',margin:'0 6px'}}>vs</span>
+                                      <span className={!m.local ? 'rm' : ''}>{visitName}</span>
+                                    </div>
+                                    <div className="cal-match-comp">{m.competicion}{m.estadio ? " · " + m.estadio : ""}</div>
+                                  </div>
+                                  <div className="cal-match-jor">J{m.jornada}</div>
+                                  <div className="cal-match-arrow">›</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()
+            ) : showInternacionales ? (
               internacionales.total === 0 ? (
                 <div className="promo-empty">No hay internacionales en la base de datos.</div>
               ) : (
