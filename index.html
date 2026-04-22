@@ -494,6 +494,35 @@
     .pic-mini-circle { width:46px; height:46px; border-radius:50%; border:2px solid #1a56db; background:#1a56db; display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:700; margin:0 auto; box-shadow:0 2px 5px rgba(0,0,0,0.3); overflow:hidden; }
     .pic-mini-circle img { width:100%; height:100%; object-fit:cover; object-position:center 14%; }
     .pic-mini-name { display:inline-block; margin-top:4px; padding:2px 7px; background:var(--accent); color:white; font-size:9.5px; font-weight:600; border-radius:10px; white-space:nowrap; box-shadow:0 1px 2px rgba(0,0,0,0.3); }
+
+    /* ===== HOME / MENÚ ===== */
+    .home-wrap { padding:36px 28px 48px; max-width:1100px; margin:0 auto; }
+    .home-hero { text-align:center; margin-bottom:36px; }
+    .home-crest { width:84px; height:auto; margin-bottom:14px; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.1)); }
+    .home-title { font-size:34px; font-weight:700; color:var(--text); margin:0 0 6px; letter-spacing:-0.5px; }
+    .home-sub { font-size:14px; color:var(--text-2); margin:0; }
+    .home-stats { display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:36px; }
+    .home-stat { background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius); padding:20px; text-align:center; }
+    .home-stat-value { font-size:28px; font-weight:700; color:var(--accent); line-height:1; }
+    .home-stat-label { font-size:11.5px; font-weight:500; color:var(--text-2); text-transform:uppercase; letter-spacing:0.6px; margin-top:6px; }
+    .home-section-title { font-size:12px; font-weight:600; color:var(--text-2); text-transform:uppercase; letter-spacing:0.7px; margin:32px 0 14px; display:flex; align-items:center; gap:8px; }
+    .home-section-title::before { content:''; display:inline-block; width:4px; height:14px; background:var(--accent); border-radius:2px; }
+    .home-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px; }
+    .home-card { display:block; text-decoration:none; padding:18px 20px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius); cursor:pointer; transition:all 0.15s; position:relative; }
+    .home-card:hover { border-color:var(--accent); box-shadow:0 4px 14px rgba(0,0,0,0.08); transform:translateY(-1px); }
+    .home-card-title { font-size:15px; font-weight:600; color:var(--text); margin-bottom:4px; }
+    .home-card-sub { font-size:12.5px; color:var(--text-2); line-height:1.4; }
+    .home-card-logo { width:40px; height:40px; object-fit:contain; margin-bottom:10px; }
+    .home-card-featured { background:linear-gradient(135deg, #0f172a, #1e293b); border-color:#1e293b; }
+    .home-card-featured .home-card-title { color:#fbbf24; font-size:16px; }
+    .home-card-featured .home-card-sub { color:#cbd5e1; }
+    .home-card-featured:hover { border-color:#fbbf24; }
+    .home-teams-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:10px; }
+    .home-team-card { display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.15s; }
+    .home-team-card:hover { border-color:var(--accent); background:var(--accent-light); }
+    .home-team-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .home-team-name { font-size:13px; font-weight:500; color:var(--text); flex:1; }
+    .home-team-count { font-size:11px; color:var(--text-3); font-variant-numeric:tabular-nums; }
     </style>
 </head>
 <body>
@@ -2025,7 +2054,7 @@
     }
 
     /* ===== SIDEBAR COMPONENT ===== */
-    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, allPlayers, onGlobalSearchSelect }) {
+    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
       const [searchQ, setSearchQ] = useState("");
       const [searchOpen, setSearchOpen] = useState(false);
 
@@ -2056,7 +2085,7 @@
         <>
           <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
           <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-            <div className="sidebar-header">
+            <div className="sidebar-header" onClick={function(){ if (onGoHome) { onGoHome(); onClose && onClose(); } }} style={{cursor:'pointer'}} title="Inicio">
               <img src={CREST_URL} alt="Real Madrid" className="sidebar-crest" />
               <div className="sidebar-brand">La Fábrica<span>Temporada 2025/26</span></div>
             </div>
@@ -2098,13 +2127,14 @@
                   <div className="sidebar-category">{cat.name}</div>
                   {cat.teams.map(team => {
                     const data = canteraData[team];
+                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && selectedTeam === team;
                     return (
                       <div
                         key={team}
-                        className={`sidebar-item ${selectedTeam === team ? 'active' : ''}`}
+                        className={`sidebar-item ${isActive ? 'active' : ''}`}
                         onClick={() => { onSelectTeam(team); onClose(); }}
                       >
-                        <span className="sidebar-dot" style={{background: selectedTeam === team ? 'var(--accent)' : '#475569'}}></span>
+                        <span className="sidebar-dot" style={{background: isActive ? 'var(--accent)' : '#475569'}}></span>
                         <span>{team}</span>
                         <span style={{marginLeft:'auto',fontSize:'11px',color:'#475569'}}>{data ? data.jugadores.length : ''}</span>
                       </div>
@@ -3267,6 +3297,81 @@
       );
     }
 
+    /* ===== HOME / MENÚ ===== */
+    function HomeView({ allPlayers, promociones, onSelectTeam, onShowNews, onShowCaptacion, onShowPromociones }) {
+      const totalEquipos = Object.keys(canteraData).length;
+      const totalJugadores = allPlayers.length;
+      const totalIntl = allPlayers.filter(function(p){ return p.seleccion; }).length;
+
+      return (
+        <div className="home-wrap">
+          <div className="home-hero">
+            <img src={CREST_URL} alt="Real Madrid" className="home-crest" />
+            <h1 className="home-title">La Fábrica</h1>
+            <p className="home-sub">Temporada 2025/26 · Cantera masculina del Real Madrid</p>
+          </div>
+
+          <div className="home-stats">
+            <div className="home-stat">
+              <div className="home-stat-value">{totalEquipos}</div>
+              <div className="home-stat-label">Equipos</div>
+            </div>
+            <div className="home-stat">
+              <div className="home-stat-value">{totalJugadores}</div>
+              <div className="home-stat-label">Jugadores</div>
+            </div>
+            <div className="home-stat">
+              <div className="home-stat-value">{totalIntl}</div>
+              <div className="home-stat-label">Internacionales</div>
+            </div>
+          </div>
+
+          <div className="home-section-title">Destacados</div>
+          <div className="home-grid">
+            <div className="home-card home-card-featured" onClick={function(){ onSelectTeam("Juvenil A"); }}>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/UEFA_Youth_League.svg/250px-UEFA_Youth_League.svg.png" alt="UEFA Youth League" className="home-card-logo" />
+              <div className="home-card-title">Campeones de la Youth League</div>
+              <div className="home-card-sub">Juvenil A · Final vs Brujas (pens. 4-2) · 20/04/2026</div>
+            </div>
+            <div className="home-card" onClick={function(){ onSelectTeam("Castilla"); }}>
+              <div className="home-card-title">Premier League International Cup</div>
+              <div className="home-card-sub">Castilla · Semifinal vs Dinamo Zagreb (por confirmar)</div>
+            </div>
+          </div>
+
+          <div className="home-section-title">Acceso rápido</div>
+          <div className="home-grid">
+            <div className="home-card" onClick={onShowPromociones}>
+              <div className="home-card-title">Promociones</div>
+              <div className="home-card-sub">{promociones.length} jugadores jugando por encima de su categoría</div>
+            </div>
+            <div className="home-card" onClick={onShowNews}>
+              <div className="home-card-title">Noticias</div>
+              <div className="home-card-sub">Última hora de la cantera en tiempo real</div>
+            </div>
+            <div className="home-card" onClick={onShowCaptacion}>
+              <div className="home-card-title">Captación 26/27</div>
+              <div className="home-card-sub">Sugerencias de fichajes para la próxima temporada</div>
+            </div>
+          </div>
+
+          <div className="home-section-title">Equipos</div>
+          <div className="home-teams-grid">
+            {Object.keys(canteraData).map(function(team){
+              var color = (PROY_COLORS && PROY_COLORS[team]) ? PROY_COLORS[team].border : 'var(--accent)';
+              return (
+                <div key={team} className="home-team-card" onClick={function(){ onSelectTeam(team); }}>
+                  <span className="home-team-dot" style={{background: color}}></span>
+                  <span className="home-team-name">{team}</span>
+                  <span className="home-team-count">{canteraData[team].jugadores.length}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
     /* ===== MAIN APP ===== */
     function App() {
       const [user, setUser] = useState(() => sessionStorage.getItem("lfUser") || null);
@@ -3284,6 +3389,12 @@
       const [showNews, setShowNews] = useState(false);
       const [showCaptacion, setShowCaptacion] = useState(false);
       const [showPromociones, setShowPromociones] = useState(false);
+      const [showHome, setShowHome] = useState(function(){
+        try {
+          var hash = decodeURIComponent(window.location.hash.substring(1));
+          return !(hash && canteraData[hash]);
+        } catch(e) { return true; }
+      });
       const [pendingPlayerApodo, setPendingPlayerApodo] = useState(null);
       const [capSugerencias, setCapSugerencias] = useState([]);
       const [capNombre, setCapNombre] = useState("");
@@ -3501,6 +3612,7 @@
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
+        setShowHome(false);
       }, []);
 
       const handleGlobalSearchSelect = useCallback(function(team, apodo) {
@@ -3512,6 +3624,7 @@
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
+        setShowHome(false);
         setPendingPlayerApodo(apodo);
       }, []);
 
@@ -3519,6 +3632,7 @@
         setShowNews(true);
         setShowCaptacion(false);
         setShowPromociones(false);
+        setShowHome(false);
         setView("list");
       }, []);
 
@@ -3526,6 +3640,7 @@
         setShowCaptacion(true);
         setShowNews(false);
         setShowPromociones(false);
+        setShowHome(false);
         loadCaptacion();
       }, []);
 
@@ -3533,6 +3648,15 @@
         setShowPromociones(true);
         setShowNews(false);
         setShowCaptacion(false);
+        setShowHome(false);
+      }, []);
+
+      const handleGoHome = useCallback(() => {
+        setShowHome(true);
+        setShowNews(false);
+        setShowCaptacion(false);
+        setShowPromociones(false);
+        try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch(e) {}
       }, []);
 
       // Expandir jugador tras búsqueda global cuando filteredPlayers se actualiza
@@ -3716,6 +3840,8 @@
             onShowPromociones={handleShowPromociones}
             allPlayers={allPlayers}
             onGlobalSearchSelect={handleGlobalSearchSelect}
+            onGoHome={handleGoHome}
+            showHome={showHome}
           />
 
           <div className="main-content">
@@ -3725,11 +3851,11 @@
                   <MenuIcon />
                 </button>
                 <div>
-                  <h1 className="team-title">{showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
-                  <p className="team-category">{showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <h1 className="team-title">{showHome ? 'Inicio' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
+                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
-              {!showNews && !showCaptacion && !showPromociones && (
+              {!showHome && !showNews && !showCaptacion && !showPromociones && (
                 <div className="header-stats">
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--por)'}}>{stats.por}</div><div className="header-stat-label">POR</div></div>
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--def)'}}>{stats.def}</div><div className="header-stat-label">DEF</div></div>
@@ -3739,7 +3865,16 @@
               )}
             </header>
 
-            {showPromociones ? (
+            {showHome ? (
+              <HomeView
+                allPlayers={allPlayers}
+                promociones={promociones}
+                onSelectTeam={handleSelectTeam}
+                onShowNews={handleShowNews}
+                onShowCaptacion={handleShowCaptacion}
+                onShowPromociones={handleShowPromociones}
+              />
+            ) : showPromociones ? (
               promociones.length === 0 ? (
                 <div className="promo-empty">No hay promociones detectadas con los datos actuales.</div>
               ) : (
