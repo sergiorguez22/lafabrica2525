@@ -537,6 +537,13 @@
     .bday-meta { font-size:11px; color:var(--text-2); margin-top:2px; }
     .bday-date { font-size:11px; color:var(--accent); font-weight:600; margin-top:2px; }
     .bday-date.today-text { color:#92400e; }
+
+    /* ===== INTERNACIONALES ===== */
+    .intl-wrap { padding:20px 28px 28px; }
+    .intl-group { margin-bottom:28px; }
+    .intl-group-title { display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border-light); }
+    .intl-group-name { font-size:15px; font-weight:600; color:var(--text); }
+    .intl-group-count { font-size:11px; font-weight:600; padding:2px 9px; background:var(--accent-light); color:var(--accent); border-radius:10px; }
     </style>
 </head>
 <body>
@@ -2068,7 +2075,7 @@
     }
 
     /* ===== SIDEBAR COMPONENT ===== */
-    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
+    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
       const [searchQ, setSearchQ] = useState("");
       const [searchOpen, setSearchOpen] = useState(false);
 
@@ -2141,7 +2148,7 @@
                   <div className="sidebar-category">{cat.name}</div>
                   {cat.teams.map(team => {
                     const data = canteraData[team];
-                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && selectedTeam === team;
+                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && selectedTeam === team;
                     return (
                       <div
                         key={team}
@@ -2177,6 +2184,13 @@
               >
                 <span className="sidebar-dot" style={{background: showPromociones ? 'var(--accent)' : '#475569'}}></span>
                 <span>Promociones</span>
+              </div>
+              <div
+                className={`sidebar-item ${showInternacionales ? 'active' : ''}`}
+                onClick={() => { onShowInternacionales(); onClose(); }}
+              >
+                <span className="sidebar-dot" style={{background: showInternacionales ? 'var(--accent)' : '#475569'}}></span>
+                <span>Internacionales</span>
               </div>
 
             </nav>
@@ -3454,6 +3468,7 @@
       const [showNews, setShowNews] = useState(false);
       const [showCaptacion, setShowCaptacion] = useState(false);
       const [showPromociones, setShowPromociones] = useState(false);
+      const [showInternacionales, setShowInternacionales] = useState(false);
       const [showHome, setShowHome] = useState(function(){
         try {
           var hash = decodeURIComponent(window.location.hash.substring(1));
@@ -3667,6 +3682,34 @@
         return list;
       }, [allPlayers]);
 
+      // Internacionales agrupados por selección
+      const internacionales = useMemo(function() {
+        var groups = {};
+        allPlayers.forEach(function(p){
+          if (!p.seleccion) return;
+          var key = p.seleccion.trim();
+          if (!groups[key]) groups[key] = [];
+          groups[key].push(p);
+        });
+        // Ordenar claves: España primero (por Sub-XX desc), luego otros países
+        var keys = Object.keys(groups);
+        function parseSub(s) {
+          var m = s.match(/Sub-(\d+)/i);
+          return m ? parseInt(m[1], 10) : 0;
+        }
+        function isSpain(s) { return /Espa(?:ñ|n)a/i.test(s); }
+        keys.sort(function(a, b) {
+          var sa = isSpain(a), sb = isSpain(b);
+          if (sa !== sb) return sa ? -1 : 1;
+          return parseSub(b) - parseSub(a);
+        });
+        // Ordena jugadores dentro de cada grupo por apodo
+        keys.forEach(function(k){
+          groups[k].sort(function(a, b){ return (a.apodo || '').localeCompare(b.apodo || ''); });
+        });
+        return { keys: keys, groups: groups, total: allPlayers.filter(function(p){ return p.seleccion; }).length };
+      }, [allPlayers]);
+
       // Cumpleaños próximos (hoy + 14 días adelante)
       const upcomingBirthdays = useMemo(function() {
         var DAYS_AHEAD = 14;
@@ -3711,6 +3754,7 @@
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
+        setShowInternacionales(false);
         setShowHome(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -3724,6 +3768,7 @@
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
+        setShowInternacionales(false);
         setShowHome(false);
         setPendingPlayerApodo(apodo);
       }, []);
@@ -3732,6 +3777,7 @@
         setShowNews(true);
         setShowCaptacion(false);
         setShowPromociones(false);
+        setShowInternacionales(false);
         setShowHome(false);
         setView("list");
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
@@ -3741,6 +3787,7 @@
         setShowCaptacion(true);
         setShowNews(false);
         setShowPromociones(false);
+        setShowInternacionales(false);
         setShowHome(false);
         loadCaptacion();
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
@@ -3759,7 +3806,17 @@
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
+        setShowInternacionales(false);
         try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch(e) {}
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
+      }, []);
+
+      const handleShowInternacionales = useCallback(() => {
+        setShowInternacionales(true);
+        setShowNews(false);
+        setShowCaptacion(false);
+        setShowPromociones(false);
+        setShowHome(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -3942,6 +3999,8 @@
             onShowCaptacion={handleShowCaptacion}
             showPromociones={showPromociones}
             onShowPromociones={handleShowPromociones}
+            showInternacionales={showInternacionales}
+            onShowInternacionales={handleShowInternacionales}
             allPlayers={allPlayers}
             onGlobalSearchSelect={handleGlobalSearchSelect}
             onGoHome={handleGoHome}
@@ -3955,11 +4014,11 @@
                   <MenuIcon />
                 </button>
                 <div>
-                  <h1 className="team-title">{showHome ? 'Inicio' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
-                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <h1 className="team-title">{showHome ? 'Inicio' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
+                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
-              {!showHome && !showNews && !showCaptacion && !showPromociones && (
+              {!showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && (
                 <div className="header-stats">
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--por)'}}>{stats.por}</div><div className="header-stat-label">POR</div></div>
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--def)'}}>{stats.def}</div><div className="header-stat-label">DEF</div></div>
@@ -3969,7 +4028,42 @@
               )}
             </header>
 
-            {showHome ? (
+            {showInternacionales ? (
+              internacionales.total === 0 ? (
+                <div className="promo-empty">No hay internacionales en la base de datos.</div>
+              ) : (
+                <div className="intl-wrap">
+                  {internacionales.keys.map(function(k){
+                    return (
+                      <div key={k} className="intl-group">
+                        <div className="intl-group-title">
+                          <span className="intl-group-name">{k}</span>
+                          <span className="intl-group-count">{internacionales.groups[k].length}</span>
+                        </div>
+                        <div className="promo-grid">
+                          {internacionales.groups[k].map(function(p, i){
+                            var displayName = getDisplayName(p);
+                            var initials = displayName.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+                            return (
+                              <div key={i} className="promo-card" onClick={function(){ handleGlobalSearchSelect(p.equipo, p.apodo); }}>
+                                {p.foto ? (
+                                  <img src={p.foto} alt={displayName} className="promo-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+                                ) : null}
+                                <div className="promo-photo-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{initials}</div>
+                                <div className="promo-info">
+                                  <div className="promo-name">{displayName}</div>
+                                  <div className="promo-meta">{p.equipo} · {p.posicion}</div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            ) : showHome ? (
               <HomeView
                 allPlayers={allPlayers}
                 promociones={promociones}
