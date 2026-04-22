@@ -2444,11 +2444,23 @@
       };
       var playCrowd = function() {
         try {
+          var CROWD_DUR = 1.0; // segundos — corto para no pisar la voz del siguiente jugador
           var unlocked = (window._iosAudioUnlocked || [])[0];
           if (unlocked) {
+            try { unlocked.pause(); } catch(e){}
             unlocked.currentTime = 0;
             unlocked.volume = 0.9;
             unlocked.play().catch(function(){});
+            // Fade out + stop a 1s
+            setTimeout(function(){
+              try {
+                var startVol = unlocked.volume;
+                var fade = setInterval(function(){
+                  if (unlocked.volume > 0.05) unlocked.volume = Math.max(0, unlocked.volume - 0.15);
+                  else { clearInterval(fade); try { unlocked.pause(); unlocked.volume = startVol; } catch(e){} }
+                }, 40);
+              } catch(e){}
+            }, (CROWD_DUR - 0.3) * 1000);
             return;
           }
           var ctx = crowdRef.ctx;
@@ -2459,9 +2471,12 @@
           var src = ctx.createBufferSource();
           src.buffer = buf;
           var g = ctx.createGain(); g.gain.value = 0.9;
-          var offset = buf.duration > 2.2 ? Math.max(0, buf.duration - 2) : 0;
+          // Fade out al final para un corte limpio
+          g.gain.setValueAtTime(0.9, ctx.currentTime + CROWD_DUR - 0.25);
+          g.gain.linearRampToValueAtTime(0, ctx.currentTime + CROWD_DUR);
+          var offset = buf.duration > (CROWD_DUR + 0.2) ? Math.max(0, buf.duration - CROWD_DUR - 0.1) : 0;
           src.connect(g); g.connect(ctx.destination);
-          src.start(0, offset, 2);
+          src.start(0, offset, CROWD_DUR);
         } catch(e) {}
       };
 
