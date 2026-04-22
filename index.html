@@ -3573,6 +3573,7 @@
       const [expandedPlayer, setExpandedPlayer] = useState(null);
       const [searchTerm, setSearchTerm] = useState("");
       const [positionFilter, setPositionFilter] = useState("Todas");
+      const [yearFilter, setYearFilter] = useState("Todos");
       const [view, setView] = useState("list");
       const [sidebarOpen, setSidebarOpen] = useState(false);
       const [showNews, setShowNews] = useState(false);
@@ -3710,12 +3711,25 @@
         return 99;
       }
 
+      const yearOptions = useMemo(function() {
+        var set = {};
+        currentTeam.jugadores.forEach(function(p){
+          if (p.fechaNacimiento) {
+            var parts = p.fechaNacimiento.split('/');
+            if (parts.length === 3) set[parts[2]] = true;
+          }
+        });
+        return Object.keys(set).sort();
+      }, [currentTeam]);
+
       const filteredPlayers = useMemo(() => {
         var arr = currentTeam.jugadores.filter(p => {
           const term = searchTerm.toLowerCase();
           const matchesSearch = !term || p.nombre.toLowerCase().includes(term) || p.apodo.toLowerCase().includes(term) || (p.lugarNacimiento && p.lugarNacimiento.toLowerCase().includes(term));
           const matchesPos = positionFilter === "Todas" || p.posicion === positionFilter;
-          return matchesSearch && matchesPos;
+          var year = p.fechaNacimiento ? p.fechaNacimiento.split('/')[2] : '';
+          const matchesYear = yearFilter === "Todos" || year === yearFilter;
+          return matchesSearch && matchesPos && matchesYear;
         });
         // Orden táctico: POR → LD → DFC → LI → Pivote → MCD → MC → MCO → ED → EI → DC
         return arr.slice().sort(function(a, b) {
@@ -3725,7 +3739,7 @@
           if (a.dorsal != null && b.dorsal != null) return a.dorsal - b.dorsal;
           return (a.apodo || '').localeCompare(b.apodo || '');
         });
-      }, [currentTeam, searchTerm, positionFilter]);
+      }, [currentTeam, searchTerm, positionFilter, yearFilter]);
 
       const stats = useMemo(() => {
         const p = currentTeam.jugadores;
@@ -3861,6 +3875,7 @@
         setExpandedPlayer(null);
         setSearchTerm("");
         setPositionFilter("Todas");
+        setYearFilter("Todos");
         setView("list");
         setShowNews(false);
         setShowCaptacion(false);
@@ -4380,6 +4395,14 @@
                       <button key={pos} onClick={() => setPositionFilter(pos)} className={`filter-btn ${positionFilter === pos ? 'active' : ''}`}>{pos}</button>
                     ))}
                   </div>
+                  {yearOptions.length > 1 && (
+                    <div className="filter-btns">
+                      <button onClick={() => setYearFilter("Todos")} className={`filter-btn ${yearFilter === "Todos" ? 'active' : ''}`}>Todos</button>
+                      {yearOptions.map(function(y){
+                        return <button key={y} onClick={function(){ setYearFilter(y); }} className={"filter-btn" + (yearFilter === y ? ' active' : '')}>{y}</button>;
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 <div className="content-area">
