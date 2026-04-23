@@ -618,6 +618,38 @@
       .trayec-line { flex-direction:column; }
       .trayec-arrow { transform:rotate(90deg); justify-content:center; padding:2px 0; }
     }
+
+    /* ===== GENERACIONES ===== */
+    .gen-wrap { padding:20px 28px 28px; }
+    .gen-years { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border-light); }
+    .gen-year-btn { padding:8px 14px; background:var(--surface); border:1px solid var(--border-light); border-radius:8px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer; transition:all 0.15s; font-variant-numeric:tabular-nums; }
+    .gen-year-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .gen-year-btn.active { background:var(--accent); color:white; border-color:var(--accent); }
+    .gen-empty { padding:40px 28px; color:var(--text-2); text-align:center; font-size:14px; }
+    .gen-team-block { margin-bottom:20px; }
+    .gen-team-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border-light); }
+    .gen-team-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .gen-team-name { font-size:14px; font-weight:600; color:var(--text); }
+    .gen-team-count { margin-left:auto; font-size:11px; font-weight:600; padding:2px 9px; background:var(--accent-light); color:var(--accent); border-radius:10px; }
+
+    /* ===== MODAL BIENVENIDA ÁLVARO ===== */
+    .alvaro-overlay { position:fixed; inset:0; background:radial-gradient(ellipse at center, #1e293b 0%, #0a0f1c 100%); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px; animation:alvaroFadeIn 0.4s ease-out; }
+    @keyframes alvaroFadeIn { from { opacity:0; } to { opacity:1; } }
+    .alvaro-spotlight { position:absolute; inset:0; background:radial-gradient(circle at 50% 35%, rgba(251,191,36,0.15), transparent 60%); pointer-events:none; }
+    .alvaro-content { position:relative; z-index:1; text-align:center; max-width:540px; animation:alvaroPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes alvaroPop { from { transform:scale(0.6); opacity:0; } to { transform:scale(1); opacity:1; } }
+    .alvaro-logo { width:160px; height:auto; margin-bottom:28px; filter:drop-shadow(0 10px 30px rgba(251,191,36,0.4)); animation:alvaroFloat 3s ease-in-out infinite; }
+    @keyframes alvaroFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+    .alvaro-title { font-size:46px; font-weight:800; color:#fbbf24; letter-spacing:-1px; line-height:1.1; margin:0 0 14px; text-shadow:0 4px 20px rgba(251,191,36,0.3); }
+    .alvaro-sub { font-size:18px; color:#e2e8f0; font-weight:500; margin:0 0 8px; }
+    .alvaro-team { font-size:14px; color:#94a3b8; margin:0 0 32px; letter-spacing:0.5px; }
+    .alvaro-btn { display:inline-flex; align-items:center; gap:10px; padding:14px 36px; background:linear-gradient(135deg, #fbbf24, #f59e0b); color:#0f172a; border:none; border-radius:50px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 8px 24px rgba(251,191,36,0.4); transition:all 0.2s; text-transform:uppercase; letter-spacing:0.5px; }
+    .alvaro-btn:hover { transform:translateY(-2px); box-shadow:0 12px 30px rgba(251,191,36,0.5); }
+    .alvaro-crest { position:absolute; top:32px; left:50%; transform:translateX(-50%); width:50px; opacity:0.6; }
+    @media (max-width:520px) {
+      .alvaro-title { font-size:32px; }
+      .alvaro-logo { width:120px; }
+    }
     </style>
 </head>
 <body>
@@ -758,7 +790,8 @@
       "RaúlRubia": "prebenjaminb",
       "JuanB": "realmadrid2026",
       "Eneko": "realmadrid2026Bilbo",
-      "PabloVega": "realmadrid2026"
+      "PabloVega": "realmadrid2026",
+      "AlvaroLopez": "YouthLeagueChampions"
     };
     const RESTRICTED_USERS = ["PabloVega"];
     function isRestricted(u) { return RESTRICTED_USERS.indexOf(u) >= 0; }
@@ -2221,7 +2254,7 @@
     }
 
     /* ===== SIDEBAR COMPONENT ===== */
-    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, showCalendario, onShowCalendario, showProcedencia, onShowProcedencia, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
+    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, showCalendario, onShowCalendario, showProcedencia, onShowProcedencia, showGeneraciones, onShowGeneraciones, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
       const [searchQ, setSearchQ] = useState("");
       const [searchOpen, setSearchOpen] = useState(false);
 
@@ -2294,7 +2327,7 @@
                   <div className="sidebar-category">{cat.name}</div>
                   {cat.teams.map(team => {
                     const data = canteraData[team];
-                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && !showCalendario && !showProcedencia && selectedTeam === team;
+                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && !showCalendario && !showProcedencia && !showGeneraciones && selectedTeam === team;
                     return (
                       <div
                         key={team}
@@ -2351,6 +2384,13 @@
               >
                 <span className="sidebar-dot" style={{background: showProcedencia ? 'var(--accent)' : '#475569'}}></span>
                 <span>Procedencia</span>
+              </div>
+              <div
+                className={`sidebar-item ${showGeneraciones ? 'active' : ''}`}
+                onClick={() => { onShowGeneraciones(); onClose(); }}
+              >
+                <span className="sidebar-dot" style={{background: showGeneraciones ? 'var(--accent)' : '#475569'}}></span>
+                <span>Generaciones</span>
               </div>
 
             </nav>
@@ -3634,6 +3674,9 @@
       const [showProcedencia, setShowProcedencia] = useState(false);
       const [procedenciaTab, setProcedenciaTab] = useState("club");
       const [expandedProcedencia, setExpandedProcedencia] = useState(null);
+      const [showGeneraciones, setShowGeneraciones] = useState(false);
+      const [generacionAnio, setGeneracionAnio] = useState(null);
+      const [showAlvaroWelcome, setShowAlvaroWelcome] = useState(false);
       const [showHome, setShowHome] = useState(function(){
         try {
           var hash = decodeURIComponent(window.location.hash.substring(1));
@@ -3860,6 +3903,62 @@
         return list;
       }, [allPlayers]);
 
+      // Generaciones: lista de años disponibles + agrupación por equipo
+      const generacionesData = useMemo(function() {
+        var years = {};
+        allPlayers.forEach(function(p) {
+          if (p.fechaNacimiento) {
+            var parts = p.fechaNacimiento.split('/');
+            if (parts.length === 3) years[parts[2]] = true;
+          }
+        });
+        return Object.keys(years).sort();
+      }, [allPlayers]);
+
+      const generacionGrouped = useMemo(function() {
+        if (!generacionAnio) return null;
+        var groups = {};
+        allPlayers.forEach(function(p){
+          if (!p.fechaNacimiento) return;
+          var year = p.fechaNacimiento.split('/')[2];
+          if (year !== generacionAnio) return;
+          if (!groups[p.equipo]) groups[p.equipo] = [];
+          groups[p.equipo].push(p);
+        });
+        // Ordenar equipos según TEAM_HIERARCHY
+        var orderedTeams = TEAM_HIERARCHY.filter(function(t){ return groups[t]; });
+        return { teams: orderedTeams, groups: groups, total: Object.keys(groups).reduce(function(acc, k){ return acc + groups[k].length; }, 0) };
+      }, [allPlayers, generacionAnio]);
+
+      // Bienvenida especial Álvaro López
+      useEffect(function() {
+        if (user === "AlvaroLopez") {
+          var shown = false;
+          try { shown = sessionStorage.getItem("alvaro_welcomed") === "1"; } catch(e) {}
+          if (!shown) {
+            setShowAlvaroWelcome(true);
+          }
+        }
+      }, [user]);
+
+      function handleCloseAlvaroWelcome() {
+        try { sessionStorage.setItem("alvaro_welcomed", "1"); } catch(e) {}
+        setShowAlvaroWelcome(false);
+        // Llevarle directo a Youth League en Juvenil A
+        setSelectedTeam("Juvenil A");
+        window.location.hash = "Juvenil A";
+        setView("youth");
+        setShowHome(false);
+        setShowNews(false);
+        setShowCaptacion(false);
+        setShowPromociones(false);
+        setShowInternacionales(false);
+        setShowCalendario(false);
+        setShowProcedencia(false);
+        setShowGeneraciones(false);
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
+      }
+
       // Procedencia: ranking por club anterior y lugar de nacimiento
       const procedenciaStats = useMemo(function() {
         var clubs = {}, cities = {};
@@ -3967,6 +4066,7 @@
         setShowInternacionales(false);
         setShowCalendario(false);
         setShowProcedencia(false);
+        setShowGeneraciones(false);
         setShowHome(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -3983,6 +4083,7 @@
         setShowInternacionales(false);
         setShowCalendario(false);
         setShowProcedencia(false);
+        setShowGeneraciones(false);
         setShowHome(false);
         setPendingPlayerApodo(apodo);
       }, []);
@@ -3994,6 +4095,7 @@
         setShowInternacionales(false);
         setShowCalendario(false);
         setShowProcedencia(false);
+        setShowGeneraciones(false);
         setShowHome(false);
         setView("list");
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
@@ -4006,6 +4108,7 @@
         setShowInternacionales(false);
         setShowCalendario(false);
         setShowProcedencia(false);
+        setShowGeneraciones(false);
         setShowHome(false);
         loadCaptacion();
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
@@ -4038,6 +4141,19 @@
         setShowPromociones(false);
         setShowInternacionales(false);
         setShowCalendario(false);
+        setShowGeneraciones(false);
+        setShowHome(false);
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
+      }, []);
+
+      const handleShowGeneraciones = useCallback(() => {
+        setShowGeneraciones(true);
+        setShowNews(false);
+        setShowCaptacion(false);
+        setShowPromociones(false);
+        setShowInternacionales(false);
+        setShowCalendario(false);
+        setShowProcedencia(false);
         setShowHome(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -4049,6 +4165,7 @@
         setShowPromociones(false);
         setShowCalendario(false);
         setShowProcedencia(false);
+        setShowGeneraciones(false);
         setShowHome(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -4229,6 +4346,21 @@
 
       return (
         <div className="app-layout">
+          {showAlvaroWelcome && (
+            <div className="alvaro-overlay">
+              <div className="alvaro-spotlight"></div>
+              <img src={CREST_URL} alt="Real Madrid" className="alvaro-crest" />
+              <div className="alvaro-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/UEFA_Youth_League.svg/250px-UEFA_Youth_League.svg.png" alt="UEFA Youth League" className="alvaro-logo" />
+                <h1 className="alvaro-title">¡ERES CAMPEÓN DE EUROPA!</h1>
+                <p className="alvaro-sub">Mister, lo conseguisteis. UEFA Youth League 2025/26.</p>
+                <p className="alvaro-team">Real Madrid Juvenil A · Final vs Brujas (4-2 pen.) · 20/04/2026</p>
+                <button className="alvaro-btn" onClick={handleCloseAlvaroWelcome}>
+                  Entrar a la app →
+                </button>
+              </div>
+            </div>
+          )}
           <Sidebar
             selectedTeam={selectedTeam}
             onSelectTeam={handleSelectTeam}
@@ -4248,6 +4380,8 @@
             onShowCalendario={handleShowCalendario}
             showProcedencia={showProcedencia}
             onShowProcedencia={handleShowProcedencia}
+            showGeneraciones={showGeneraciones}
+            onShowGeneraciones={handleShowGeneraciones}
             allPlayers={allPlayers}
             onGlobalSearchSelect={handleGlobalSearchSelect}
             onGoHome={handleGoHome}
@@ -4261,11 +4395,11 @@
                   <MenuIcon />
                 </button>
                 <div>
-                  <h1 className="team-title">{showHome ? 'Inicio' : showProcedencia ? 'Procedencia' : showCalendario ? 'Calendario' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
-                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showProcedencia ? `Ranking de clubes y lugares de origen · ${allPlayers.length} jugadores analizados` : showCalendario ? `${calendario.partidos.length} partidos programados · actualizado ${calendario.actualizado}` : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <h1 className="team-title">{showHome ? 'Inicio' : showGeneraciones ? 'Generaciones' : showProcedencia ? 'Procedencia' : showCalendario ? 'Calendario' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
+                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showGeneraciones ? (generacionAnio ? `Generación ${generacionAnio} · ${(generacionGrouped && generacionGrouped.total) || 0} jugadores en ${(generacionGrouped && generacionGrouped.teams.length) || 0} equipos` : 'Selecciona un año para ver todos los jugadores nacidos esa temporada') : showProcedencia ? `Ranking de clubes y lugares de origen · ${allPlayers.length} jugadores analizados` : showCalendario ? `${calendario.partidos.length} partidos programados · actualizado ${calendario.actualizado}` : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
-              {!showHome && !showProcedencia && !showCalendario && !showNews && !showCaptacion && !showPromociones && !showInternacionales && (
+              {!showHome && !showGeneraciones && !showProcedencia && !showCalendario && !showNews && !showCaptacion && !showPromociones && !showInternacionales && (
                 <div className="header-stats">
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--por)'}}>{stats.por}</div><div className="header-stat-label">POR</div></div>
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--def)'}}>{stats.def}</div><div className="header-stat-label">DEF</div></div>
@@ -4275,7 +4409,51 @@
               )}
             </header>
 
-            {showProcedencia ? (
+            {showGeneraciones ? (
+              <div className="gen-wrap">
+                <div className="gen-years">
+                  {generacionesData.map(function(y){
+                    return <button key={y} className={"gen-year-btn" + (generacionAnio === y ? " active" : "")} onClick={function(){ setGeneracionAnio(y); }}>{y}</button>;
+                  })}
+                </div>
+                {!generacionAnio ? (
+                  <div className="gen-empty">Selecciona un año arriba para ver todos los jugadores nacidos esa temporada agrupados por equipo.</div>
+                ) : !generacionGrouped || generacionGrouped.total === 0 ? (
+                  <div className="gen-empty">No hay jugadores del año {generacionAnio}.</div>
+                ) : (
+                  generacionGrouped.teams.map(function(team){
+                    var tcolor = (PROY_COLORS && PROY_COLORS[team]) ? PROY_COLORS[team].border : 'var(--accent)';
+                    return (
+                      <div key={team} className="gen-team-block">
+                        <div className="gen-team-header">
+                          <span className="gen-team-dot" style={{background: tcolor}}></span>
+                          <span className="gen-team-name">{team}</span>
+                          <span className="gen-team-count">{generacionGrouped.groups[team].length}</span>
+                        </div>
+                        <div className="promo-grid">
+                          {generacionGrouped.groups[team].map(function(p, i){
+                            var displayName = getDisplayName(p);
+                            var initials = displayName.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+                            return (
+                              <div key={i} className="promo-card" onClick={function(){ handleGlobalSearchSelect(team, p.apodo); }}>
+                                {p.foto ? (
+                                  <img src={p.foto} alt={displayName} className="promo-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+                                ) : null}
+                                <div className="promo-photo-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{initials}</div>
+                                <div className="promo-info">
+                                  <div className="promo-name">{displayName}</div>
+                                  <div className="promo-meta">{p.posicion} · {p.fechaNacimiento}</div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            ) : showProcedencia ? (
               (function(){
                 var items = procedenciaTab === "club" ? procedenciaStats.clubs : procedenciaStats.cities;
                 var topCount = items.length > 0 ? items[0].count : 1;
