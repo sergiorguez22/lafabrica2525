@@ -600,6 +600,24 @@
     .proc-player-chip:hover { border-color:var(--accent); background:var(--accent-light); color:var(--accent); }
     .proc-player-chip img { width:20px; height:20px; border-radius:50%; object-fit:cover; object-position:center 14%; }
     .proc-player-chip-fallback { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:white; background:#94a3b8; flex-shrink:0; }
+
+    /* ===== TRAYECTORIA ===== */
+    .trayec { margin-top:16px; padding:14px; background:var(--bg); border-radius:var(--radius-sm); border:1px solid var(--border-light); }
+    .trayec-title { font-size:11px; font-weight:600; color:var(--text-2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+    .trayec-title::before { content:''; display:inline-block; width:3px; height:12px; background:var(--accent); border-radius:2px; }
+    .trayec-line { display:flex; align-items:stretch; gap:6px; }
+    .trayec-step { flex:1; min-width:0; text-align:center; padding:10px 8px; border:1px solid var(--border-light); border-radius:var(--radius-sm); background:var(--surface); }
+    .trayec-step-label { font-size:9.5px; font-weight:700; text-transform:uppercase; color:var(--text-3); letter-spacing:0.5px; margin-bottom:4px; }
+    .trayec-step-name { font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3; }
+    .trayec-step-year { font-size:10.5px; color:var(--text-3); margin-top:3px; font-variant-numeric:tabular-nums; }
+    .trayec-step.current { border-color:var(--accent); background:var(--accent-light); }
+    .trayec-step.current .trayec-step-name { color:var(--accent); }
+    .trayec-step.future { border-style:dashed; }
+    .trayec-arrow { display:flex; align-items:center; color:var(--text-3); font-size:14px; font-weight:700; flex-shrink:0; }
+    @media (max-width:520px) {
+      .trayec-line { flex-direction:column; }
+      .trayec-arrow { transform:rotate(90deg); justify-content:center; padding:2px 0; }
+    }
     </style>
 </head>
 <body>
@@ -4610,6 +4628,51 @@
                                         Ver perfil oficial en realmadrid.com
                                       </a>
                                     ) : null;
+                                  })()}
+
+                                  {(function(){
+                                    // Trayectoria: anterior → actual → proyección
+                                    var origenRaw = player.origen || '';
+                                    var origenMatch = origenRaw.match(/^(.*?)\s*\((\d{4})\)\s*$/);
+                                    var origenClub = origenMatch ? origenMatch[1].trim() : origenRaw.trim();
+                                    var origenYear = origenMatch ? origenMatch[2] : '';
+                                    var proy = (proySergio && proySergio.proyeccion) || proyecciones[user] || null;
+                                    if (!proy) {
+                                      var others = Object.keys(proyecciones).filter(function(u){ return !isRestricted(user) || u === user; });
+                                      if (others.length > 0) proy = proyecciones[others[0]];
+                                    }
+                                    return (
+                                      <div className="trayec">
+                                        <div className="trayec-title">Trayectoria</div>
+                                        <div className="trayec-line">
+                                          {origenClub && (
+                                            <>
+                                              <div className="trayec-step">
+                                                <div className="trayec-step-label">Anterior</div>
+                                                <div className="trayec-step-name">{origenClub}</div>
+                                                {origenYear && <div className="trayec-step-year">{origenYear}</div>}
+                                              </div>
+                                              <div className="trayec-arrow">→</div>
+                                            </>
+                                          )}
+                                          <div className="trayec-step current">
+                                            <div className="trayec-step-label">Actual</div>
+                                            <div className="trayec-step-name">{selectedTeam}</div>
+                                            <div className="trayec-step-year">2025/26</div>
+                                          </div>
+                                          {proy && (
+                                            <>
+                                              <div className="trayec-arrow">→</div>
+                                              <div className="trayec-step future">
+                                                <div className="trayec-step-label">Proyección</div>
+                                                <div className="trayec-step-name">{proy}</div>
+                                                <div className="trayec-step-year">26/27</div>
+                                              </div>
+                                            </>
+                                          )}
+                                        </div>
+                                      </div>
+                                    );
                                   })()}
 
                                   <button className="scout-toggle" onClick={function(e){e.stopPropagation();setScoutOpen(!scoutOpen);}}>
