@@ -3646,6 +3646,12 @@
       const [savedClips, setSavedClips] = useState(function(){
         try { return JSON.parse(localStorage.getItem("piz_clips") || "[]"); } catch(e){ return []; }
       });
+      // Narración de voz
+      const [currentAudio, setCurrentAudio] = useState(null);
+      const [narrating, setNarrating] = useState(false);
+      const audioRef = React.useRef(null);
+      const mediaRecRef = React.useRef(null);
+      const micStreamRef = React.useRef(null);
 
       function nextId() { return Date.now() + Math.random().toString(36).slice(2, 6); }
 
@@ -3678,6 +3684,10 @@
         setPlaying(true);
         setPlayFrameIdx(0);
         applyFrame(frames[0]);
+        // Audio sync
+        if (currentAudio && audioRef.current) {
+          try { audioRef.current.src = currentAudio; audioRef.current.currentTime = 0; audioRef.current.play().catch(function(){}); } catch(e){}
+        }
         var startT = Date.now();
         var firstT = frames[0].time;
         playTimerRef.current = setInterval(function(){
@@ -3701,7 +3711,50 @@
       }
       function stopPlayback() {
         if (playTimerRef.current) { clearInterval(playTimerRef.current); playTimerRef.current = null; }
+        if (audioRef.current) { try { audioRef.current.pause(); } catch(e){} }
         setPlaying(false);
+      }
+
+      function startNarration() {
+        if (frames.length < 2) { alert('Graba primero los movimientos del clip antes de narrar.'); return; }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+          alert('Tu navegador no soporta grabación de audio.'); return;
+        }
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream){
+          micStreamRef.current = stream;
+          var rec;
+          try { rec = new MediaRecorder(stream); } catch(e) { alert('Error iniciando MediaRecorder: ' + e.message); stream.getTracks().forEach(function(t){t.stop();}); return; }
+          mediaRecRef.current = rec;
+          var chunks = [];
+          rec.ondataavailable = function(e){ if (e.data && e.data.size > 0) chunks.push(e.data); };
+          rec.onstop = function(){
+            var blob = new Blob(chunks, { type: rec.mimeType || 'audio/webm' });
+            var reader = new FileReader();
+            reader.onloadend = function(){ setCurrentAudio(reader.result); };
+            reader.readAsDataURL(blob);
+            try { stream.getTracks().forEach(function(t){ t.stop(); }); } catch(e){}
+            micStreamRef.current = null; mediaRecRef.current = null;
+            setNarrating(false);
+          };
+          rec.start();
+          setNarrating(true);
+          // Reproduce el clip mientras narra
+          playClip();
+          // Para automáticamente al terminar el clip
+          var totalDur = (frames[frames.length-1].time - frames[0].time) + 500;
+          setTimeout(function(){
+            if (mediaRecRef.current && mediaRecRef.current.state === 'recording') mediaRecRef.current.stop();
+          }, totalDur);
+        }).catch(function(err){
+          alert('No se pudo acceder al micrófono: ' + (err.message || err));
+        });
+      }
+      function stopNarration() {
+        if (mediaRecRef.current && mediaRecRef.current.state === 'recording') mediaRecRef.current.stop();
+        stopPlayback();
+      }
+      function clearAudio() {
+        setCurrentAudio(null);
       }
       function applyFrame(f) {
         setChips(function(prev){
@@ -3733,15 +3786,16 @@
         if (frames.length < 2) { alert('Nada que guardar.'); return; }
         var name = prompt('Nombre del clip táctico:', 'Jugada ' + (savedClips.length + 1));
         if (!name) return;
-        var clip = { id: nextId(), name: name, frames: frames, at: new Date().toISOString() };
+        var clip = { id: nextId(), name: name, frames: frames, audio: currentAudio || null, at: new Date().toISOString() };
         var next = savedClips.concat([clip]);
         setSavedClips(next);
-        try { localStorage.setItem('piz_clips', JSON.stringify(next)); } catch(e){ alert('Demasiado grande para localStorage. Reduce duración.'); }
+        try { localStorage.setItem('piz_clips', JSON.stringify(next)); } catch(e){ alert('Demasiado grande para localStorage. Reduce duración o quita la voz.'); }
       }
       function loadClip(clip) {
         setFrames(clip.frames);
+        setCurrentAudio(clip.audio || null);
         if (clip.frames.length > 0) applyFrame(clip.frames[0]);
-        alert('Clip cargado. Pulsa "Reproducir" para verlo.');
+        alert('Clip cargado' + (clip.audio ? ' con voz' : '') + '. Pulsa "Reproducir" para verlo.');
       }
       function deleteClip(id) {
         var next = savedClips.filter(function(c){ return c.id !== id; });
@@ -3945,13 +3999,25 @@
             {playing && (
               <button className="piz-btn" style={{background:'#dc2626',color:'white',borderColor:'#dc2626'}} onClick={stopPlayback}>⏸ Pausa</button>
             )}
+            {!recording && !playing && frames.length > 1 && !narrating && (
+              <button className="piz-btn" style={{background:'#0f172a',color:'white',borderColor:'#0f172a'}} onClick={startNarration} title="Graba tu voz mientras se reproduce el clip">🎙️ Narrar voz</button>
+            )}
+            {narrating && (
+              <button className="piz-btn" style={{background:'#dc2626',color:'white',borderColor:'#dc2626'}} onClick={stopNarration}>⏹ Stop voz</button>
+            )}
+            {!recording && !playing && currentAudio && (
+              <span style={{fontSize:'11px',color:'#16a34a',fontWeight:600}}>🎙️ con voz</span>
+            )}
             {!recording && !playing && frames.length > 1 && (
               <>
                 <button className="piz-btn" onClick={saveClip}>💾 Guardar clip</button>
-                <button className="piz-btn" onClick={clearFrames}>Descartar</button>
+                <button className="piz-btn" onClick={function(){ clearFrames(); clearAudio(); }}>Descartar</button>
               </>
             )}
           </div>
+          {/* Reproductor de audio oculto (sync con la animación) */}
+          <audio ref={audioRef} style={{display:'none'}} />
+
 
           <div className="piz-toolbar">
             <span className="piz-toolbar-label">Dibujo:</span>
@@ -4036,6 +4102,7 @@
                     <div key={clip.id} style={{display:'flex',alignItems:'center',gap:'8px',padding:'8px 12px',background:'var(--surface)',border:'1px solid var(--border-light)',borderRadius:'6px'}}>
                       <span style={{fontSize:'13px',fontWeight:500}}>▶ {clip.name}</span>
                       <span style={{fontSize:'10.5px',color:'var(--text-3)'}}>{clip.frames.length}f</span>
+                      {clip.audio && <span style={{fontSize:'11px',color:'#16a34a'}} title="Con narración de voz">🎙️</span>}
                       <button className="piz-snap-btn" onClick={function(){ loadClip(clip); }}>Cargar</button>
                       <button className="piz-snap-btn danger" onClick={function(){ if(confirm('¿Borrar clip?')) deleteClip(clip.id); }}>×</button>
                     </div>
