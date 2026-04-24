@@ -692,10 +692,13 @@
     .piz-toolbar-label { font-size:11px; color:var(--text-2); font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
     .piz-field-wrap { position:relative; max-width:800px; margin:0 auto; }
     .piz-field { position:relative; width:100%; aspect-ratio:68/105; background:linear-gradient(180deg,#2d8c3c 0%,#339944 8%,#2d8c3c 8%,#339944 16%,#2d8c3c 16%,#339944 24%,#2d8c3c 24%,#339944 32%,#2d8c3c 32%,#339944 40%,#2d8c3c 40%,#339944 48%,#2d8c3c 48%,#339944 56%,#2d8c3c 56%,#339944 64%,#2d8c3c 64%,#339944 72%,#2d8c3c 72%,#339944 80%,#2d8c3c 80%,#339944 88%,#2d8c3c 88%,#339944 96%,#2d8c3c 96%); border-radius:8px; overflow:hidden; touch-action:none; user-select:none; }
-    .piz-chip { position:absolute; transform:translate(-50%,-50%); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:white; cursor:grab; box-shadow:0 2px 6px rgba(0,0,0,0.4); border:2px solid white; user-select:none; touch-action:none; }
+    .piz-chip { position:absolute; transform:translate(-50%,-50%); cursor:grab; user-select:none; touch-action:none; text-align:center; display:flex; flex-direction:column; align-items:center; }
     .piz-chip:active { cursor:grabbing; }
-    .piz-chip.madrid { background:#1a56db; }
-    .piz-chip-label { position:absolute; top:100%; left:50%; transform:translateX(-50%); margin-top:3px; padding:2px 6px; background:rgba(0,0,0,0.7); color:white; font-size:9px; font-weight:600; border-radius:3px; white-space:nowrap; pointer-events:none; }
+    .piz-chip-circle { border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; box-shadow:0 2px 6px rgba(0,0,0,0.4); overflow:hidden; }
+    .piz-chip.rival .piz-chip-circle { width:38px; height:38px; font-size:13px; border:2px solid white; }
+    .piz-chip.madrid .piz-chip-circle { width:54px; height:54px; font-size:14px; border:2px solid #1a56db; background:#1a56db; }
+    .piz-chip-name { display:inline-block; background:var(--accent); color:white; font-size:10px; font-weight:600; padding:3px 9px; border-radius:12px; margin-top:5px; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.35); line-height:1.25; }
+    .piz-chip-dorsal { position:absolute; top:-4px; left:-4px; width:20px; height:20px; border-radius:50%; background:#ffffff; border:2px solid #1a56db; color:#1a56db; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,0.25); z-index:1; line-height:1; }
     .piz-snapshots { margin-top:18px; }
     .piz-snap-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:10px; margin-top:10px; }
     .piz-snap { background:var(--surface); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:8px; }
@@ -3626,16 +3629,22 @@
       });
       const dragRef = React.useRef(null);
       const [rivalCount, setRivalCount] = useState(0);
+      // Herramientas de dibujo
+      const [pizTool, setPizTool] = useState('move'); // move | arrow | line | curve
+      const [pizDash, setPizDash] = useState(false);
+      const [pizColor, setPizColor] = useState('#0f172a');
+      const [shapes, setShapes] = useState([]);
+      const [drawing, setDrawing] = useState(null);
 
       function nextId() { return Date.now() + Math.random().toString(36).slice(2, 6); }
 
       function addMadrid(player) {
-        var label = player.dorsal ? String(player.dorsal) : (player.apodo || '').slice(0, 2).toUpperCase();
+        var initials = (player.apodo || '').slice(0, 2).toUpperCase();
         var name = getDisplayName(player);
         // Posición inicial: si ya hay chips, distribuir; si no, centro
         var x = 50 + (chips.length * 5) % 30 - 15;
         var y = 50 + (chips.length * 7) % 30 - 15;
-        setChips(function(prev){ return prev.concat([{ id: nextId(), team: 'madrid', label: label, name: name, x: x, y: y, photo: player.foto || null }]); });
+        setChips(function(prev){ return prev.concat([{ id: nextId(), team: 'madrid', label: initials, name: name, dorsal: player.dorsal || null, x: x, y: y, photo: player.foto || null }]); });
       }
       function addRival() {
         var n = rivalCount + 1;
@@ -3655,20 +3664,31 @@
         var nuevos = [];
         for (var i = 0; i < Math.min(11, roster.length); i++) {
           var p = roster[i];
-          var label = p.dorsal ? String(p.dorsal) : (p.apodo || '').slice(0, 2).toUpperCase();
-          nuevos.push({ id: nextId(), team:'madrid', label: label, name: getDisplayName(p), x: slots[i].x, y: slots[i].y, photo: p.foto || null });
+          var initials = (p.apodo || '').slice(0, 2).toUpperCase();
+          nuevos.push({ id: nextId(), team:'madrid', label: initials, name: getDisplayName(p), dorsal: p.dorsal || null, x: slots[i].x, y: slots[i].y, photo: p.foto || null });
         }
         setChips(nuevos);
       }
 
-      // Drag handlers
+      // Drag handlers chips
       function onPointerDown(e, chipId) {
+        if (pizTool !== 'move') return; // si dibujando, no movemos chips
         e.preventDefault();
+        e.stopPropagation();
         var rect = fieldRef.current.getBoundingClientRect();
         dragRef.current = { id: chipId, rect: rect };
         try { e.target.setPointerCapture(e.pointerId); } catch(err){}
       }
       function onPointerMove(e) {
+        // Drawing en curso
+        if (drawing) {
+          var rectD = fieldRef.current.getBoundingClientRect();
+          var dx = ((e.clientX - rectD.left) / rectD.width) * 100;
+          var dy = ((e.clientY - rectD.top) / rectD.height) * 100;
+          dx = Math.max(0, Math.min(100, dx)); dy = Math.max(0, Math.min(100, dy));
+          setDrawing(function(prev){ return prev ? Object.assign({}, prev, { x2: dx, y2: dy }) : prev; });
+          return;
+        }
         var d = dragRef.current; if (!d) return;
         var rect = d.rect;
         var x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -3679,11 +3699,63 @@
           return prev.map(function(c){ return c.id === d.id ? Object.assign({}, c, { x: x, y: y }) : c; });
         });
       }
-      function onPointerUp() { dragRef.current = null; }
+      function onPointerUp() {
+        if (drawing) {
+          if (Math.abs(drawing.x2 - drawing.x1) > 1.5 || Math.abs(drawing.y2 - drawing.y1) > 1.5) {
+            setShapes(function(prev){ return prev.concat([drawing]); });
+          }
+          setDrawing(null);
+          return;
+        }
+        dragRef.current = null;
+      }
+
+      // Drawing en el campo (no chip)
+      function onFieldPointerDown(e) {
+        if (pizTool === 'move') return;
+        // Asegúrate de que el target es el campo, no un chip
+        if (e.target.closest('.piz-chip')) return;
+        e.preventDefault();
+        var rect = fieldRef.current.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+        setDrawing({ id: nextId(), tool: pizTool, dash: pizDash, color: pizColor, x1: x, y1: y, x2: x, y2: y });
+      }
 
       function deleteChip(id) {
         setChips(function(prev){ return prev.filter(function(c){ return c.id !== id; }); });
       }
+      function deleteShape(id) {
+        setShapes(function(prev){ return prev.filter(function(s){ return s.id !== id; }); });
+      }
+      function clearShapes() {
+        if (shapes.length === 0) return;
+        if (confirm('¿Borrar todos los trazos?')) setShapes([]);
+      }
+      // Calcula path SVG según herramienta
+      function shapePath(s) {
+        if (s.tool === 'curve') {
+          var dx = s.x2 - s.x1, dy = s.y2 - s.y1;
+          var mx = (s.x1 + s.x2) / 2, my = (s.y1 + s.y2) / 2;
+          var len = Math.sqrt(dx*dx + dy*dy) || 1;
+          var off = len * 0.3;
+          var px = -dy / len, py = dx / len;
+          var cx = mx + px * off, cy = my + py * off;
+          return 'M ' + s.x1 + ' ' + s.y1 + ' Q ' + cx + ' ' + cy + ' ' + s.x2 + ' ' + s.y2;
+        }
+        return 'M ' + s.x1 + ' ' + s.y1 + ' L ' + s.x2 + ' ' + s.y2;
+      }
+      function shapeStroke(s) {
+        return s.dash ? '2,1.5' : '0';
+      }
+      function shapeMarker(s) {
+        return (s.tool === 'arrow' || s.tool === 'curve') ? 'url(#piz-arrow-' + s.color.replace('#','') + ')' : '';
+      }
+      // Marcadores únicos por color
+      var allColors = {};
+      shapes.forEach(function(s){ allColors[s.color] = true; });
+      if (drawing) allColors[drawing.color] = true;
+      var colorList = Object.keys(allColors);
 
       function saveSnapshot() {
         if (typeof window.html2canvas === 'undefined') { alert('Esperando librería de exportación, vuelve a probar en 2s.'); return; }
@@ -3736,8 +3808,20 @@
             <button className="piz-btn primary" onClick={saveSnapshot}>📸 Guardar instantánea</button>
           </div>
 
+          <div className="piz-toolbar">
+            <span className="piz-toolbar-label">Dibujo:</span>
+            <button className={"piz-btn" + (pizTool === 'move' ? ' primary' : '')} onClick={function(){ setPizTool('move'); }} title="Mover fichas">✥ Mover</button>
+            <button className={"piz-btn" + (pizTool === 'arrow' ? ' primary' : '')} onClick={function(){ setPizTool('arrow'); }} title="Flecha recta">→ Flecha</button>
+            <button className={"piz-btn" + (pizTool === 'curve' ? ' primary' : '')} onClick={function(){ setPizTool('curve'); }} title="Flecha curva">↷ Curva</button>
+            <button className={"piz-btn" + (pizTool === 'line' ? ' primary' : '')} onClick={function(){ setPizTool('line'); }} title="Línea sin flecha">— Línea</button>
+            <button className={"piz-btn" + (pizDash ? ' primary' : '')} onClick={function(){ setPizDash(!pizDash); }} title="Línea discontinua">┄ Discontinua</button>
+            <span className="piz-toolbar-label" style={{marginLeft:'8px'}}>Color trazo:</span>
+            <input type="color" className="piz-color-input" value={pizColor} onChange={function(e){ setPizColor(e.target.value); }} />
+            <button className="piz-btn" onClick={clearShapes} style={{marginLeft:'auto'}}>Borrar trazos</button>
+          </div>
+
           <div className="piz-field-wrap">
-            <div ref={fieldRef} className="piz-field" onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerLeave={onPointerUp}>
+            <div ref={fieldRef} className="piz-field" onPointerDown={onFieldPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerLeave={onPointerUp} style={{cursor: pizTool === 'move' ? 'default' : 'crosshair'}}>
               <div className="field-lines">
                 <div className="field-center-line"></div>
                 <div className="field-center-circle"></div>
@@ -3746,14 +3830,40 @@
                 <div className="field-goal-top"></div>
                 <div className="field-goal-bottom"></div>
               </div>
+              {/* SVG overlay con trazos */}
+              <svg className="piz-svg" viewBox="0 0 100 100" preserveAspectRatio="none" style={{position:'absolute',inset:0,width:'100%',height:'100%',pointerEvents:'none',zIndex:1}}>
+                <defs>
+                  {colorList.map(function(col){
+                    var id = 'piz-arrow-' + col.replace('#','');
+                    return (
+                      <marker key={id} id={id} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill={col} />
+                      </marker>
+                    );
+                  })}
+                </defs>
+                {shapes.map(function(s){
+                  return (
+                    <path key={s.id} d={shapePath(s)} fill="none" stroke={s.color} strokeWidth="0.6" strokeDasharray={shapeStroke(s)} strokeLinecap="round" markerEnd={shapeMarker(s)} style={{pointerEvents:'auto',cursor:'pointer'}} onClick={function(e){ if (pizTool === 'move') { e.stopPropagation(); deleteShape(s.id); } }}>
+                      <title>{pizTool === 'move' ? 'Click para borrar' : ''}</title>
+                    </path>
+                  );
+                })}
+                {drawing && (
+                  <path d={shapePath(drawing)} fill="none" stroke={drawing.color} strokeWidth="0.6" strokeDasharray={shapeStroke(drawing)} strokeLinecap="round" markerEnd={shapeMarker(drawing)} opacity="0.7" />
+                )}
+              </svg>
               {chips.map(function(c){
-                var bg = c.team === 'rival' ? rivalColor : '#1a56db';
+                var bgCircle = c.team === 'rival' ? rivalColor : '#1a56db';
                 return (
-                  <div key={c.id} className={"piz-chip " + c.team} style={{left: c.x + '%', top: c.y + '%', background: bg, overflow: c.photo ? 'hidden' : 'visible'}} onPointerDown={function(e){ onPointerDown(e, c.id); }} onDoubleClick={function(){ deleteChip(c.id); }} title={c.name + ' (doble clic para borrar)'}>
-                    {c.photo ? (
-                      <img src={c.photo} alt={c.name} style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 14%',borderRadius:'50%'}} draggable="false" />
-                    ) : c.label}
-                    <div className="piz-chip-label">{c.name}</div>
+                  <div key={c.id} className={"piz-chip " + c.team} style={{left: c.x + '%', top: c.y + '%', zIndex: 2}} onPointerDown={function(e){ onPointerDown(e, c.id); }} onDoubleClick={function(){ deleteChip(c.id); }} title={c.name + ' (doble clic para borrar)'}>
+                    <div className="piz-chip-circle" style={{background: bgCircle, borderColor: c.team === 'rival' ? 'white' : bgCircle, position:'relative'}}>
+                      {c.team === 'madrid' && c.dorsal ? <span className="piz-chip-dorsal">{c.dorsal}</span> : null}
+                      {c.photo ? (
+                        <img src={c.photo} alt={c.name} style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 14%',borderRadius:'50%'}} draggable="false" />
+                      ) : c.label}
+                    </div>
+                    {c.team === 'madrid' && c.name && <div className="piz-chip-name">{c.name}</div>}
                   </div>
                 );
               })}
