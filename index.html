@@ -3807,40 +3807,40 @@
     function HomeView({ allPlayers, promociones, upcomingBirthdays, onSelectTeam, onShowNews, onShowCaptacion, onShowPromociones, onGlobalSearchSelect, user, calendario }) {
       // ===== HOME PERSONALIZADO PARA ÁLVARO LÓPEZ (entrenador Juvenil A) =====
       if (user === "AlvaroLopez") {
-        var teamName = "Juvenil A";
-        var teamData = canteraData[teamName];
-        var teamPlayers = teamData ? teamData.jugadores : [];
-        var totalJug = teamPlayers.length;
-        var intl = teamPlayers.filter(function(p){ return p.seleccion; });
-        var totalIntl = intl.length;
+        var alTeamName = "Juvenil A";
+        var alTeamData = canteraData[alTeamName];
+        var alTeamPlayers = alTeamData ? alTeamData.jugadores : [];
+        var alTotalJug = alTeamPlayers.length;
+        var alIntl = alTeamPlayers.filter(function(p){ return p.seleccion; });
+        var alTotalIntl = alIntl.length;
         // Edad media
         var today = new Date();
-        var edades = teamPlayers.filter(function(p){ return p.fechaNacimiento; }).map(function(p){
+        var alEdades = alTeamPlayers.filter(function(p){ return p.fechaNacimiento; }).map(function(p){
           var parts = p.fechaNacimiento.split('/');
           var d = new Date(parseInt(parts[2],10), parseInt(parts[1],10)-1, parseInt(parts[0],10));
           var age = today.getFullYear() - d.getFullYear();
           if (today.getMonth() < d.getMonth() || (today.getMonth() === d.getMonth() && today.getDate() < d.getDate())) age--;
           return age;
         });
-        var edadMedia = edades.length > 0 ? (edades.reduce(function(a,b){return a+b;},0) / edades.length).toFixed(1) : '-';
+        var alEdadMedia = alEdades.length > 0 ? (alEdades.reduce(function(a,b){return a+b;},0) / alEdades.length).toFixed(1) : '-';
         // Próximo partido
-        var proximo = null;
+        var alProximo = null;
         if (calendario && calendario.partidos) {
-          var nowD = new Date(); nowD.setHours(0,0,0,0);
-          for (var i = 0; i < calendario.partidos.length; i++) {
-            var m = calendario.partidos[i];
-            if (m.equipo !== teamName) continue;
-            var pp = m.fecha.split('/');
-            var md = new Date(parseInt(pp[2],10), parseInt(pp[1],10)-1, parseInt(pp[0],10));
-            md.setHours(0,0,0,0);
-            if (md >= nowD) { proximo = m; break; }
+          var alNowD = new Date(); alNowD.setHours(0,0,0,0);
+          for (var ai = 0; ai < calendario.partidos.length; ai++) {
+            var alM = calendario.partidos[ai];
+            if (alM.equipo !== alTeamName) continue;
+            var alPp = alM.fecha.split('/');
+            var alMd = new Date(parseInt(alPp[2],10), parseInt(alPp[1],10)-1, parseInt(alPp[0],10));
+            alMd.setHours(0,0,0,0);
+            if (alMd >= alNowD) { alProximo = alM; break; }
           }
         }
         // Cumpleaños del equipo
-        var teamApodos = teamPlayers.map(function(p){ return p.apodo; });
-        var teamBdays = (upcomingBirthdays || []).filter(function(b){ return teamApodos.indexOf(b.player.apodo) >= 0 && b.player.equipo === teamName; });
+        var alTeamApodos = alTeamPlayers.map(function(p){ return p.apodo; });
+        var alTeamBdays = (upcomingBirthdays || []).filter(function(b){ return alTeamApodos.indexOf(b.player.apodo) >= 0 && b.player.equipo === alTeamName; });
         // Internacionales del equipo
-        var teamIntl = intl;
+        var alTeamIntl = alIntl;
 
         var MONTHS_ES_LONG = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
         function fmtBday(item) {
@@ -3861,30 +3861,30 @@
 
             <div className="home-stats" style={{gridTemplateColumns:'repeat(4, 1fr)'}}>
               <div className="home-stat">
-                <div className="home-stat-value">{totalJug}</div>
+                <div className="home-stat-value">{alTotalJug}</div>
                 <div className="home-stat-label">Jugadores</div>
               </div>
               <div className="home-stat">
-                <div className="home-stat-value">{totalIntl}</div>
+                <div className="home-stat-value">{alTotalIntl}</div>
                 <div className="home-stat-label">Internacionales</div>
               </div>
               <div className="home-stat">
-                <div className="home-stat-value">{edadMedia}</div>
+                <div className="home-stat-value">{alEdadMedia}</div>
                 <div className="home-stat-label">Edad media</div>
               </div>
               <div className="home-stat">
-                <div className="home-stat-value">{teamBdays.length}</div>
+                <div className="home-stat-value">{alTeamBdays.length}</div>
                 <div className="home-stat-label">Cumples 14d</div>
               </div>
             </div>
 
-            {proximo && (
+            {alProximo && (
               <>
                 <div className="home-section-title">Próximo partido</div>
                 <div className="home-grid" style={{gridTemplateColumns:'1fr'}}>
-                  <div className="home-card home-card-featured" onClick={function(){ onSelectTeam(teamName); }}>
-                    <div className="home-card-title">{proximo.local ? teamName : proximo.rival} <span style={{color:'#94a3b8',margin:'0 8px',fontSize:'14px'}}>vs</span> {proximo.local ? proximo.rival : teamName}</div>
-                    <div className="home-card-sub">{proximo.competicion} · {proximo.fecha}{proximo.hora ? ' · ' + proximo.hora + 'h' : ''} · {proximo.local ? 'Casa' : 'Fuera'}{proximo.estadio ? ' · ' + proximo.estadio : ''}</div>
+                  <div className="home-card home-card-featured" onClick={function(){ onSelectTeam(alTeamName); }}>
+                    <div className="home-card-title">{alProximo.local ? alTeamName : alProximo.rival} <span style={{color:'#94a3b8',margin:'0 8px',fontSize:'14px'}}>vs</span> {alProximo.local ? alProximo.rival : alTeamName}</div>
+                    <div className="home-card-sub">{alProximo.competicion} · {alProximo.fecha}{alProximo.hora ? ' · ' + alProximo.hora + 'h' : ''} · {alProximo.local ? 'Casa' : 'Fuera'}{alProximo.estadio ? ' · ' + alProximo.estadio : ''}</div>
                   </div>
                 </div>
               </>
@@ -3892,31 +3892,31 @@
 
             <div className="home-section-title">Acceso rápido</div>
             <div className="home-grid">
-              <div className="home-card" onClick={function(){ onSelectTeam(teamName); }}>
+              <div className="home-card" onClick={function(){ onSelectTeam(alTeamName); }}>
                 <div className="home-card-title">Plantilla Juvenil A</div>
-                <div className="home-card-sub">{totalJug} jugadores · ver, filtrar y editar</div>
+                <div className="home-card-sub">{alTotalJug} jugadores · ver, filtrar y editar</div>
               </div>
-              <div className="home-card" onClick={function(){ onSelectTeam(teamName); setTimeout(function(){ var btns = document.querySelectorAll('.view-btn'); for(var i=0;i<btns.length;i++){ if(btns[i].textContent.indexOf('Alineación')>=0){btns[i].click();break;}}},100); }}>
+              <div className="home-card" onClick={function(){ onSelectTeam(alTeamName); setTimeout(function(){ var btns = document.querySelectorAll('.view-btn'); for(var i=0;i<btns.length;i++){ if(btns[i].textContent.indexOf('Alineación')>=0){btns[i].click();break;}}},100); }}>
                 <div className="home-card-title">Alineación / Pizarra</div>
                 <div className="home-card-sub">Construir alineación + presentación animada</div>
               </div>
-              <div className="home-card" onClick={function(){ onSelectTeam(teamName); setTimeout(function(){ var btns = document.querySelectorAll('.view-btn'); for(var i=0;i<btns.length;i++){ if(btns[i].textContent.indexOf('Youth')>=0){btns[i].click();break;}}},100); }}>
+              <div className="home-card" onClick={function(){ onSelectTeam(alTeamName); setTimeout(function(){ var btns = document.querySelectorAll('.view-btn'); for(var i=0;i<btns.length;i++){ if(btns[i].textContent.indexOf('Youth')>=0){btns[i].click();break;}}},100); }}>
                 <div className="home-card-title">Youth League 🏆</div>
                 <div className="home-card-sub">Revivir los 11 partidos de la temporada campeona</div>
               </div>
             </div>
 
-            {teamBdays.length > 0 && (
+            {alTeamBdays.length > 0 && (
               <>
                 <div className="home-section-title">Cumpleaños del equipo</div>
                 <div className="home-bdays">
-                  {teamBdays.map(function(item, i){
+                  {alTeamBdays.map(function(item, i){
                     var p = item.player;
                     var displayName = getDisplayName(p);
                     var initials = displayName.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
                     var isToday = item.daysUntil === 0;
                     return (
-                      <div key={i} className={"bday-card" + (isToday ? " today" : "")} onClick={function(){ onGlobalSearchSelect(teamName, p.apodo); }}>
+                      <div key={i} className={"bday-card" + (isToday ? " today" : "")} onClick={function(){ onGlobalSearchSelect(alTeamName, p.apodo); }}>
                         {p.foto ? <img src={p.foto} alt={displayName} className="bday-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} /> : null}
                         <div className="bday-photo-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{initials}</div>
                         <div className="bday-info">
@@ -3931,15 +3931,15 @@
               </>
             )}
 
-            {teamIntl.length > 0 && (
+            {alTeamIntl.length > 0 && (
               <>
                 <div className="home-section-title">Internacionales</div>
                 <div className="home-bdays">
-                  {teamIntl.map(function(p, i){
+                  {alTeamIntl.map(function(p, i){
                     var displayName = getDisplayName(p);
                     var initials = displayName.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
                     return (
-                      <div key={i} className="bday-card" onClick={function(){ onGlobalSearchSelect(teamName, p.apodo); }}>
+                      <div key={i} className="bday-card" onClick={function(){ onGlobalSearchSelect(alTeamName, p.apodo); }}>
                         {p.foto ? <img src={p.foto} alt={displayName} className="bday-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} /> : null}
                         <div className="bday-photo-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{initials}</div>
                         <div className="bday-info">
