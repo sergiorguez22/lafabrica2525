@@ -3614,6 +3614,195 @@
       );
     }
 
+    /* ===== PIZARRA TÁCTICA ===== */
+    function PizarraView({ teamName }) {
+      const team = canteraData[teamName];
+      const roster = team ? team.jugadores : [];
+      const fieldRef = React.useRef(null);
+      const [chips, setChips] = useState([]);
+      const [rivalColor, setRivalColor] = useState("#dc2626");
+      const [snapshots, setSnapshots] = useState(function(){
+        try { return JSON.parse(localStorage.getItem("piz_snapshots") || "[]"); } catch(e){ return []; }
+      });
+      const dragRef = React.useRef(null);
+      const [rivalCount, setRivalCount] = useState(0);
+
+      function nextId() { return Date.now() + Math.random().toString(36).slice(2, 6); }
+
+      function addMadrid(player) {
+        var label = player.dorsal ? String(player.dorsal) : (player.apodo || '').slice(0, 2).toUpperCase();
+        var name = getDisplayName(player);
+        // Posición inicial: si ya hay chips, distribuir; si no, centro
+        var x = 50 + (chips.length * 5) % 30 - 15;
+        var y = 50 + (chips.length * 7) % 30 - 15;
+        setChips(function(prev){ return prev.concat([{ id: nextId(), team: 'madrid', label: label, name: name, x: x, y: y, photo: player.foto || null }]); });
+      }
+      function addRival() {
+        var n = rivalCount + 1;
+        setRivalCount(n);
+        setChips(function(prev){ return prev.concat([{ id: nextId(), team: 'rival', label: String(n), name: 'Rival ' + n, x: 50 + (n * 6) % 40 - 20, y: 70 + (n * 4) % 20 - 10, photo: null }]); });
+      }
+      function clearAll() {
+        if (confirm('¿Limpiar campo?')) { setChips([]); setRivalCount(0); }
+      }
+      function loadElevenInicial() {
+        // Pre-llena con 11 jugadores de la plantilla en formación 4-3-3
+        var slots = [
+          { x:50, y:90 }, { x:88, y:68 }, { x:62, y:74 }, { x:38, y:74 }, { x:12, y:68 },
+          { x:50, y:55 }, { x:25, y:40 }, { x:75, y:40 },
+          { x:85, y:22 }, { x:50, y:16 }, { x:15, y:22 }
+        ];
+        var nuevos = [];
+        for (var i = 0; i < Math.min(11, roster.length); i++) {
+          var p = roster[i];
+          var label = p.dorsal ? String(p.dorsal) : (p.apodo || '').slice(0, 2).toUpperCase();
+          nuevos.push({ id: nextId(), team:'madrid', label: label, name: getDisplayName(p), x: slots[i].x, y: slots[i].y, photo: p.foto || null });
+        }
+        setChips(nuevos);
+      }
+
+      // Drag handlers
+      function onPointerDown(e, chipId) {
+        e.preventDefault();
+        var rect = fieldRef.current.getBoundingClientRect();
+        dragRef.current = { id: chipId, rect: rect };
+        try { e.target.setPointerCapture(e.pointerId); } catch(err){}
+      }
+      function onPointerMove(e) {
+        var d = dragRef.current; if (!d) return;
+        var rect = d.rect;
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+        x = Math.max(2, Math.min(98, x));
+        y = Math.max(2, Math.min(98, y));
+        setChips(function(prev){
+          return prev.map(function(c){ return c.id === d.id ? Object.assign({}, c, { x: x, y: y }) : c; });
+        });
+      }
+      function onPointerUp() { dragRef.current = null; }
+
+      function deleteChip(id) {
+        setChips(function(prev){ return prev.filter(function(c){ return c.id !== id; }); });
+      }
+
+      function saveSnapshot() {
+        if (typeof window.html2canvas === 'undefined') { alert('Esperando librería de exportación, vuelve a probar en 2s.'); return; }
+        var node = fieldRef.current;
+        if (!node) return;
+        window.html2canvas(node, { backgroundColor: null, useCORS: true, scale: 2, logging: false }).then(function(canvas){
+          var dataUrl = canvas.toDataURL('image/png');
+          var snap = { id: nextId(), dataUrl: dataUrl, name: 'Posición ' + (snapshots.length + 1), at: new Date().toISOString() };
+          var next = snapshots.concat([snap]);
+          setSnapshots(next);
+          try { localStorage.setItem('piz_snapshots', JSON.stringify(next)); } catch(e){ /* may fail si demasiado grande */ }
+        });
+      }
+      function downloadSnapshot(s) {
+        var a = document.createElement('a');
+        a.href = s.dataUrl;
+        a.download = (s.name || 'pizarra').replace(/[^a-zA-Z0-9_-]/g,'_') + '.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      }
+      function deleteSnapshot(id) {
+        var next = snapshots.filter(function(s){ return s.id !== id; });
+        setSnapshots(next);
+        try { localStorage.setItem('piz_snapshots', JSON.stringify(next)); } catch(e){}
+      }
+      function downloadAll() {
+        snapshots.forEach(function(s, i){ setTimeout(function(){ downloadSnapshot(s); }, i * 200); });
+      }
+      function clearAllSnapshots() {
+        if (confirm('¿Borrar todas las instantáneas?')) {
+          setSnapshots([]);
+          try { localStorage.removeItem('piz_snapshots'); } catch(e){}
+        }
+      }
+      function renameSnapshot(id, newName) {
+        var next = snapshots.map(function(s){ return s.id === id ? Object.assign({}, s, { name: newName }) : s; });
+        setSnapshots(next);
+        try { localStorage.setItem('piz_snapshots', JSON.stringify(next)); } catch(e){}
+      }
+
+      var addedIds = chips.filter(function(c){return c.team==='madrid';}).map(function(c){ return c.name; });
+
+      return (
+        <div className="piz-wrap">
+          <div className="piz-toolbar">
+            <button className="piz-btn primary" onClick={loadElevenInicial}>Cargar 11 inicial</button>
+            <button className="piz-btn" onClick={addRival}>+ Rival</button>
+            <span className="piz-toolbar-label" style={{marginLeft:'8px'}}>Color rival:</span>
+            <input type="color" className="piz-color-input" value={rivalColor} onChange={function(e){ setRivalColor(e.target.value); }} />
+            <button className="piz-btn" onClick={clearAll} style={{marginLeft:'auto'}}>Limpiar campo</button>
+            <button className="piz-btn primary" onClick={saveSnapshot}>📸 Guardar instantánea</button>
+          </div>
+
+          <div className="piz-field-wrap">
+            <div ref={fieldRef} className="piz-field" onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerLeave={onPointerUp}>
+              <div className="field-lines">
+                <div className="field-center-line"></div>
+                <div className="field-center-circle"></div>
+                <div className="field-penalty-top"></div>
+                <div className="field-penalty-bottom"></div>
+                <div className="field-goal-top"></div>
+                <div className="field-goal-bottom"></div>
+              </div>
+              {chips.map(function(c){
+                var bg = c.team === 'rival' ? rivalColor : '#1a56db';
+                return (
+                  <div key={c.id} className={"piz-chip " + c.team} style={{left: c.x + '%', top: c.y + '%', background: bg, overflow: c.photo ? 'hidden' : 'visible'}} onPointerDown={function(e){ onPointerDown(e, c.id); }} onDoubleClick={function(){ deleteChip(c.id); }} title={c.name + ' (doble clic para borrar)'}>
+                    {c.photo ? (
+                      <img src={c.photo} alt={c.name} style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 14%',borderRadius:'50%'}} draggable="false" />
+                    ) : c.label}
+                    <div className="piz-chip-label">{c.name}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="piz-roster">
+            {roster.map(function(p, i){
+              var added = addedIds.indexOf(getDisplayName(p)) >= 0;
+              return (
+                <div key={i} className={"piz-roster-chip" + (added ? " added" : "")} onClick={function(){ if (!added) addMadrid(p); }}>
+                  <div className="piz-roster-mini">{p.dorsal || (p.apodo||'').slice(0,2).toUpperCase()}</div>
+                  <span>{getDisplayName(p)}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {snapshots.length > 0 && (
+            <div className="piz-snapshots">
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'8px'}}>
+                <h3 style={{margin:0,fontSize:'14px',fontWeight:600,color:'var(--text)'}}>Instantáneas guardadas ({snapshots.length})</h3>
+                <div style={{display:'flex',gap:'6px'}}>
+                  <button className="piz-snap-btn" onClick={downloadAll}>↓ Descargar todas</button>
+                  <button className="piz-snap-btn danger" onClick={clearAllSnapshots}>Borrar todas</button>
+                </div>
+              </div>
+              <div className="piz-snap-grid">
+                {snapshots.map(function(s, idx){
+                  return (
+                    <div key={s.id} className="piz-snap">
+                      <img src={s.dataUrl} alt={s.name} onClick={function(){ downloadSnapshot(s); }} title="Click para descargar" />
+                      <div className="piz-snap-label">
+                        <input type="text" value={s.name} onChange={function(e){ renameSnapshot(s.id, e.target.value); }} style={{flex:1,minWidth:0,padding:'2px 6px',border:'1px solid var(--border-light)',borderRadius:'4px',fontSize:'11px'}} />
+                        <div className="piz-snap-actions">
+                          <button className="piz-snap-btn" onClick={function(){ downloadSnapshot(s); }}>↓</button>
+                          <button className="piz-snap-btn danger" onClick={function(){ deleteSnapshot(s.id); }}>×</button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     /* ===== HOME / MENÚ ===== */
     function HomeView({ allPlayers, promociones, upcomingBirthdays, onSelectTeam, onShowNews, onShowCaptacion, onShowPromociones, onGlobalSearchSelect, user, calendario }) {
       // ===== HOME PERSONALIZADO PARA ÁLVARO LÓPEZ (entrenador Juvenil A) =====
@@ -5130,6 +5319,9 @@
                     Youth League
                   </button>
                 )}
+                {selectedTeam === "Juvenil A" && (user === "AlvaroLopez" || user === "SergioRguez") && (
+                  <button className={`view-btn ${view === 'pizarra' ? 'active' : ''}`} onClick={() => setView('pizarra')}>Pizarra</button>
+                )}
               </div>
             </div>
 
@@ -5391,6 +5583,10 @@
 
             {view === 'youth' && selectedTeam === "Juvenil A" && (
               <CupView allPlayers={allPlayers} cupData={youthLeague} rmLabel="Real Madrid" />
+            )}
+
+            {view === 'pizarra' && selectedTeam === "Juvenil A" && (user === "AlvaroLopez" || user === "SergioRguez") && (
+              <PizarraView teamName="Juvenil A" />
             )}
 
             </>
