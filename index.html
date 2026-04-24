@@ -697,7 +697,7 @@
     .piz-chip-circle { border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; box-shadow:0 2px 6px rgba(0,0,0,0.4); overflow:hidden; }
     .piz-chip.rival .piz-chip-circle { width:38px; height:38px; font-size:13px; border:2px solid white; }
     .piz-chip.madrid .piz-chip-circle { width:54px; height:54px; font-size:14px; border:2px solid #1a56db; background:#1a56db; }
-    .piz-chip-name { display:inline-block; background:var(--accent); color:white; font-size:10px; font-weight:600; padding:3px 9px; border-radius:12px; margin-top:5px; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.35); line-height:1.25; }
+    .piz-chip-name { display:inline-block; background:#1a56db; color:white; font-size:10px; font-weight:600; padding:3px 9px; border-radius:6px; margin-top:5px; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.35); line-height:1.25; }
     .piz-chip-dorsal { position:absolute; top:-4px; left:-4px; width:20px; height:20px; border-radius:50%; background:#ffffff; border:2px solid #1a56db; color:#1a56db; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(0,0,0,0.25); z-index:1; line-height:1; }
     .piz-snapshots { margin-top:18px; }
     .piz-snap-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:10px; margin-top:10px; }
@@ -3635,8 +3635,119 @@
       const [pizColor, setPizColor] = useState('#0f172a');
       const [shapes, setShapes] = useState([]);
       const [drawing, setDrawing] = useState(null);
+      // Grabación de movimientos
+      const [recording, setRecording] = useState(false);
+      const [frames, setFrames] = useState([]);
+      const recStartRef = React.useRef(0);
+      const lastFrameRef = React.useRef(0);
+      const [playing, setPlaying] = useState(false);
+      const [playFrameIdx, setPlayFrameIdx] = useState(0);
+      const playTimerRef = React.useRef(null);
+      const [savedClips, setSavedClips] = useState(function(){
+        try { return JSON.parse(localStorage.getItem("piz_clips") || "[]"); } catch(e){ return []; }
+      });
 
       function nextId() { return Date.now() + Math.random().toString(36).slice(2, 6); }
+
+      // Captura un frame con el estado actual (chips + shapes)
+      function pushFrame() {
+        if (!recording) return;
+        var t = Date.now() - recStartRef.current;
+        if (t - lastFrameRef.current < 60) return; // throttle ~16fps
+        lastFrameRef.current = t;
+        var snap = { time: t, chips: chips.map(function(c){ return { id: c.id, x: c.x, y: c.y }; }), shapes: shapes.slice() };
+        setFrames(function(prev){ return prev.concat([snap]); });
+      }
+      function startRecording() {
+        if (chips.length === 0) { alert('Añade fichas al campo antes de grabar.'); return; }
+        recStartRef.current = Date.now();
+        lastFrameRef.current = 0;
+        setFrames([{ time: 0, chips: chips.map(function(c){ return { id: c.id, x: c.x, y: c.y }; }), shapes: shapes.slice() }]);
+        setRecording(true);
+        setPlaying(false);
+      }
+      function stopRecording() {
+        // Captura el frame final
+        var t = Date.now() - recStartRef.current;
+        var snap = { time: t, chips: chips.map(function(c){ return { id: c.id, x: c.x, y: c.y }; }), shapes: shapes.slice() };
+        setFrames(function(prev){ return prev.concat([snap]); });
+        setRecording(false);
+      }
+      function playClip() {
+        if (frames.length < 2) { alert('No hay nada grabado (graba al menos un movimiento).'); return; }
+        setPlaying(true);
+        setPlayFrameIdx(0);
+        applyFrame(frames[0]);
+        var startT = Date.now();
+        var firstT = frames[0].time;
+        playTimerRef.current = setInterval(function(){
+          var elapsed = Date.now() - startT + firstT;
+          var idx = 0;
+          for (var i = 0; i < frames.length; i++) {
+            if (frames[i].time <= elapsed) idx = i; else break;
+          }
+          if (idx >= frames.length - 1) {
+            applyFrame(frames[frames.length - 1]);
+            stopPlayback();
+          } else {
+            // Interpola entre frames idx e idx+1
+            var f1 = frames[idx], f2 = frames[idx + 1];
+            var span = f2.time - f1.time;
+            var prog = span > 0 ? (elapsed - f1.time) / span : 1;
+            applyFrameInterp(f1, f2, prog);
+            setPlayFrameIdx(idx);
+          }
+        }, 16);
+      }
+      function stopPlayback() {
+        if (playTimerRef.current) { clearInterval(playTimerRef.current); playTimerRef.current = null; }
+        setPlaying(false);
+      }
+      function applyFrame(f) {
+        setChips(function(prev){
+          return prev.map(function(c){
+            var fc = f.chips.find(function(x){ return x.id === c.id; });
+            return fc ? Object.assign({}, c, { x: fc.x, y: fc.y }) : c;
+          });
+        });
+        setShapes(f.shapes || []);
+      }
+      function applyFrameInterp(f1, f2, prog) {
+        setChips(function(prev){
+          return prev.map(function(c){
+            var c1 = f1.chips.find(function(x){ return x.id === c.id; });
+            var c2 = f2.chips.find(function(x){ return x.id === c.id; });
+            if (!c1 || !c2) return c;
+            return Object.assign({}, c, { x: c1.x + (c2.x - c1.x) * prog, y: c1.y + (c2.y - c1.y) * prog });
+          });
+        });
+        setShapes(f2.shapes || f1.shapes || []);
+      }
+      function clearFrames() {
+        if (recording) return;
+        if (frames.length > 0 && !confirm('¿Descartar grabación actual?')) return;
+        setFrames([]);
+        setPlayFrameIdx(0);
+      }
+      function saveClip() {
+        if (frames.length < 2) { alert('Nada que guardar.'); return; }
+        var name = prompt('Nombre del clip táctico:', 'Jugada ' + (savedClips.length + 1));
+        if (!name) return;
+        var clip = { id: nextId(), name: name, frames: frames, at: new Date().toISOString() };
+        var next = savedClips.concat([clip]);
+        setSavedClips(next);
+        try { localStorage.setItem('piz_clips', JSON.stringify(next)); } catch(e){ alert('Demasiado grande para localStorage. Reduce duración.'); }
+      }
+      function loadClip(clip) {
+        setFrames(clip.frames);
+        if (clip.frames.length > 0) applyFrame(clip.frames[0]);
+        alert('Clip cargado. Pulsa "Reproducir" para verlo.');
+      }
+      function deleteClip(id) {
+        var next = savedClips.filter(function(c){ return c.id !== id; });
+        setSavedClips(next);
+        try { localStorage.setItem('piz_clips', JSON.stringify(next)); } catch(e){}
+      }
 
       function addMadrid(player) {
         var initials = (player.apodo || '').slice(0, 2).toUpperCase();
@@ -3670,9 +3781,21 @@
         setChips(nuevos);
       }
 
+      // Captura frames automáticamente cuando se mueven chips/shapes durante grabación
+      useEffect(function(){
+        if (!recording) return;
+        var t = Date.now() - recStartRef.current;
+        if (t - lastFrameRef.current < 50) return;
+        lastFrameRef.current = t;
+        setFrames(function(prev){
+          return prev.concat([{ time: t, chips: chips.map(function(c){ return { id: c.id, x: c.x, y: c.y }; }), shapes: shapes.slice() }]);
+        });
+      }, [chips, shapes]);
+
       // Drag handlers chips
       function onPointerDown(e, chipId) {
         if (pizTool !== 'move') return; // si dibujando, no movemos chips
+        if (playing) return; // no mover durante reproducción
         e.preventDefault();
         e.stopPropagation();
         var rect = fieldRef.current.getBoundingClientRect();
@@ -3808,6 +3931,28 @@
             <button className="piz-btn primary" onClick={saveSnapshot}>📸 Guardar instantánea</button>
           </div>
 
+          <div className="piz-toolbar" style={{background: recording ? '#fee2e2' : 'var(--surface)', borderColor: recording ? '#dc2626' : 'var(--border-light)'}}>
+            <span className="piz-toolbar-label" style={{color: recording ? '#991b1b' : 'inherit'}}>{recording ? '🔴 GRABANDO ' + (Math.round((Date.now() - recStartRef.current)/100)/10) + 's' : 'Vídeo táctico:'}</span>
+            {!recording && !playing && (
+              <button className="piz-btn primary" onClick={startRecording} title="Grabar movimientos">⏺ Grabar</button>
+            )}
+            {recording && (
+              <button className="piz-btn" style={{background:'#dc2626',color:'white',borderColor:'#dc2626'}} onClick={stopRecording}>⏹ Stop</button>
+            )}
+            {!recording && frames.length > 1 && !playing && (
+              <button className="piz-btn primary" onClick={playClip}>▶ Reproducir ({frames.length} frames)</button>
+            )}
+            {playing && (
+              <button className="piz-btn" style={{background:'#dc2626',color:'white',borderColor:'#dc2626'}} onClick={stopPlayback}>⏸ Pausa</button>
+            )}
+            {!recording && !playing && frames.length > 1 && (
+              <>
+                <button className="piz-btn" onClick={saveClip}>💾 Guardar clip</button>
+                <button className="piz-btn" onClick={clearFrames}>Descartar</button>
+              </>
+            )}
+          </div>
+
           <div className="piz-toolbar">
             <span className="piz-toolbar-label">Dibujo:</span>
             <button className={"piz-btn" + (pizTool === 'move' ? ' primary' : '')} onClick={function(){ setPizTool('move'); }} title="Mover fichas">✥ Mover</button>
@@ -3881,6 +4026,24 @@
               );
             })}
           </div>
+
+          {savedClips.length > 0 && (
+            <div className="piz-snapshots" style={{marginBottom:'14px'}}>
+              <h3 style={{margin:'0 0 8px 0',fontSize:'14px',fontWeight:600,color:'var(--text)'}}>Clips tácticos guardados ({savedClips.length})</h3>
+              <div style={{display:'flex',flexWrap:'wrap',gap:'8px'}}>
+                {savedClips.map(function(clip){
+                  return (
+                    <div key={clip.id} style={{display:'flex',alignItems:'center',gap:'8px',padding:'8px 12px',background:'var(--surface)',border:'1px solid var(--border-light)',borderRadius:'6px'}}>
+                      <span style={{fontSize:'13px',fontWeight:500}}>▶ {clip.name}</span>
+                      <span style={{fontSize:'10.5px',color:'var(--text-3)'}}>{clip.frames.length}f</span>
+                      <button className="piz-snap-btn" onClick={function(){ loadClip(clip); }}>Cargar</button>
+                      <button className="piz-snap-btn danger" onClick={function(){ if(confirm('¿Borrar clip?')) deleteClip(clip.id); }}>×</button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {snapshots.length > 0 && (
             <div className="piz-snapshots">
