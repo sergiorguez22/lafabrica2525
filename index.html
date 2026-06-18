@@ -811,7 +811,7 @@
           // Transform and execute app code
           var source = document.getElementById('app-source').textContent;
           try {
-            var transformed = Babel.transform(source, { presets: ['react'] }).code;
+            var transformed = Babel.transform(source, { presets: [['react', { runtime: 'classic' }]] }).code;
             var script = document.createElement('script');
             script.textContent = transformed;
             document.body.appendChild(script);
