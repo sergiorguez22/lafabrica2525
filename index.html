@@ -1307,6 +1307,41 @@
     const f7Teams = ["Alevín B", "Alevín C", "Benjamín A", "Benjamín B", "Prebenjamín A", "Prebenjamín B", "Debutante"];
     /* ===== PROYECCIONES CONFIG ===== */
     const TEAM_HIERARCHY = ["Primer Equipo", "Castilla", "Real Madrid C", "Juvenil A", "Juvenil B", "Juvenil C", "Cadete A", "Cadete B", "Infantil A", "Infantil B", "Alevín A", "Alevín B", "Alevín C", "Benjamín A", "Benjamín B", "Prebenjamín A", "Prebenjamín B", "Debutante"];
+    /* ===== BAJAS 25-26 (jugadores que ya no aparecen en ninguna plantilla oficial del RM) ===== */
+    const bajas2526 = [
+      { equipoOrigen: "Castilla", apodo: "Fran González", nombre: "Francisco Javier González Pérez", posicion: "Portero", posicionDetalle: null, fechaNacimiento: "24/06/2005", lugarNacimiento: "León", origen: "Cultural Leonesa (2022)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/3kibouup3gxwnnxp3vhz83af7/players/francisco-javier-gonzalez-perez/FRAN_GONZALEZ_550x650.jpg", perfilRM: "castilla/francisco-javier-gonzalez-perez", destino: "Sevilla FC", tipo: "Venta", nota: null },
+      { equipoOrigen: "Castilla", apodo: "Súnico", nombre: "Guillermo Súnico Alonso", posicion: "Portero", posicionDetalle: null, fechaNacimiento: "09/01/2004", lugarNacimiento: "Las Rozas (Madrid)", origen: "Los Jarales (2011)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/3kibouup3gxwnnxp3vhz83af7/players/guillermo-sunico-alonso/GUILLERMO_SUNICO_380x501.jpg", perfilRM: "castilla/guillermo-sunico-alonso", destino: "CD Numancia", tipo: "Libre", nota: null },
+      { equipoOrigen: "Castilla", apodo: "Valdepeñas", nombre: "Víctor Valdepeñas Talavera", posicion: "Defensa", posicionDetalle: null, fechaNacimiento: "20/10/2006", lugarNacimiento: "Madrid", origen: "Rayo Vallecano (2018)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/3kibouup3gxwnnxp3vhz83af7/players/victor-valdepenas-talavera/VICTOR_VALDEPE%C3%91AS_380x501.jpg", perfilRM: "castilla/victor-valdepenas-talavera", destino: "ACF Fiorentina (ITA)", tipo: "Venta", nota: null },
+      { equipoOrigen: "Castilla", apodo: "Palacios", nombre: "César Palacios Pérez", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "11/11/2004", lugarNacimiento: "Soria", origen: "CD Numancia", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/3kibouup3gxwnnxp3vhz83af7/players/cesar-palacios-perez/CESAR_PALACIOS_550x650.jpg", perfilRM: "castilla/cesar-palacios-perez", destino: "Fulham FC (ING)", tipo: "Venta", nota: null },
+      { equipoOrigen: "Castilla", apodo: "Bruno", nombre: "Bruno Iglesias Lois", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "01/05/2003", lugarNacimiento: "Salamanca", origen: "Santa Marta (2008)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/3kibouup3gxwnnxp3vhz83af7/players/bruno-iglesias-lois/BRUNO_IGLESIAS_380x501.jpg", perfilRM: "castilla/bruno-iglesias-lois", destino: "Fútbol ucraniano", tipo: "Libre", nota: "Club sin confirmar" },
+      { equipoOrigen: "Castilla", apodo: "Adrián Arnu", nombre: "Adrián Arnuncio Baquerín", posicion: "Delantero", posicionDetalle: null, fechaNacimiento: "12/05/2007", lugarNacimiento: "Valladolid", origen: "Real Valladolid", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/4ld9hi9ix04aaj8hf9aam8hbo/players/adrian-arnuncio-baquerin/fotos/ARNAU_380x501_FONDO_BLANCO.jpg", perfilRM: "castilla/adrian-arnuncio-baquerin", destino: "Real Valladolid", tipo: "Fin de cesión", nota: "Regresa a su club" },
+      { equipoOrigen: "Real Madrid C", apodo: "Hugo Mantecón", nombre: "Hugo Mantecón Gil", posicion: "Portero", posicionDetalle: null, fechaNacimiento: "28/01/2005", lugarNacimiento: "Pinto (Madrid)", origen: "Rayo Majadahonda (2024)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/4ld9hi9ix04aaj8hf9aam8hbo/jugadores-antiguos/hugo-mantecon-gil/HUGO_MANTECON_550x650.png", perfilRM: null, destino: "CD Toledo", tipo: "Libre", nota: null },
+      { equipoOrigen: "Real Madrid C", apodo: "A. Moya", nombre: "Alejandro Moya Grediaga", posicion: "Defensa", posicionDetalle: null, fechaNacimiento: "04/08/2005", lugarNacimiento: "Guadalajara", origen: "Levante UD (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEJANDRO_MOYA_550x650?$Desktop$&fit=wrap&wid=420", perfilRM: null, destino: "Atlético Levante UD", tipo: "Libre", nota: null },
+      { equipoOrigen: "Real Madrid C", apodo: "Óscar Mesa", nombre: "Óscar Mesa Pérez", posicion: "Defensa", posicionDetalle: "Lateral izquierdo", fechaNacimiento: "03/07/2006", lugarNacimiento: "Santa Cruz de Tenerife", origen: "Tenerife (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/OSCAR_MESA_550x650-1?$Desktop$&fit=wrap&wid=420", perfilRM: null, destino: "CF Rayo Majadahonda", tipo: "Cesión", nota: null },
+      { equipoOrigen: "Real Madrid C", apodo: "Eric Gómez", nombre: "Eric Gómez Alcon", posicion: "Defensa", posicionDetalle: null, fechaNacimiento: "24/02/2004", lugarNacimiento: "Alcorcón (Madrid)", origen: "Estudiantes (2010)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ERIC_GOMEZ_550x650?$Desktop$&fit=wrap&wid=420", perfilRM: null, destino: "Zamora CF", tipo: "Venta", nota: null },
+      { equipoOrigen: "Real Madrid C", apodo: "Joan", nombre: "Joan Mascaró Amer", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "26/08/2005", lugarNacimiento: "Manacor", origen: "Manacor (2019)", foto: "https://assets.realmadrid.com/is/image/realmadrid/JOAN_MASCARO_550x650?$Desktop$&fit=wrap&wid=420", perfilRM: null, destino: "CE Europa", tipo: "Libre", nota: null },
+      { equipoOrigen: "Real Madrid C", apodo: "Enrique", nombre: "Enrique Herrero García", posicion: "Delantero", posicionDetalle: null, fechaNacimiento: "28/01/2005", lugarNacimiento: "Lorqui (Murcia)", origen: "Navalcarnero (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ENRIQUE_HERRERO_550x650?$Desktop$&fit=wrap&wid=288&hei=384", perfilRM: "realmadrid-c/enrique-herrero-garcia", destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Real Madrid C", apodo: "Iker Gil", nombre: "Iker Gil López", posicion: "Delantero", posicionDetalle: null, fechaNacimiento: "15/03/2005", lugarNacimiento: "Zaragoza", origen: "La Amistad (2013)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/4ld9hi9ix04aaj8hf9aam8hbo/players/antiguos-rmc/iker-gil/IKER_GIL_550x650.png", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Juvenil A", apodo: "Javi Mena", nombre: "Javier Mena Cabero", posicion: "Defensa", posicionDetalle: "Lateral derecho", fechaNacimiento: "20/04/2007", lugarNacimiento: "Toledo", origen: "Getafe (2023)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/94fi9vfdd9mt8loa66a6e31l3/players/javier-mena-cabero/assets/JAVIER_MENA_1VC5039_550x650.jpg", perfilRM: null, destino: "CD Toledo", tipo: "Cesión", nota: "Renovó con RM; sigue siendo del club" },
+      { equipoOrigen: "Juvenil A", apodo: "Bruno", nombre: "Bruno Galassi", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "19/04/2007", lugarNacimiento: "Argentina", origen: "Getafe (2023)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/94fi9vfdd9mt8loa66a6e31l3/players/bruno-galassi/assets/BRUNO%20GALASSI_DB10261_380x501%20%E2%80%93%201.png", perfilRM: null, destino: "SS Lazio (ITA)", tipo: "Venta", nota: null },
+      { equipoOrigen: "Juvenil C", apodo: "Hugo", nombre: "Hugo Sarmiento Albillo", posicion: "Defensa", posicionDetalle: null, fechaNacimiento: "14/07/2009", lugarNacimiento: "Madrid", origen: "Getafe (2019)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-1/players/hugo-sarmiento-albillo/HUGO%20SARMIENTO_550x650.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Juvenil C", apodo: "Mario", nombre: "Mario Bullón López", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "03/05/2009", lugarNacimiento: "Madrid", origen: "Getafe (2024)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/-1/players/mario-bullon-lopez/MARIO%20BULLON_550x650.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Cadete A", apodo: "Fernando", nombre: "Fernando Pereira Villares", posicion: "Defensa", posicionDetalle: null, fechaNacimiento: "11/06/2010", lugarNacimiento: "Madrid", origen: "Rayo Ciudad Alcobendas (2018)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/8ev5dpxklqplrfhr3k4x9qf6f/players/fernando-pereira-villares/FERNANDO_PEREIRA_550x650.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Cadete A", apodo: "Héctor", nombre: "Héctor Montero Rodríguez", posicion: "Delantero", posicionDetalle: null, fechaNacimiento: "13/08/2010", lugarNacimiento: "Madrid", origen: "Levante UD (2024)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/8ev5dpxklqplrfhr3k4x9qf6f/players/hector-montero/HECTOR_MONTERO_550x650.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Cadete B", apodo: "Izan", nombre: "Izan Santamaría Lomínchar", posicion: "Portero", posicionDetalle: null, fechaNacimiento: "24/09/2011", lugarNacimiento: "Toledo", origen: "Sporting Hortaleza (2022)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/7ebeusy35c7b0ok792vbut016/players/izan-santamaria/assets/Carita-IZAN%20SANTAMARIA_2526.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Cadete B", apodo: "Alonso", nombre: "Alonso Moreno Lara", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "02/09/2011", lugarNacimiento: "Madrid", origen: "CD Juanín y Diego (2023)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/7ebeusy35c7b0ok792vbut016/players/alonso-moreno-lara/Carita_Alonso_Moreno_25_26.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Cadete B", apodo: "Adrián", nombre: "Adrián Velasco González", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "08/10/2011", lugarNacimiento: "Madrid", origen: "Elche (2024)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/7ebeusy35c7b0ok792vbut016/players/adrian-velasco/assets/Carita-ADRIAN%20VELASCO_2526.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil A", apodo: "Íñigo", nombre: "Íñigo Fresco García", posicion: "Defensa", posicionDetalle: null, fechaNacimiento: "23/11/2012", lugarNacimiento: "Madrid", origen: "Atlético de Madrid (2019)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/z3qd8a45k79g3bqqbloawdg4/players/inigo-fresco-garcia/I%C3%91IGO%20FRESCO_1VC5092_550X650.png", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil A", apodo: "Anderson", nombre: "Anderson Jesus Amador Pérez", posicion: "Defensa", posicionDetalle: null, fechaNacimiento: "16/02/2012", lugarNacimiento: "República Dominicana", origen: "Unión Zona Norte (2021)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/z3qd8a45k79g3bqqbloawdg4/players/anderson-jesus-amador-perez/ANDERSON%20AMADOR_1VC5057_550X650.png", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil A", apodo: "Samuel", nombre: "Samuel Aceves Vidal", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "22/12/2012", lugarNacimiento: "Madrid", origen: "Parquesol (2020)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/z3qd8a45k79g3bqqbloawdg4/players/samuel-aceves-vidal/SAMUEL%20ACEVES_1VC5055_550X650.png", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil A", apodo: "Aleks", nombre: "Aleksandar Chobanov", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "25/09/2012", lugarNacimiento: "Bulgaria", origen: "Osasuna (2023)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/z3qd8a45k79g3bqqbloawdg4/players/aleksandar-chobanov-chobanov/ALEKSANDER%20CHOVANOV_1VC5060_550X650.png", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil A", apodo: "Pablo Maciá", nombre: "Pablo Maciá Mendez", posicion: "Delantero", posicionDetalle: null, fechaNacimiento: "06/02/2012", lugarNacimiento: "Alicante", origen: "Montecarlo (2020)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/z3qd8a45k79g3bqqbloawdg4/players/antiguos/pablo-macia-mendez/PABLO%20MACIA_1VC5073_550X650.png", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil B", apodo: "Alejandro", nombre: "Alejandro Del Pino González", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "20/11/2013", lugarNacimiento: "Madrid", origen: "CD Leganés (2020)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/uyuvojvmv9i4on3euqgaryp6/players/alejandro-del-pino-gonzalez/ALEJANDRO_DEL_PINO_550x650.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil B", apodo: "Adrián", nombre: "Adrián Rodríguez López", posicion: "Centrocampista", posicionDetalle: null, fechaNacimiento: "09/01/2013", lugarNacimiento: "Madrid", origen: "Parquesol (2019)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/uyuvojvmv9i4on3euqgaryp6/players/adrian-rodriguez-lopez/ADRIAN_RODRIGUEZ_550x650.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil B", apodo: "Diego", nombre: "Diego González González", posicion: "Delantero", posicionDetalle: null, fechaNacimiento: "07/02/2013", lugarNacimiento: "Madrid", origen: "Getafe (2021)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/uyuvojvmv9i4on3euqgaryp6/players/diego-gonzalez-gonzalez/DIEGO_GONZALEZ_550x650.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+      { equipoOrigen: "Infantil B", apodo: "Pablo", nombre: "Pablo de la Pedraja Rico", posicion: "Delantero", posicionDetalle: null, fechaNacimiento: "23/12/2013", lugarNacimiento: "Santander", origen: "Colegio San Agustín (2019)", foto: "https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/sports/football/uyuvojvmv9i4on3euqgaryp6/players/antiguos/pablo-de-la-pedraja-rico/PABLO_DE_LA_PEDRAZA_550x650.jpg", perfilRM: null, destino: null, tipo: "Desconocido", nota: null },
+    ];
+
     const PROY_COLORS = {
       "Primer Equipo": { bg: "#fef3c7", text: "#92400e", border: "#f59e0b" },
       "Castilla": { bg: "#dbeafe", text: "#1e40af", border: "#3b82f6" },
@@ -2321,7 +2356,7 @@
     }
 
     /* ===== SIDEBAR COMPONENT ===== */
-    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, showCalendario, onShowCalendario, showProcedencia, onShowProcedencia, showGeneraciones, onShowGeneraciones, showRadar, onShowRadar, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
+    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, showCalendario, onShowCalendario, showProcedencia, onShowProcedencia, showGeneraciones, onShowGeneraciones, showRadar, onShowRadar, showBajas, onShowBajas, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
       const [searchQ, setSearchQ] = useState("");
       const [searchOpen, setSearchOpen] = useState(false);
 
@@ -2458,6 +2493,13 @@
               >
                 <span className="sidebar-dot" style={{background: showGeneraciones ? 'var(--accent)' : '#475569'}}></span>
                 <span>Generaciones</span>
+              </div>
+              <div
+                className={`sidebar-item ${showBajas ? 'active' : ''}`}
+                onClick={() => { onShowBajas(); onClose(); }}
+              >
+                <span className="sidebar-dot" style={{background: showBajas ? 'var(--accent)' : '#475569'}}></span>
+                <span>Bajas 25-26</span>
               </div>
               {user === "AlvaroLopez" && (
                 <div
@@ -4433,6 +4475,8 @@
       const [generacionAnio, setGeneracionAnio] = useState(null);
       const [showAlvaroWelcome, setShowAlvaroWelcome] = useState(false);
       const [showRadar, setShowRadar] = useState(false);
+      const [showBajas, setShowBajas] = useState(false);
+      const [bajasFilter, setBajasFilter] = useState("Todos");
       const [radarRivales, setRadarRivales] = useState(function() {
         try { return JSON.parse(localStorage.getItem("radar_rivales") || "{}"); } catch(e) { return {}; }
       });
@@ -4710,6 +4754,7 @@
         window.location.hash = "Juvenil A";
         setView("youth");
         setShowHome(false);
+        setShowBajas(false);
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
@@ -4830,6 +4875,7 @@
         setShowGeneraciones(false);
         setShowRadar(false);
         setShowHome(false);
+        setShowBajas(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -4848,6 +4894,7 @@
         setShowGeneraciones(false);
         setShowRadar(false);
         setShowHome(false);
+        setShowBajas(false);
         setPendingPlayerApodo(apodo);
       }, []);
 
@@ -4861,6 +4908,7 @@
         setShowGeneraciones(false);
         setShowRadar(false);
         setShowHome(false);
+        setShowBajas(false);
         setView("list");
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -4875,6 +4923,7 @@
         setShowGeneraciones(false);
         setShowRadar(false);
         setShowHome(false);
+        setShowBajas(false);
         loadCaptacion();
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -4884,6 +4933,7 @@
         setShowNews(false);
         setShowCaptacion(false);
         setShowHome(false);
+        setShowBajas(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -4909,6 +4959,7 @@
         setShowGeneraciones(false);
         setShowRadar(false);
         setShowHome(false);
+        setShowBajas(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -4922,6 +4973,7 @@
         setShowProcedencia(false);
         setShowRadar(false);
         setShowHome(false);
+        setShowBajas(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -4935,6 +4987,22 @@
         setShowProcedencia(false);
         setShowGeneraciones(false);
         setShowHome(false);
+        setShowBajas(false);
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
+      }, []);
+
+      const handleShowBajas = useCallback(() => {
+        setShowBajas(true);
+        setShowNews(false);
+        setShowCaptacion(false);
+        setShowPromociones(false);
+        setShowInternacionales(false);
+        setShowCalendario(false);
+        setShowProcedencia(false);
+        setShowGeneraciones(false);
+        setShowRadar(false);
+        setShowHome(false);
+        setView("list");
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -4985,6 +5053,7 @@
         setShowGeneraciones(false);
         setShowRadar(false);
         setShowHome(false);
+        setShowBajas(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -4995,6 +5064,7 @@
         setShowPromociones(false);
         setShowInternacionales(false);
         setShowHome(false);
+        setShowBajas(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -5202,6 +5272,8 @@
             onShowGeneraciones={handleShowGeneraciones}
             showRadar={showRadar}
             onShowRadar={handleShowRadar}
+            showBajas={showBajas}
+            onShowBajas={handleShowBajas}
             allPlayers={allPlayers}
             onGlobalSearchSelect={handleGlobalSearchSelect}
             onGoHome={handleGoHome}
@@ -5215,11 +5287,11 @@
                   <MenuIcon />
                 </button>
                 <div>
-                  <h1 className="team-title">{showHome ? 'Inicio' : showRadar ? 'Radar Rival' : showGeneraciones ? 'Generaciones' : showProcedencia ? 'Procedencia' : showCalendario ? 'Calendario' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : selectedTeam}</h1>
-                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showRadar ? 'Análisis de plantillas rivales próximas del Juvenil A' : showGeneraciones ? (generacionAnio ? `Generación ${generacionAnio} · ${(generacionGrouped && generacionGrouped.total) || 0} jugadores en ${(generacionGrouped && generacionGrouped.teams.length) || 0} equipos` : 'Selecciona un año para ver todos los jugadores nacidos esa temporada') : showProcedencia ? `Ranking de clubes y lugares de origen · ${allPlayers.length} jugadores analizados` : showCalendario ? `${calendario.partidos.length} partidos programados · actualizado ${calendario.actualizado}` : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <h1 className="team-title">{showHome ? 'Inicio' : showRadar ? 'Radar Rival' : showGeneraciones ? 'Generaciones' : showProcedencia ? 'Procedencia' : showCalendario ? 'Calendario' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : showBajas ? 'Bajas 25-26' : selectedTeam}</h1>
+                  <p className="team-category">{showHome ? 'La Fábrica 25/26 · Cantera masculina del Real Madrid' : showRadar ? 'Análisis de plantillas rivales próximas del Juvenil A' : showGeneraciones ? (generacionAnio ? `Generación ${generacionAnio} · ${(generacionGrouped && generacionGrouped.total) || 0} jugadores en ${(generacionGrouped && generacionGrouped.teams.length) || 0} equipos` : 'Selecciona un año para ver todos los jugadores nacidos esa temporada') : showProcedencia ? `Ranking de clubes y lugares de origen · ${allPlayers.length} jugadores analizados` : showCalendario ? `${calendario.partidos.length} partidos programados · actualizado ${calendario.actualizado}` : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : showBajas ? `${bajas2526.length} jugadores que ya no están en la web oficial · seguimiento temporada 26/27` : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
-              {!showHome && !showRadar && !showGeneraciones && !showProcedencia && !showCalendario && !showNews && !showCaptacion && !showPromociones && !showInternacionales && (
+              {!showHome && !showRadar && !showGeneraciones && !showProcedencia && !showCalendario && !showNews && !showCaptacion && !showPromociones && !showInternacionales && !showBajas && (
                 <div className="header-stats">
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--por)'}}>{stats.por}</div><div className="header-stat-label">POR</div></div>
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--def)'}}>{stats.def}</div><div className="header-stat-label">DEF</div></div>
@@ -5639,6 +5711,56 @@
               </div>
             ) : showNews ? (
               <NewsView />
+            ) : showBajas ? (
+              (function(){
+                var tipos = ["Todos","Venta","Cesión","Libre","Fin de cesión","Desconocido"];
+                var tipoColor = { "Venta":"#dc2626","Cesión":"#2563eb","Libre":"#64748b","Fin de cesión":"#7c3aed","Desconocido":"#475569" };
+                var filtered = bajas2526.filter(function(b){ return bajasFilter==="Todos" || b.tipo===bajasFilter; });
+                var groups = {};
+                filtered.forEach(function(b){ (groups[b.equipoOrigen]=groups[b.equipoOrigen]||[]).push(b); });
+                var orderedTeams = TEAM_HIERARCHY.filter(function(t){ return groups[t]; });
+                return (
+                  <div style={{padding:"18px 28px 32px"}}>
+                    <div className="radar-intro">
+                      <strong>Bajas 25-26.</strong> Jugadores de la temporada 25-26 que ya no figuran en ninguna plantilla oficial del Real Madrid (cruce entre nuestra base de datos y la web oficial). Los ascensos al primer equipo/filiales no cuentan como baja. El destino se indica cuando hay fuente fiable; en categorías inferiores muchos quedan como <em>desconocido</em>.
+                    </div>
+                    <div className="cap-tabs" style={{marginTop:"14px",marginBottom:"6px",flexWrap:"wrap"}}>
+                      {tipos.map(function(t){
+                        var n = t==="Todos" ? bajas2526.length : bajas2526.filter(function(b){return b.tipo===t;}).length;
+                        if (t!=="Todos" && n===0) return null;
+                        return <button key={t} className={"cap-tab "+(bajasFilter===t?"active":"")} onClick={function(){ setBajasFilter(t); }}>{t} ({n})</button>;
+                      })}
+                    </div>
+                    {orderedTeams.length===0 ? (
+                      <div className="promo-empty">No hay bajas de este tipo.</div>
+                    ) : orderedTeams.map(function(team){
+                      return (
+                        <div key={team} style={{marginTop:"22px"}}>
+                          <div style={{fontSize:"12.5px",fontWeight:700,letterSpacing:"0.03em",textTransform:"uppercase",color:"var(--accent)",borderBottom:"1px solid rgba(148,163,184,0.18)",paddingBottom:"7px",marginBottom:"13px"}}>{team} <span style={{color:"var(--text-3)",fontWeight:400}}>· {groups[team].length}</span></div>
+                          <div className="promo-grid">
+                            {groups[team].map(function(b,i){
+                              var initials = b.apodo.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+                              var col = tipoColor[b.tipo] || "#475569";
+                              return (
+                                <div key={i} className="promo-card" style={{cursor:"default"}}>
+                                  {b.foto ? <img src={b.foto} alt={b.apodo} className="promo-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} /> : null}
+                                  <div className="promo-photo-fallback" style={{display: b.foto ? 'none' : 'flex', background: getFieldColor(b.posicion)}}>{initials}</div>
+                                  <div className="promo-info">
+                                    <div className="promo-name">{b.apodo}</div>
+                                    <div className="promo-meta">{b.posicion} · {b.fechaNacimiento ? b.fechaNacimiento.split('/')[2] : ''}</div>
+                                    <span className="promo-badge" style={{background:col,color:"#fff"}}>{b.tipo}{b.destino ? " · "+b.destino : ""}</span>
+                                    {b.nota ? <div style={{fontSize:"10.5px",color:"var(--text-3)",marginTop:"4px",lineHeight:1.3}}>{b.nota}</div> : null}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()
             ) : (
             <>
             <div className="toolbar">
