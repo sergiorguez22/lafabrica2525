@@ -764,6 +764,41 @@
 
     /* Crest con sombra sutil */
     .login-crest,.sidebar-crest,.home-crest { filter:drop-shadow(0 2px 8px rgba(0,0,0,0.12)); }
+
+    /* ========== REBRAND AURORA IVY 26/27 ========== */
+    :root {
+      --accent:#1C3B2B;
+      --accent-light:rgba(28,59,43,0.08);
+      --accent-medium:rgba(28,59,43,0.14);
+      --accent-grad:linear-gradient(135deg,#2c5a42 0%,#1C3B2B 60%,#142c20 100%);
+      --pink:#E84D8A; --pink-soft:rgba(232,77,138,0.12);
+      --ivory:#ECE5D8;
+      --bg:#f7f5ef;
+      --border:#e4ddcd;
+      --border-light:#efe9db;
+      --ring:0 0 0 3px rgba(28,59,43,0.16);
+      --sidebar-bg:#1C3B2B;
+      --sidebar-hover:#274d39;
+      --sidebar-text:#b7c3b9;
+      --sidebar-active:#ECE5D8;
+    }
+    /* Pantalla de carga y marca en verde Aurora Ivy */
+    #loading-screen { background:#1C3B2B; }
+    .loader-title { color:#ECE5D8; }
+    .loader-bar { background:#13291e; }
+    .sidebar-header { border-bottom-color:#274d39; }
+    .sidebar-footer { border-top-color:#274d39; }
+    .sidebar-brand, .sidebar-username { color:#ECE5D8; }
+    .sidebar-category { color:#8aa392; }
+    .sidebar-item.active { background:linear-gradient(90deg, rgba(236,229,216,0.18), rgba(236,229,216,0.04)); color:#ECE5D8; border-left-color:var(--pink); }
+    .sidebar-avatar { background:#274d39; color:#ECE5D8; }
+    /* Secundario (rosa): selecciones / internacionales */
+    .intl-badge { background:var(--pink-soft); color:var(--pink); }
+    /* Marfil: chips y conmutadores seleccionables */
+    .view-toggle { background:var(--ivory); }
+    /* Tarjeta destacada (campeón) en verde, manteniendo el dorado del título */
+    .home-card-featured { background:linear-gradient(135deg,#142c20,#1C3B2B); border-color:#274d39; }
+    .home-card-featured .home-card-sub { color:#b7c3b9; }
     </style>
 </head>
 <body>
