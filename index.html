@@ -920,13 +920,41 @@
     .roster-group-count { font-size:11px; font-weight:700; letter-spacing:0; color:var(--text-3); background:var(--ivory); border-radius:999px; padding:2px 8px; }
     .expanded-content { background:#f8f5ee; }
     @media (min-width:769px) {
-      .table-header, .table-row { grid-template-columns:56px minmax(220px,1.7fr) 150px 120px 1fr 1fr 28px; }
+      .table-header, .table-row { grid-template-columns:56px minmax(240px,1.8fr) 130px 1fr 1fr 28px; }
     }
     @media (max-width:768px) {
       .roster-avatar, .roster-avatar-fb { width:34px; height:34px; }
       .table-row { padding:10px 14px; }
       .roster-group { padding:16px 14px 8px; }
     }
+
+    /* ===== PLANTILLA v2: desplegables y posición en letras ===== */
+    .roster-select { position:relative; display:inline-flex; align-items:center; gap:8px; padding:0 34px 0 16px; height:42px; border:1px solid var(--border); border-radius:999px; background:var(--surface); cursor:pointer; transition:border-color .2s, background .2s; }
+    .roster-select::after { content:''; position:absolute; right:15px; top:50%; width:7px; height:7px; border-right:2px solid var(--accent); border-bottom:2px solid var(--accent); transform:translateY(-70%) rotate(45deg); pointer-events:none; }
+    .roster-select:hover { border-color:var(--accent); }
+    .roster-select.on { background:var(--accent); border-color:var(--accent); }
+    .roster-select.on::after { border-color:#ECE5D8; }
+    .roster-select-lbl { font-size:10.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3); }
+    .roster-select.on .roster-select-lbl { color:rgba(236,229,216,.7); }
+    .roster-select select { appearance:none; -webkit-appearance:none; border:none; background:transparent; font:inherit; font-size:13.5px; font-weight:700; color:var(--accent); cursor:pointer; outline:none; padding:0; }
+    .roster-select.on select { color:#ECE5D8; }
+    .roster-select select option { color:var(--text); background:#fff; }
+    .roster-pos { margin-left:9px; font-size:11px; font-weight:800; letter-spacing:.06em; vertical-align:1px; }
+    @media (max-width:768px) {
+      .table-header, .table-row { grid-template-columns:34px 1fr 82px 22px; }
+      .table-header > *:nth-child(3), .table-row > *:nth-child(3) { display:block !important; }
+      .table-header > *:nth-child(6) { display:block !important; }
+      .table-row > .chevron { display:flex !important; }
+      .roster-select { height:38px; padding:0 30px 0 12px; }
+    }
+
+    /* ===== INICIO sin barra superior (como ferrari.com) ===== */
+    .main-content { position:relative; }
+    .top-header.top-header-home { position:absolute; top:0; left:0; right:0; background:transparent !important; border:none !important; box-shadow:none; pointer-events:none; z-index:25; }
+    .top-header-home .header-left > div, .top-header-home .header-stats { display:none !important; }
+    .top-header-home .hamburger { pointer-events:auto; color:#ECE5D8; }
+    .fh-hero { min-height:100vh; padding-top:96px; }
+    @media (max-width:768px) { .fh-hero { min-height:100svh; padding-top:84px; } }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
@@ -1086,6 +1114,12 @@
     }
     function lfLocalUsers() { try { return JSON.parse(localStorage.getItem('lf_custom_users') || '[]'); } catch(e) { return []; } }
     function lfSaveLocalUsers(list) { try { localStorage.setItem('lf_custom_users', JSON.stringify(list)); } catch(e) {} }
+    function posAbbr(p) {
+      var d = (p.posicionDetalle || "").toLowerCase();
+      var map = { "portero":"POR", "lateral derecho":"LD", "central":"DFC", "defensa central":"DFC", "lateral izquierdo":"LI", "carrilero derecho":"CAD", "carrilero izquierdo":"CAI", "pivote":"MCD", "interior defensivo":"MCD", "mediocentro":"MC", "medio":"MC", "interior":"MC", "interior ofensivo":"MCO", "mediapunta":"MP", "extremo derecho":"ED", "extremo izquierdo":"EI", "delantero centro":"DC", "delantero":"DC" };
+      if (map[d]) return map[d];
+      return ({ "Portero":"POR", "Defensa":"DEF", "Centrocampista":"MED", "Delantero":"DEL" })[p.posicion] || "";
+    }
     function lfGenPassword(n) {
       var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%*?';
       var arr = new Uint32Array(n || 12); crypto.getRandomValues(arr);
@@ -3605,7 +3639,7 @@
       const [error, setError] = useState(null);
 
       useEffect(function() {
-        var CACHE_KEY = 'ngc_news_cache_v1';
+        var CACHE_KEY = 'lf_news_cache_v2';
         var CACHE_TTL = 60 * 60 * 1000; // 1h
         var FEED = 'https://www.bernabeudigital.com/rss/?section=4';
         var PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEED);
@@ -3636,7 +3670,15 @@
           }
         } catch(e) {}
 
-        fetch(PROXY)
+        fetch('/api/news')
+          .then(function(r){ if (!r.ok) throw new Error('http'); return r.json(); })
+          .then(function(data){
+            if (!data || !data.items || data.items.length === 0) throw new Error('empty');
+            setItems(data.items);
+            try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), items: data.items })); } catch(e) {}
+            setLoading(false); setError(null);
+          })
+          .catch(function(){ return fetch(PROXY)
           .then(function(r){ if (!r.ok) throw new Error('http'); return r.json(); })
           .then(function(data){
             if (data.status !== 'ok' || !data.items) throw new Error('bad-data');
@@ -3650,7 +3692,7 @@
             setLoading(false);
             // Si no había cache, ya estamos mostrando noticiasData hardcodeado
             if (!localStorage.getItem(CACHE_KEY)) setError('No se pudo actualizar. Mostrando últimas guardadas.');
-          });
+          }); });
       }, []);
 
       return (
@@ -6307,18 +6349,20 @@
                     <SearchIcon />
                     <input className="search-input" type="text" placeholder="Buscar jugador, lugar..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
                   </div>
-                  <div className="filter-btns">
-                    {positions.map(pos => (
-                      <button key={pos} onClick={() => setPositionFilter(pos)} className={`filter-btn ${positionFilter === pos ? 'active' : ''}`}>{pos}</button>
-                    ))}
-                  </div>
+                  <label className={"roster-select" + (positionFilter !== "Todas" ? " on" : "")}>
+                    <span className="roster-select-lbl">Posición</span>
+                    <select value={positionFilter} onChange={function(e){ setPositionFilter(e.target.value); }}>
+                      {positions.map(function(pos){ return <option key={pos} value={pos}>{pos === "Todas" ? "Todas" : pos === "Centrocampista" ? "Centrocampistas" : pos + "s"}</option>; })}
+                    </select>
+                  </label>
                   {yearOptions.length > 1 && (
-                    <div className="filter-btns">
-                      <button onClick={() => setYearFilter("Todos")} className={`filter-btn ${yearFilter === "Todos" ? 'active' : ''}`}>Todos</button>
-                      {yearOptions.map(function(y){
-                        return <button key={y} onClick={function(){ setYearFilter(y); }} className={"filter-btn" + (yearFilter === y ? ' active' : '')}>{y}</button>;
-                      })}
-                    </div>
+                    <label className={"roster-select" + (yearFilter !== "Todos" ? " on" : "")}>
+                      <span className="roster-select-lbl">Año</span>
+                      <select value={yearFilter} onChange={function(e){ setYearFilter(e.target.value); }}>
+                        <option value="Todos">Todos</option>
+                        {yearOptions.map(function(y){ return <option key={y} value={y}>{y}</option>; })}
+                      </select>
+                    </label>
                   )}
                 </div>
 
@@ -6327,7 +6371,6 @@
                     <div className="table-header">
                       <div>#</div>
                       <div>Jugador</div>
-                      <div>Posición</div>
                       <div>Nacimiento</div>
                       <div>Lugar de nacimiento</div>
                       <div>Procedencia</div>
@@ -6353,15 +6396,9 @@
                               {player.foto ? <img className="roster-avatar" src={player.foto} alt="" loading="lazy" onError={function(e){ e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} /> : null}
                               <div className="roster-avatar-fb" style={{display: player.foto ? 'none' : 'flex', background: getFieldColor(player.posicion)}}>{initials}</div>
                               <div style={{minWidth:0}}>
-                                <div className="player-name">{player.apodo}</div>
+                                <div className="player-name">{player.apodo}<span className="roster-pos" style={{color: ps.dot}}>{posAbbr(player)}</span></div>
                                 <div className="player-fullname">{player.nombre}</div>
                               </div>
-                            </div>
-                            <div>
-                              <span className="pos-badge" style={{background:ps.bg, color:ps.text}}>
-                                <span className="pos-dot" style={{background:ps.dot}}></span>
-                                {player.posicionDetalle || (player.posicion === "Centrocampista" ? "Medio" : player.posicion)}
-                              </span>
                             </div>
                             <div className="birth-date">{player.fechaNacimiento || '-'}{age != null && <div className="roster-age">{age} años</div>}</div>
                             <div className="birth-place">{player.lugarNacimiento || '-'}</div>
