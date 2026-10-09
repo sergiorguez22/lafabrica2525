@@ -1071,6 +1071,31 @@
       .fh-eyebrow span { display:block; } .fh-eyebrow .fh-eyebrow-sep { display:none; }
       .fh-lead { margin:24px 0 34px; }
     }
+
+    /* ===== MÓVIL: pestañas deslizables (evitan el zoom-out del iPhone) y plantilla compacta ===== */
+    .main-content { overflow-x:clip; }
+    @media (max-width:768px) {
+      .toolbar { padding:16px 0 0; display:block; }
+      .view-toggle { display:flex; flex-wrap:nowrap; width:max-content; max-width:calc(100% - 32px); margin:0 16px; overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:none; -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity; }
+      .view-toggle::-webkit-scrollbar { display:none; }
+      .view-btn { flex-shrink:0; white-space:nowrap; padding:8px 14px; font-size:13px; scroll-snap-align:start; }
+      .filters { padding:14px 16px 4px; gap:8px; display:grid; grid-template-columns:1fr 1fr; }
+      .filters .search-box { grid-column:1 / -1; max-width:none; width:100%; }
+      .filters .roster-select { width:100%; min-width:0; justify-content:flex-start; }
+      .filters .roster-select select { min-width:0; flex:1; text-overflow:ellipsis; }
+      .table-header, .table-row { grid-template-columns:28px minmax(0,1fr) 76px 14px; gap:8px; }
+      .table-row { padding:10px 12px; }
+      .table-header { padding:12px 12px; }
+      .row-num { font-size:16px; text-align:center; }
+      .roster-player { gap:10px; }
+      .player-name { font-size:14.5px; line-height:1.2; }
+      .roster-pos { margin-left:6px; font-size:10px; white-space:nowrap; }
+      .content-area { padding:12px 12px 28px; }
+      .table-container { border-radius:16px; }
+      .player-fullname { font-size:11.5px; }
+      .birth-date { font-size:12px; }
+      .roster-age { font-size:10.5px; }
+    }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
