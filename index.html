@@ -977,6 +977,34 @@
     .clf-table.nogoals .hm { display:none; }
     .clf-src { font-size:11px; color:var(--text-3); margin-top:10px; }
     @media (max-width:768px) { .clf-table .hm { display:none; } .clf-title { font-size:19px; } .clf-rm-pos { font-size:30px; } }
+
+    /* ===== ESCUDO MARFIL + TRANSICIÓN (estilo ferrari.com) ===== */
+    #loading-screen { background:radial-gradient(900px 520px at 50% 45%, #2b5741 0%, #1C3B2B 60%, #13291e 100%) !important; transition:opacity .6s ease !important; }
+    .loader-crest { width:92px !important; filter:drop-shadow(0 14px 34px rgba(0,0,0,.35)); animation:crestBreath 2.4s ease-in-out infinite; transition:transform .6s cubic-bezier(.2,.7,.2,1), filter .6s ease, opacity .6s ease; }
+    #loading-screen.fade-out .loader-crest { transform:scale(1.35); filter:blur(8px); opacity:0; }
+    .loader-title { color:#ECE5D8 !important; letter-spacing:.32em !important; text-transform:uppercase; font-size:13px !important; }
+    .loader-sub { color:rgba(236,229,216,.5) !important; }
+    .loader-bar { width:160px !important; height:2px !important; background:rgba(236,229,216,.14) !important; }
+    .loader-fill { background:#ECE5D8 !important; }
+    @keyframes crestBreath { 0%,100% { transform:scale(1); opacity:.92; } 50% { transform:scale(1.045); opacity:1; } }
+    .sidebar-crest { filter:drop-shadow(0 2px 6px rgba(0,0,0,.25)) !important; }
+    .fh-hero-inner { animation:none !important; }
+    .fh-crest-wrap { position:relative; width:118px; aspect-ratio:32/43; margin-bottom:30px; animation:crestIn 1.3s cubic-bezier(.2,.7,.2,1) both; }
+    .fh-crest-wrap img { width:100%; height:100%; display:block; filter:drop-shadow(0 16px 36px rgba(0,0,0,.35)); }
+    .fh-crest-wrap::after { content:''; position:absolute; inset:0; pointer-events:none;
+      background:linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 62%); background-size:260% 100%; background-position:160% 0;
+      -webkit-mask:url(crest-ivory.svg) center/contain no-repeat; mask:url(crest-ivory.svg) center/contain no-repeat;
+      animation:crestSheen 1.5s cubic-bezier(.4,0,.2,1) 1s both; }
+    @keyframes crestIn { 0% { opacity:0; transform:scale(1.22); filter:blur(16px); } 100% { opacity:1; transform:none; filter:none; } }
+    @keyframes crestSheen { from { background-position:160% 0; } to { background-position:-70% 0; } }
+    @keyframes fhUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:none; } }
+    .fh-eyebrow { animation:fhUp .8s cubic-bezier(.2,.7,.2,1) .55s both; }
+    .fh-title { animation:fhUp .9s cubic-bezier(.2,.7,.2,1) .7s both; }
+    .fh-lead { animation:fhUp .9s cubic-bezier(.2,.7,.2,1) .9s both; }
+    .fh-ctas { animation:fhUp .9s cubic-bezier(.2,.7,.2,1) 1.05s both; }
+    .fh-stats { animation:fhUp 1s cubic-bezier(.2,.7,.2,1) 1.25s both; }
+    @media (prefers-reduced-motion: reduce) { .fh-crest-wrap, .fh-crest-wrap::after, .fh-eyebrow, .fh-title, .fh-lead, .fh-ctas, .fh-stats, .loader-crest { animation:none !important; } }
+    @media (max-width:768px) { .fh-crest-wrap { width:86px; } }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
@@ -988,7 +1016,7 @@
 
   <!-- ===== LOADING SCREEN ===== -->
   <div id="loading-screen">
-    <img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" alt="" class="loader-crest">
+    <img src="crest-ivory.svg" alt="" class="loader-crest">
     <div class="loader-title">La Fábrica 26/27</div>
     <div class="loader-sub">Cantera Real Madrid</div>
     <div class="loader-bar"><div class="loader-fill" id="loader-fill"></div></div>
@@ -1088,7 +1116,7 @@
           setTimeout(function() {
             var ls = document.getElementById('loading-screen');
             ls.classList.add('fade-out');
-            setTimeout(function() { ls.style.display = 'none'; }, 400);
+            setTimeout(function() { ls.style.display = 'none'; }, 700);
           }, 200);
         })
         .catch(function(err) {
@@ -2667,7 +2695,7 @@
           <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
           <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-header" onClick={function(){ if (onGoHome) { onGoHome(); onClose && onClose(); } }} style={{cursor:'pointer'}} title="Inicio">
-              <img src={CREST_URL} alt="Real Madrid" className="sidebar-crest" />
+              <img src="crest-ivory.svg" alt="Real Madrid" className="sidebar-crest" />
               <div className="sidebar-brand">La Fábrica<span>Temporada 2026/27</span></div>
             </div>
             <div className="global-search-wrap">
@@ -4652,7 +4680,7 @@
         <div className="fh">
           <section className="fh-hero">
             <div className="fh-hero-inner">
-              <img src={CREST_URL} alt="" className="fh-crest" />
+              <div className="fh-crest-wrap"><img src="crest-ivory.svg" alt="Real Madrid" /></div>
               <div className="fh-eyebrow">Cantera masculina · Temporada 2026/27</div>
               <h1 className="fh-title">La Fábrica</h1>
               <p className="fh-lead">De Debutante al Castilla. Todas las plantillas, la trayectoria y el seguimiento de cada jugador de la cantera.</p>
