@@ -1102,6 +1102,25 @@
       .birth-date { font-size:12px; }
       .roster-age { font-size:10.5px; }
     }
+
+    /* ===== Botones del Inicio: píldoras con flecha dibujada y centrada ===== */
+    .fh-cta-circle { font-size:0 !important; line-height:0; }
+    .fh-cta-circle::before { content:''; width:8px; height:8px; border-top:2px solid currentColor; border-right:2px solid currentColor; transform:translateX(-1.5px) rotate(45deg); }
+    .fh-cta-circle-sm::before { width:7px; height:7px; }
+    .fh-ctas { gap:14px; align-items:center; }
+    .fh-cta { height:54px; padding:0 8px 0 28px; gap:18px; border-radius:999px; border:1.5px solid rgba(236,229,216,.45); font-size:12.5px; letter-spacing:.16em; line-height:1; transition:background .25s, border-color .25s, color .25s; }
+    .fh-cta > span:first-child { padding-top:1px; }
+    .fh-cta .fh-cta-circle { width:38px; height:38px; border:none; background:rgba(236,229,216,.14); transform:none; }
+    .fh-cta:hover { border-color:#ECE5D8; }
+    .fh-cta:hover .fh-cta-circle { background:#ECE5D8; color:#1C3B2B; transform:none; }
+    .fh-cta:first-child { background:#ECE5D8; color:#1C3B2B; border-color:#ECE5D8; }
+    .fh-cta:first-child .fh-cta-circle { background:#1C3B2B; color:#ECE5D8; }
+    .fh-cta:first-child:hover { background:#fff; border-color:#fff; }
+    .fh-cta:first-child:hover .fh-cta-circle { background:#1C3B2B; color:#ECE5D8; }
+    @media (max-width:520px) {
+      .fh-ctas { flex-direction:column; width:100%; max-width:320px; }
+      .fh-cta { width:100%; justify-content:space-between; }
+    }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
