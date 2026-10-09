@@ -1136,6 +1136,18 @@
       .fh-lead { margin:clamp(12px, 2vh, 30px) 0 clamp(16px, 2.6vh, 42px); }
       .fh-stats { margin-top:clamp(10px, 2vh, 76px); padding:clamp(10px, 1.6vh, 34px) 0 clamp(10px, 1.6vh, 38px); }
     }
+
+    /* ===== Destacados 26/27 ===== */
+    .fh-feature-next { display:inline-flex; align-items:center; gap:10px; margin-top:16px; align-self:flex-start; font-size:13px; font-weight:600; padding:8px 14px 8px 8px; border-radius:999px; background:rgba(236,229,216,.1); border:1px solid rgba(236,229,216,.18); }
+    .fh-feature-next span { font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; background:#ECE5D8; color:#1C3B2B; border-radius:999px; padding:4px 9px; }
+    .fh-leaders { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+    .fh-leader { display:inline-flex; flex-direction:column; align-items:flex-start; gap:2px; padding:9px 14px; border-radius:14px; border:1px solid rgba(28,59,43,.18); background:rgba(255,255,255,.55); color:var(--accent); font:inherit; cursor:pointer; text-align:left; transition:background .2s, border-color .2s, color .2s; }
+    .fh-leader b { font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:.01em; }
+    .fh-leader span { font-size:11.5px; font-weight:600; color:var(--text-2); }
+    .fh-leader:hover { background:var(--accent); border-color:var(--accent); color:#ECE5D8; }
+    .fh-leader:hover span { color:rgba(236,229,216,.75); }
+    .fh-feature { padding-top:112px; }
+    @media (max-width:768px) { .fh-feature { padding:96px 22px 24px; min-height:0; } .fh-feature-logo { top:24px; left:22px; width:52px; height:52px; } .fh-feature-arrow { top:24px; right:22px; } .fh-feature-title { font-size:26px; } }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
@@ -2272,6 +2284,11 @@
     };
 
     /* ===== CLASIFICACIONES ===== */
+    const YL2627 = {
+      ultimo: "J1: Real Madrid 3-0 Inter",
+      posicion: "5º de 36 en la fase liga",
+      proximo: "Roma - Real Madrid · 14/10 · 14:00"
+    };
     const clasificaciones = {
       "Castilla": {
         liga: "Primera Federación Grupo 2", jornada: 7, fuente: "https://www.besoccer.es/competicion/clasificacion/primera_division_rfef/2027/grupo2",
@@ -4853,23 +4870,40 @@
 
           <div className="fh-body">
             <div className="fh-sec-head">
-              <div className="fh-sec-eyebrow">Palmarés y competiciones</div>
+              <div className="fh-sec-eyebrow">Temporada 2026/27</div>
               <h2 className="fh-sec-title">Destacados</h2>
             </div>
             <div className="fh-feature-grid">
               <div className="fh-feature fh-feature-dark" onClick={function(){ onSelectTeam("Juvenil A"); }}>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/UEFA_Youth_League.svg/250px-UEFA_Youth_League.svg.png" alt="UEFA Youth League" className="fh-feature-logo" />
                 <span className="fh-cta-circle fh-feature-arrow">›</span>
-                <div className="fh-feature-kicker">Juvenil A · 2025/26</div>
-                <div className="fh-feature-title">Campeones de la Youth League</div>
-                <div className="fh-feature-sub">Final frente al Brujas · 4-2 en los penaltis · 20/04/2026</div>
+                <div className="fh-feature-kicker">Juvenil A · Youth League 2026/27</div>
+                <div className="fh-feature-title">Defiende el título</div>
+                <div className="fh-feature-sub">{YL2627.ultimo} · {YL2627.posicion}</div>
+                <div className="fh-feature-next"><span>Próximo</span>{YL2627.proximo}</div>
               </div>
-              <div className="fh-feature fh-feature-ivory" onClick={function(){ onSelectTeam("Castilla"); }}>
-                <span className="fh-cta-circle fh-feature-arrow">›</span>
-                <div className="fh-feature-kicker">Castilla · 2025/26</div>
-                <div className="fh-feature-title">Premier League International Cup</div>
-                <div className="fh-feature-sub">Semifinal frente al Dinamo Zagreb</div>
-              </div>
+              {(function(){
+                var lideres = Object.keys(clasificaciones).map(function(t){
+                  var c = clasificaciones[t]; var rm = (c.equipos || []).filter(function(e){ return e.esRM; })[0];
+                  return rm ? { team: t, pos: rm.pos, pts: rm.pts, pj: rm.pj } : null;
+                }).filter(function(x){ return x && x.pos === 1; });
+                return (
+                  <div className="fh-feature fh-feature-ivory" onClick={function(){ onSelectTeam(lideres.length ? lideres[0].team : "Castilla"); }}>
+                    <span className="fh-cta-circle fh-feature-arrow">›</span>
+                    <div className="fh-feature-kicker">Clasificaciones · 2026/27</div>
+                    <div className="fh-feature-title">{lideres.length ? (lideres.length === 1 ? "Líder de su grupo" : lideres.length + " equipos líderes") : "Clasificaciones"}</div>
+                    {lideres.length ? (
+                      <div className="fh-leaders">
+                        {lideres.map(function(l){
+                          return <button key={l.team} className="fh-leader" onClick={function(e){ e.stopPropagation(); onSelectTeam(l.team); }}><b>{l.team}</b><span>{l.pts} pts · {l.pj} PJ</span></button>;
+                        })}
+                      </div>
+                    ) : (
+                      <div className="fh-feature-sub">Consulta la tabla de cada equipo</div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="fh-sec-head">
