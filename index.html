@@ -7,6 +7,9 @@
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Fábrica 26/27 - Cantera Real Madrid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <style>
     :root {
       --accent: #1a56db;
@@ -717,6 +720,50 @@
       .alvaro-title { font-size:32px; }
       .alvaro-logo { width:120px; }
     }
+    /* ========== VISUAL POLISH 26/27 (capa superior, no estructural) ========== */
+    :root {
+      --shadow: 0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.07);
+      --shadow-lg: 0 2px 6px rgba(16,24,40,0.06), 0 16px 32px -8px rgba(16,24,40,0.14);
+      --shadow-hover: 0 8px 20px -6px rgba(16,24,40,0.14), 0 2px 6px rgba(16,24,40,0.06);
+      --ring: 0 0 0 3px rgba(26,86,219,0.18);
+      --accent-grad: linear-gradient(135deg, #2563eb 0%, #1a56db 55%, #1e40af 100%);
+    }
+    body { font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; letter-spacing:-0.006em; }
+    .team-title,.home-title,.player-card-name,.login-title,.home-card-title { letter-spacing:-0.02em; }
+    .home-stat-value,.header-stat-val,.proc-count,.home-team-count,.birth-date { font-variant-numeric:tabular-nums; }
+
+    /* Header translúcido con blur */
+    .top-header { background:rgba(255,255,255,0.78); backdrop-filter:saturate(180%) blur(12px); -webkit-backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid rgba(17,24,39,0.07); }
+
+    /* Tarjetas: hairline + sombra refinada + elevación al hover */
+    .table-container,.lineup-roster { border:1px solid var(--border-light); box-shadow:var(--shadow); }
+    .home-stat,.home-card,.home-team-card,.promo-card,.proc-row,.cap-card,.info-card { transition:transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s ease, border-color .18s ease; }
+    .home-card:hover,.home-team-card:hover,.promo-card:hover,.proc-row:hover,.cap-card:hover,.home-stat:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); border-color:rgba(26,86,219,0.35); }
+    .home-card-featured:hover { border-color:#334155; }
+
+    /* Fotos con aro/sombra sutil y placeholder con degradado */
+    .player-photo { box-shadow:inset 0 0 0 1px rgba(17,24,39,0.06); background:linear-gradient(160deg,#eef1f6,#e2e6ee); }
+    .promo-photo,.promo-photo-fallback { box-shadow:0 2px 6px rgba(16,24,40,0.10); }
+
+    /* Botones con degradado de acento + micro-interacción */
+    .login-btn,.cap-btn,.informe-btn-primary { background:var(--accent-grad); box-shadow:0 2px 6px rgba(26,86,219,0.28); transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease; }
+    .login-btn:hover,.cap-btn:hover,.informe-btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(26,86,219,0.34); opacity:1; }
+    .login-btn:active,.cap-btn:active,.informe-btn-primary:active { transform:translateY(0); }
+    .view-btn.active { box-shadow:0 1px 2px rgba(16,24,40,0.10), 0 2px 6px rgba(16,24,40,0.06); }
+
+    /* Sidebar: ítems redondeados y activo con degradado */
+    .sidebar-item { border-radius:0 8px 8px 0; margin-right:8px; }
+    .sidebar-item.active { background:linear-gradient(90deg, rgba(26,86,219,0.26), rgba(26,86,219,0.05)); }
+
+    /* Foco accesible */
+    .login-field:focus,.search-input:focus,.cap-input:focus,.cap-select:focus,.informe-textarea:focus { box-shadow:var(--ring); border-color:var(--accent); }
+
+    /* Badges/pills más nítidos y barras con degradado */
+    .pos-badge,.promo-badge,.cap-card-team,.intl-badge { box-shadow:inset 0 0 0 1px rgba(17,24,39,0.04); }
+    .proc-bar-fill { background:var(--accent-grad); }
+
+    /* Crest con sombra sutil */
+    .login-crest,.sidebar-crest,.home-crest { filter:drop-shadow(0 2px 8px rgba(0,0,0,0.12)); }
     </style>
 </head>
 <body>
@@ -1417,25 +1464,13 @@
         { nombre: "Álvaro López", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALVARO_LOPEZ_550x650?$Desktop$&fit=wrap&wid=288&hei=384" },
         { nombre: "Luis Ayllón", rol: "Segundo entrenador", foto: null }
       ],
-      "Juvenil B": [{ nombre: "Marcos Jiménez", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARCOS_JIMENEZ_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Juvenil C": [
-        { nombre: "Nacho Román", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/380x501_FONDO_BLANCO_0000_NACHO-ROMAN---SEGUNDO-ENTRENADOR_JT11408?$Desktop$&fit=wrap&wid=288&hei=384" },
-        { nombre: "David Valentín", rol: "Segundo entrenador", foto: null }
-      ],
+      "Juvenil B": [{ nombre: "Alfonso Berenguer", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Alonso_berenguer?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Juvenil C": [{ nombre: "Santiago Palacios", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Santiago_palacio?$Desktop$&fit=wrap&wid=288&hei=384" }],
       "Cadete A": [{ nombre: "Carlos Cura", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/CARLOS_CURA_550x650?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Cadete B": [
-        { nombre: "Alfonso Berenguer", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/380x501_FONDO_BLANCO_0001_ALFONSO-BERENGUER_DB10335?$Desktop$&fit=wrap&wid=288&hei=384" },
-        { nombre: "Pablo Castro", rol: "Segundo entrenador", foto: null }
-      ],
-      "Infantil A": [{ nombre: "Alberto Madrid", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALBERTO%20MADRID%20INFANTIL%20A_1VC5042_550X650?$Desktop$&fit=wrap&wid=288&hei=384" }],
-      "Infantil B": [
-        { nombre: "Juan Carlos Duque", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/JUAN_CARLOS_DUQUE_550x650-1?$Desktop$&fit=wrap&wid=288&hei=384" },
-        { nombre: "Diego Elcoroiribe", rol: "Segundo entrenador", foto: null }
-      ],
-      "Alevín A": [
-        { nombre: "Mario Madrid", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARIO_MADRID_380x501?$Desktop$&fit=wrap&wid=288&hei=384" },
-        { nombre: "Jerónimo Laín", rol: "Segundo entrenador", foto: null }
-      ],
+      "Cadete B": [{ nombre: "Marcos Merino", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARCOS-MERINO-ENTRENADOR-CADETE-B_HE16603?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Infantil A": [{ nombre: "Émerson Esteve", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/EMERSON-ESTEVE-ENTRENADOR-INFANTIL-A_HE16676?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Infantil B": [{ nombre: "Iván García", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/IVAN-GARCIA-ENTRENADOR-INFANTIL-B_HE16721?$Desktop$&fit=wrap&wid=288&hei=384" }],
+      "Alevín A": [{ nombre: "Alberto Madrid", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALBERTO-MADRID-ENTRENADOR-ALEVIN-A_HE16662?$Desktop$&fit=wrap&wid=288&hei=384" }],
       "Alevín B": [
         { nombre: "Mario Seguido", rol: "Entrenador", foto: "https://assets.realmadrid.com/is/image/realmadrid/Alev%C3%ADn%20B%20%E2%80%93%20Mario%20Seguido_380_501%20%E2%80%93%201?$Desktop$&fit=wrap&wid=288&hei=384" },
         { nombre: "Jorge Ortega", rol: "Segundo entrenador", foto: null }
@@ -2347,7 +2382,7 @@
             <input className="login-field" type="password" placeholder="Contraseña" value={password} onChange={e => { setPassword(e.target.value); setError(""); }} autoComplete="off" />
             <button className="login-btn" type="submit">Acceder</button>
             {error && <p className="login-error">{error}</p>}
-            <p style={{marginTop:'16px', fontSize:'11px', lineHeight:1.45, color:'rgba(255,255,255,0.55)', textAlign:'center', maxWidth:'300px'}}>
+            <p style={{marginTop:'18px', fontSize:'11px', lineHeight:1.5, color:'var(--text-3)', textAlign:'center', maxWidth:'320px', paddingTop:'16px', borderTop:'1px solid var(--border-light)'}}>
               Aplicación privada de uso interno para el seguimiento deportivo del cuerpo técnico. Proyecto personal <strong>no oficial</strong>, sin afiliación, patrocinio ni relación con el Real Madrid C. F. ni con ninguna entidad oficial. No solicita datos bancarios ni personales.
             </p>
           </form>
