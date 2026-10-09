@@ -800,6 +800,138 @@
     /* Tarjeta destacada (campeón) en verde, manteniendo el dorado del título */
     .home-card-featured { background:linear-gradient(135deg,#142c20,#1C3B2B); border-color:#274d39; }
     .home-card-featured .home-card-sub { color:#b7c3b9; }
+
+    /* ===== MENU LATERAL: buscador y puntos en la paleta (sin azules pizarra) ===== */
+    .global-search-wrap { border-bottom-color:#274d39; }
+    .global-search-input { background:rgba(0,0,0,0.18); border-color:rgba(236,229,216,0.14); color:#ECE5D8; border-radius:999px; }
+    .global-search-input::placeholder { color:rgba(236,229,216,0.45); }
+    .global-search-input:focus { border-color:rgba(236,229,216,0.45); }
+    .global-search-icon { color:rgba(236,229,216,0.5); }
+    .global-search-results { background:#13291e; border-color:#274d39; }
+    .global-search-result { border-bottom-color:#1C3B2B; }
+    .global-search-result:hover { background:#274d39; }
+    .global-search-img { background:#274d39; }
+    .global-search-name { color:#ECE5D8; }
+    .global-search-meta, .global-search-empty { color:rgba(236,229,216,0.5); }
+    .sidebar-item:hover { color:#ECE5D8; }
+    .sidebar-brand span, .sidebar-logout { color:rgba(236,229,216,0.5); }
+
+    /* ===== CABECERA EN INICIO: continua con el hero ===== */
+    .top-header.top-header-home { background:#1C3B2B; border-bottom:1px solid rgba(236,229,216,0.08); backdrop-filter:none; -webkit-backdrop-filter:none; }
+    .top-header-home .team-title { color:#ECE5D8; text-transform:uppercase; letter-spacing:0.18em; font-size:13px; font-weight:700; }
+    .top-header-home .team-category { color:rgba(236,229,216,0.55); }
+    .top-header-home .hamburger { color:#ECE5D8; }
+
+    /* ===== INICIO (inspirado en ferrari.com) ===== */
+    .fh-hero { position:relative; min-height:calc(100vh - 73px); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:72px 28px 0; color:#ECE5D8; overflow:hidden;
+      background:
+        radial-gradient(1100px 560px at 50% 32%, #2b5741 0%, rgba(28,59,43,0) 62%),
+        radial-gradient(900px 520px at 50% 115%, #0c1d14 0%, rgba(12,29,20,0) 70%),
+        #1C3B2B; }
+    .fh-hero::before { content:''; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(90deg, rgba(236,229,216,0.022) 0 1px, transparent 1px 140px); }
+    .fh-hero-inner { position:relative; max-width:900px; display:flex; flex-direction:column; align-items:center; animation:fhIn .9s cubic-bezier(.2,.7,.2,1) both; }
+    .fh-crest { width:116px; height:auto; margin-bottom:30px; filter:grayscale(1) brightness(1.72) sepia(.4) contrast(.95) drop-shadow(0 12px 32px rgba(0,0,0,.35)); }
+    .fh-eyebrow { font-size:12px; font-weight:600; letter-spacing:.32em; text-transform:uppercase; color:rgba(236,229,216,.68); margin-bottom:18px; }
+    .fh-title { margin:0; font-size:clamp(56px, 9vw, 132px); line-height:.9; font-weight:800; letter-spacing:-0.035em; text-transform:uppercase; color:#ECE5D8; }
+    .fh-lead { font-size:17px; line-height:1.55; color:rgba(236,229,216,.76); max-width:560px; margin:24px 0 36px; }
+    .fh-ctas { display:flex; gap:32px; flex-wrap:wrap; justify-content:center; }
+    .fh-cta { display:inline-flex; align-items:center; gap:14px; background:none; border:none; padding:0; cursor:pointer; font:inherit; font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:#ECE5D8; }
+    .fh-cta-circle { width:44px; height:44px; flex-shrink:0; border-radius:50%; border:1.5px solid currentColor; display:inline-flex; align-items:center; justify-content:center; font-size:22px; line-height:1; transition:background .25s, color .25s, transform .25s, border-color .25s; }
+    .fh-cta:hover .fh-cta-circle { background:#ECE5D8; color:#1C3B2B; border-color:#ECE5D8; transform:translateX(3px); }
+    .fh-stats { position:relative; width:100%; max-width:1180px; display:grid; grid-template-columns:repeat(4,1fr); margin-top:76px; padding:34px 0 38px; border-top:1px solid rgba(236,229,216,.14); }
+    .fh-stat { padding:0 12px; }
+    .fh-stat + .fh-stat { border-left:1px solid rgba(236,229,216,.14); }
+    .fh-stat-val { font-size:42px; font-weight:800; letter-spacing:-0.025em; font-variant-numeric:tabular-nums; color:#ECE5D8; line-height:1; }
+    .fh-stat-lbl { font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:rgba(236,229,216,.58); margin-top:10px; }
+    .fh-body { max-width:1180px; margin:0 auto; padding:8px 28px 80px; }
+    .fh-sec-head { margin:64px 0 22px; }
+    .fh-sec-eyebrow { font-size:11px; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--pink); margin-bottom:8px; }
+    .fh-sec-title { margin:0; font-size:34px; font-weight:800; letter-spacing:-0.02em; text-transform:uppercase; color:var(--accent); }
+    .fh-feature-grid { display:grid; grid-template-columns:1.3fr 1fr; gap:18px; }
+    .fh-feature { position:relative; min-height:270px; border-radius:22px; padding:34px; display:flex; flex-direction:column; justify-content:flex-end; cursor:pointer; overflow:hidden; transition:transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s; }
+    .fh-feature:hover { transform:translateY(-4px); box-shadow:0 26px 50px -18px rgba(16,24,40,.38); }
+    .fh-feature-dark { color:#ECE5D8; background:radial-gradient(620px 320px at 85% 0%, #2c5a42, rgba(44,90,66,0) 70%), linear-gradient(160deg,#1C3B2B,#0f2318); }
+    .fh-feature-ivory { color:var(--accent); background:linear-gradient(160deg,#ECE5D8,#e1d6c2); }
+    .fh-feature-logo { position:absolute; top:30px; left:34px; width:58px; height:58px; object-fit:contain; filter:drop-shadow(0 4px 12px rgba(0,0,0,.3)); }
+    .fh-feature-arrow { position:absolute; top:30px; right:30px; }
+    .fh-feature:hover .fh-feature-arrow { background:currentColor; }
+    .fh-feature-dark:hover .fh-feature-arrow { background:#ECE5D8; color:#1C3B2B; }
+    .fh-feature-ivory:hover .fh-feature-arrow { background:var(--accent); color:#ECE5D8; border-color:var(--accent); }
+    .fh-feature-kicker { font-size:11px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; opacity:.72; margin-bottom:10px; }
+    .fh-feature-title { font-size:30px; font-weight:800; line-height:1.02; letter-spacing:-0.015em; text-transform:uppercase; max-width:440px; }
+    .fh-feature-dark .fh-feature-title { color:#fbbf24; }
+    .fh-feature-sub { font-size:14px; opacity:.8; margin-top:12px; }
+    .fh-teams, .fh-quick { display:grid; grid-template-columns:repeat(auto-fill, minmax(210px,1fr)); gap:12px; }
+    .fh-quick { grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); }
+    .fh-team { min-height:136px; display:flex; flex-direction:column; padding:18px 18px 16px; background:var(--surface); border:1px solid var(--border-light); border-radius:18px; cursor:pointer; transition:transform .25s cubic-bezier(.2,.7,.3,1), background .25s, border-color .25s, box-shadow .25s; }
+    .fh-team-cat { font-size:10.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3); transition:color .25s; }
+    .fh-team-name { margin-top:8px; font-size:21px; font-weight:800; line-height:1.05; letter-spacing:-0.01em; text-transform:uppercase; color:var(--accent); transition:color .25s; }
+    .fh-team-foot { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; padding-top:14px; }
+    .fh-team-count { font-size:12px; color:var(--text-2); font-variant-numeric:tabular-nums; transition:color .25s; }
+    .fh-cta-circle-sm { width:32px; height:32px; font-size:17px; color:var(--accent); border-width:1.5px; }
+    .fh-team:hover { background:var(--accent); border-color:var(--accent); transform:translateY(-3px); box-shadow:0 18px 36px -18px rgba(28,59,43,.6); }
+    .fh-team:hover .fh-team-cat, .fh-team:hover .fh-team-count { color:rgba(236,229,216,.7); }
+    .fh-team:hover .fh-team-name, .fh-team:hover .fh-cta-circle-sm { color:#ECE5D8; }
+    .fh-scroll { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(240px,260px); gap:12px; overflow-x:auto; padding-bottom:10px; scroll-snap-type:x mandatory; }
+    .fh-scroll > * { scroll-snap-align:start; }
+    @keyframes fhIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:none; } }
+    @media (max-width:768px) {
+      .fh-hero { min-height:auto; padding:56px 18px 0; }
+      .fh-crest { width:84px; }
+      .fh-stats { grid-template-columns:repeat(2,1fr); row-gap:26px; margin-top:52px; }
+      .fh-stat:nth-child(3) { border-left:none; }
+      .fh-feature-grid { grid-template-columns:1fr; }
+      .fh-body { padding:0 16px 56px; }
+      .fh-sec-head { margin:48px 0 18px; }
+      .fh-sec-title { font-size:26px; }
+      .fh-feature-title { font-size:24px; }
+    }
+
+    /* ===== PLANTILLA 26/27 ===== */
+    .toolbar { padding:22px 28px 0; }
+    .view-toggle { border-radius:999px; padding:4px; }
+    .view-btn { border-radius:999px; padding:8px 18px; }
+    .view-btn.active { color:var(--accent); font-weight:700; }
+    .filters { padding:16px 28px 6px; gap:10px; align-items:center; }
+    .search-input { border-radius:999px; padding:11px 16px 11px 40px; border:1px solid var(--border); }
+    .filter-btns { gap:6px; }
+    .filter-btn { border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; border:1px solid var(--border); }
+    .filter-btn:not(.active) { background:var(--surface); color:var(--text-2); }
+    .filter-btn:not(.active):hover { background:var(--ivory); color:var(--accent); }
+    .filter-btn.active { background:var(--accent); color:#ECE5D8; border-color:var(--accent); }
+    .content-area { padding:14px 28px 34px; }
+    .table-container { background:var(--surface); border:1px solid var(--border-light); border-radius:20px; overflow:hidden; box-shadow:0 1px 2px rgba(16,24,40,.04), 0 14px 34px -20px rgba(16,24,40,.2); }
+    .table-header { background:var(--surface); border-bottom:1px solid var(--border-light); padding:16px 24px; font-size:10.5px; font-weight:700; letter-spacing:.14em; color:var(--text-3); }
+    .table-row { padding:12px 24px; border-bottom:1px solid #f2eee6; transition:background .18s, box-shadow .18s; }
+    .table-row:hover { background:#faf8f3; box-shadow:inset 3px 0 0 var(--accent); }
+    .table-row.expanded { background:#f6f2ea; box-shadow:inset 3px 0 0 var(--pink); }
+    .row-num { font-size:20px; font-weight:800; color:var(--accent); letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+    .player-name { font-size:15px; font-weight:700; letter-spacing:-0.01em; }
+    .player-fullname { font-size:12px; color:var(--text-3); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pos-badge { border-radius:999px; padding:4px 10px; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+    .birth-date { font-size:13px; font-weight:600; }
+    .roster-age { font-size:11px; font-weight:500; color:var(--text-3); margin-top:2px; }
+    .birth-place { font-size:13px; color:var(--text-2); }
+    .roster-player { display:flex; align-items:center; gap:12px; min-width:0; }
+    .roster-avatar, .roster-avatar-fb { width:42px; height:42px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 2px #fff, 0 2px 8px rgba(16,24,40,.16); }
+    .roster-avatar { object-fit:cover; object-position:center 12%; background:var(--ivory); }
+    .roster-avatar-fb { align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:700; }
+    .roster-group { display:flex; align-items:center; gap:10px; padding:22px 24px 10px; font-size:11px; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); background:linear-gradient(180deg,#fbfaf6,#ffffff); border-bottom:1px solid #f2eee6; }
+    .roster-group-count { font-size:11px; font-weight:700; letter-spacing:0; color:var(--text-3); background:var(--ivory); border-radius:999px; padding:2px 8px; }
+    .expanded-content { background:#f8f5ee; }
+    @media (min-width:769px) {
+      .table-header, .table-row { grid-template-columns:56px minmax(220px,1.7fr) 150px 120px 1fr 1fr 28px; }
+    }
+    @media (max-width:768px) {
+      .roster-avatar, .roster-avatar-fb { width:34px; height:34px; }
+      .table-row { padding:10px 14px; }
+      .roster-group { padding:16px 14px 8px; }
+    }
+    .main-content { min-width:0; }
+    .fh, .fh-hero, .fh-body { max-width:100%; }
+    .fh { overflow-x:hidden; }
+    .fh-scroll { min-width:0; max-width:100%; }
+    @media (max-width:860px){ .admin-grid{ grid-template-columns:1fr !important; } }
     </style>
 </head>
 <body>
@@ -945,6 +1077,20 @@
     };
     const RESTRICTED_USERS = ["PabloVega"];
     function isRestricted(u) { return RESTRICTED_USERS.indexOf(u) >= 0; }
+    /* ===== ADMINISTRACION DE USUARIOS ===== */
+    const ADMIN_USERS = ["SergioRguez"];
+    function isAdmin(u) { return ADMIN_USERS.indexOf(u) >= 0; }
+    async function lfSha256(txt) {
+      var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt));
+      return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2, '0'); }).join('');
+    }
+    function lfLocalUsers() { try { return JSON.parse(localStorage.getItem('lf_custom_users') || '[]'); } catch(e) { return []; } }
+    function lfSaveLocalUsers(list) { try { localStorage.setItem('lf_custom_users', JSON.stringify(list)); } catch(e) {} }
+    function lfGenPassword(n) {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%*?';
+      var arr = new Uint32Array(n || 12); crypto.getRandomValues(arr);
+      return Array.from(arr).map(function(x){ return chars[x % chars.length]; }).join('');
+    }
 
     // Supabase
     var _sb = null;
@@ -964,18 +1110,18 @@
           { nombre: "Diego Aguado Facio", apodo: "Diego Aguado", posicion: "Defensa", fechaNacimiento: "07/02/2007", lugarNacimiento: "Madrid", seleccion: "Sub-20 España", origen: "Soto del Real (2017)", foto: "https://assets.realmadrid.com/is/image/realmadrid/DIEGO_AGUADO_JT19868_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/diego-aguado-facio", dorsal: 3 },
           { nombre: "Mario Rivas Lagos", apodo: "Mario Rivas", posicion: "Defensa", fechaNacimiento: "16/03/2007", lugarNacimiento: "Sevilla", seleccion: "Sub-18 España", origen: "Sevilla FC", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARIO_RIVAS_JT19542_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/mario-rivas-lagos", dorsal: 4 },
           { nombre: "Joan Martínez Lozano", apodo: "Joan Martínez", posicion: "Defensa", fechaNacimiento: "20/08/2007", lugarNacimiento: "Alginet (Valencia)", seleccion: "Sub-17 España", origen: "Levante UD", foto: "https://assets.realmadrid.com/is/image/realmadrid/JOAN_MARTINEZ_JT19691_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/joan-martinez-lozano", dorsal: 5 },
-          { nombre: "Oscar Naasei Opong", apodo: "Naasei", posicion: "Defensa", dorsal: 21, fechaNacimiento: "24/02/2005", lugarNacimiento: "Acra (Ghana)", seleccion: null, origen: "Granada (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/Oscar_Naasei_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/oscar-naasei-opong" },
+          { nombre: "Oscar Naasei Opong", apodo: "Naasei", posicion: "Defensa", dorsal: 21, fechaNacimiento: "24/02/2005", lugarNacimiento: "Acra (Ghana)", seleccion: null, origen: "Granada (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/Oscar%20Naasei_1500x2000%20%E2%80%93%201?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/oscar-naasei-opong" },
           { nombre: "Lamini Domingos Fati Joao", apodo: "Lamini", posicion: "Defensa", fechaNacimiento: "18/04/2006", lugarNacimiento: "Madrid", origen: "CD Leganés (2025)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LAMINI_FATI_JT19496_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/lamini-domingos-fati-joao", dorsal: 23 },
           { nombre: "Jorge Cestero Sancho", apodo: "Cestero", posicion: "Centrocampista", fechaNacimiento: "24/03/2006", lugarNacimiento: "Zaragoza", origen: "Real Zaragoza", foto: "https://assets.realmadrid.com/is/image/realmadrid/JORGE_CESTERO_JT19680_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/jorge-cestero-sancho", dorsal: 6 },
           { nombre: "Hugo de Llanos García", apodo: "Hugo de Llanos", posicion: "Centrocampista", fechaNacimiento: "18/03/2005", lugarNacimiento: "Madrid", origen: "EMF Valdemoro (2013)", foto: "https://assets.realmadrid.com/is/image/realmadrid/HUGO_DE_LLANOS_JT19779_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/hugo-de-llanos-garcia", dorsal: 8 },
           { nombre: "Pol Fortuny Albareda", apodo: "Pol Fortuny", posicion: "Centrocampista", fechaNacimiento: "11/03/2005", lugarNacimiento: "Tarragona", seleccion: "Sub-19 España", origen: "CF Reus", foto: "https://assets.realmadrid.com/is/image/realmadrid/POL_FORTUNY_JT19617_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/pol-fortuny-albareda", dorsal: 10 },
           { nombre: "Álvaro Leiva Alemany", apodo: "Á. Leiva", posicion: "Centrocampista", fechaNacimiento: "28/12/2004", lugarNacimiento: "Algeciras (Cádiz)", seleccion: "Sub-19 España", origen: "Algeciras (2017)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALVARO_LEIVA_JT19755_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 11, perfilRM: "castilla/alvaro-leiva-alemany" },
           { nombre: "Izan Regueira Nóvoa", apodo: "Izan", posicion: "Centrocampista", fechaNacimiento: "08/02/2006", lugarNacimiento: "Ourense", origen: "Celta (2020)", foto: "https://assets.realmadrid.com/is/image/realmadrid/IZAN_REGUEIRA_JT19719_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 14, perfilRM: "castilla/izan-regueira-novoa" },
-          { nombre: "Sergio Martinez Montero", apodo: "Sergio Martínez", posicion: "Centrocampista", dorsal: 16, fechaNacimiento: "15/05/2007", lugarNacimiento: "Laredo (Cantabria)", seleccion: null, origen: "Racing de Santander (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/Sergio_Martinez_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/sergio-martinez-montero" },
+          { nombre: "Sergio Martinez Montero", apodo: "Sergio Martínez", posicion: "Centrocampista", dorsal: 16, fechaNacimiento: "15/05/2007", lugarNacimiento: "Laredo (Cantabria)", seleccion: null, origen: "Racing de Santander (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/Sergio%20Mart%C3%ADnez_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/sergio-martinez-montero" },
           { nombre: "Alexis Ciria Flores", apodo: "Alexis Ciria", posicion: "Centrocampista", posicionDetalle: "Extremo izquierdo", fechaNacimiento: "04/01/2008", lugarNacimiento: "Badajoz", seleccion: "Sub-17 España", origen: "Sevilla (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEXIS_CIRIA_JT19844_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 17, perfilRM: "castilla/alexis-ciria-flores" },
           { nombre: "Roberto Martin Uruel", apodo: "Roberto Martín", posicion: "Centrocampista", fechaNacimiento: "12/08/2006", lugarNacimiento: "Monzón (Huesca)", seleccion: "Sub-19 España", origen: "Huesca (2020)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ROBERTO_MARTIN_JT19830_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 20, perfilRM: "castilla/roberto-martin-uruel" },
           { nombre: "Daniel Mesonero Miguel", apodo: "D. Mesonero", posicion: "Centrocampista", fechaNacimiento: "03/09/2005", lugarNacimiento: "Madrid", origen: "Rayo Vallecano (2019)", foto: "https://assets.realmadrid.com/is/image/realmadrid/DANIEL_MESONERO_JT19741_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 22, perfilRM: "castilla/daniel-mesonero-miguel" },
-          { nombre: "Daniel Yáñez Barla", apodo: "Yáñez", posicion: "Delantero", fechaNacimiento: "28/03/2007", lugarNacimiento: "Cádiz", origen: "Cadiz CF", foto: "https://assets.realmadrid.com/is/image/realmadrid/DANIEL_YANEZ_JT19337_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/daniel-yanez-barla", dorsal: 7 },
+          { nombre: "Daniel Yáñez Barla", apodo: "Yáñez", posicion: "Delantero", fechaNacimiento: "28/03/2007", lugarNacimiento: "Cádiz", origen: "Cadiz CF", foto: "https://assets.realmadrid.com/is/image/realmadrid/DANIEL_YA%C3%91EZ_JT19337_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/daniel-yanez-barla", dorsal: 7 },
           { nombre: "Rachad Fettal Dhimi", apodo: "Rachad", posicion: "Delantero", fechaNacimiento: "16/01/2005", lugarNacimiento: "Torre-Pacheco (Murcia)", seleccion: "Marruecos", origen: "FC Cartagena", foto: "https://assets.realmadrid.com/is/image/realmadrid/RACHAD_FETTAL_JT19794_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/rachad-fettal-dhimi", dorsal: 9 },
           { nombre: "Angel Carvajal Garcia", apodo: "Carvajal", posicion: "Delantero", dorsal: 19, fechaNacimiento: "19/03/2004", lugarNacimiento: "Madrid", seleccion: null, origen: "Real Valladolid Promesas (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ANGEL_CARVAJAL_JT19525_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "castilla/angel-carvajal-garcia" }
         ]
@@ -989,7 +1135,7 @@
           { nombre: "Alfredo Sotres Acosta", apodo: "Sotres", posicion: "Defensa", fechaNacimiento: "12/03/2004", lugarNacimiento: "Madrid", origen: "Unión Adarve (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALFREDO%20SOTRES_JT19459_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 3, perfilRM: "realmadrid-c/alfredo-sotres-acosta" },
           { nombre: "Alejandro Pérez Jiménez", apodo: "Álex Pérez", posicion: "Defensa", fechaNacimiento: "15/06/2005", lugarNacimiento: "Valencia", origen: "Patacona (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEX%20PEREZ_JT10284_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 4, perfilRM: "realmadrid-c/alejandro-perez-jimenez" },
           { nombre: "Liberto Raul Navascués Vicente", apodo: "Liberto", posicion: "Defensa", posicionDetalle: "Lateral izquierdo", fechaNacimiento: "15/03/2007", lugarNacimiento: "Madrid", seleccion: "Sub-17 España", origen: "Rayo Vallecano (2017)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LIBERTO_NAVASCUES_JT19806_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 11, perfilRM: "realmadrid-c/liberto-raul-navascues-vicente" },
-          { nombre: "Pablo Bellosillo Plaza", apodo: "Bellosillo", posicion: "Defensa", dorsal: 12, fechaNacimiento: "14/09/2007", lugarNacimiento: "Madrid", seleccion: null, origen: "Rayo Vallecano (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/Pablo%20Bellosillo_JT10272_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "realmadrid-c/pablo-bellosillo-plaza" },
+          { nombre: "Pablo Bellosillo Plaza", apodo: "Bellosillo", posicion: "Defensa", dorsal: 12, fechaNacimiento: "14/09/2007", lugarNacimiento: "Madrid", seleccion: null, origen: "Rayo Vallecano (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/Pablo%20Bellosillo_JT10272_1500x2000%20%E2%80%93%201?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "realmadrid-c/pablo-bellosillo-plaza" },
           { nombre: "Aimar Garcia Diez", apodo: "Aimar", posicion: "Defensa", dorsal: 15, fechaNacimiento: "03/04/2007", lugarNacimiento: "Madrid", seleccion: null, origen: "Atlético de Madrid (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/AIMAR%20GARCIA_JT19428_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "realmadrid-c/aimar-garcia-diez" },
           { nombre: "Paulo de Almeida Hernández", apodo: "De Almeida", posicion: "Defensa", fechaNacimiento: "04/09/2007", lugarNacimiento: "Madrid", origen: "Aluche (2013)", foto: "https://assets.realmadrid.com/is/image/realmadrid/PAULO%20DE%20ALMEIDA_JT10152_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 17, perfilRM: "realmadrid-c/paulo-de-almeida-hernandez" },
           { nombre: "Ariel Nkoghe Ncara", apodo: "Ariel", posicion: "Defensa", posicionDetalle: "Central", fechaNacimiento: "15/03/2007", lugarNacimiento: "Móstoles", origen: "Atlético de Madrid (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ARIEL_NKOGHE_JT19485_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: 21, perfilRM: "realmadrid-c/ariel-nkoghe-ncara" },
@@ -1028,7 +1174,7 @@
           { nombre: "Adrián Pérez Muñoz", apodo: "Adri Pérez", posicion: "Centrocampista", fechaNacimiento: "16/12/2007", lugarNacimiento: "Madrid", seleccion: "Sub-18 España", origen: "Sevilla (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ADRIAN%20PEREZ_JT10127_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-a/adrian-perez-munoz" },
           { nombre: "Diego Lacosta Villalba", apodo: "Lacosta", posicion: "Centrocampista", posicionDetalle: "Mediocentro", fechaNacimiento: "16/02/2008", lugarNacimiento: "Zaragoza", seleccion: "Sub-17 España", origen: "Santo Domingo Juventud (2012)", foto: "https://assets.realmadrid.com/is/image/realmadrid/DIEGO_LACOSTA_JT19907_1500x2000-1?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-a/diego-lacosta-villalba" },
           { nombre: "Moctar Cherif Fofana", apodo: "Cherif", posicion: "Centrocampista", posicionDetalle: "Interior defensivo", fechaNacimiento: "01/12/2009", lugarNacimiento: "Madrid", origen: "México Paracuellos (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/CHERIF_FOFANA_JT19930_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "juvenil-c/moctar-cherif-acacio-fofana-mesie-eyegue", dorsal: null },
-          { nombre: "Marco David Company García", apodo: "Marco", posicion: "Centrocampista", fechaNacimiento: "24/01/2009", lugarNacimiento: "Torrent (Valencia)", seleccion: "Sub-17 España", origen: "Valencia (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARCO_COMPAÑY_HE10859?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-a/marco-david-company-garcia" },
+          { nombre: "Marco David Company García", apodo: "Marco", posicion: "Centrocampista", fechaNacimiento: "24/01/2009", lugarNacimiento: "Torrent (Valencia)", seleccion: "Sub-17 España", origen: "Valencia (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARCO_COMPA%C3%91Y_HE10859?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-a/marco-david-company-garcia" },
           { nombre: "Andres Corcoba Martínez", apodo: "Andrés", posicion: "Centrocampista", posicionDetalle: "Interior defensivo", fechaNacimiento: "25/03/2008", lugarNacimiento: "La Baña (Leon)", origen: "Atlético de Madrid (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ANDRES%20CORCOBA_JT10249_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-a/andres-corcoba-martinez" },
           { nombre: "Rubén López Domínguez", apodo: "Rubén López", posicion: "Centrocampista", fechaNacimiento: "26/03/2008", lugarNacimiento: "Madrid", seleccion: "Sub-16 España", origen: "Seseña (2016)", foto: "https://assets.realmadrid.com/is/image/realmadrid/RUBEN%20LOPEZ_JT10079_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-a/ruben-lopez-dominguez" },
           { nombre: "Pelayo Palomo Cidón", apodo: "Pelayo", posicion: "Centrocampista", fechaNacimiento: "29/02/2008", lugarNacimiento: "Madrid", origen: "Rayo Vallecano (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/PELAYO%20PALOMO_JT10116_1500x2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-a/pelayo-palomo-cidon" },
@@ -1045,7 +1191,7 @@
           { nombre: "Jose Alberto Castelau de Roa", apodo: "Castelau", posicion: "Portero", fechaNacimiento: "13/01/2009", lugarNacimiento: "Getafe", origen: "Parla Escuela (2013)", foto: "https://assets.realmadrid.com/is/image/realmadrid/JOSE%20ALBERTO%20CASTELAU_HE10858?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/jose-alberto-castelau-de-roa" },
           { nombre: "Héctor Martínez Sánchez", apodo: "Héctor", posicion: "Portero", fechaNacimiento: "05/02/2009", lugarNacimiento: "Madrid", origen: "Rayo Vallecano (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/HECTOR%20MARTINEZ_HE10710?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/hector-martinez-sanchez" },
           { nombre: "Izan Ramírez Pérez", apodo: "Izan Ramírez", posicion: "Portero", fechaNacimiento: "15/02/2010", lugarNacimiento: "Madrid", origen: "Sevilla (2016)", foto: "https://assets.realmadrid.com/is/image/realmadrid/IZAN%20RAMIREZ_HE10811?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/izan-ramirez-perez" },
-          { nombre: "Alejandro Castaño Villastrigo", apodo: "Castaño", posicion: "Defensa", posicionDetalle: "Central", fechaNacimiento: "11/04/2009", lugarNacimiento: "Avilés (Asturias)", seleccion: "Sub-16 España", origen: "Villarreal (2025)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEJANDRO%20CASTAÑO_HE10836?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/alejandro-castano-villastrigo" },
+          { nombre: "Alejandro Castaño Villastrigo", apodo: "Castaño", posicion: "Defensa", posicionDetalle: "Central", fechaNacimiento: "11/04/2009", lugarNacimiento: "Avilés (Asturias)", seleccion: "Sub-16 España", origen: "Villarreal (2025)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEJANDRO%20CASTA%C3%91O_HE10836?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/alejandro-castano-villastrigo" },
           { nombre: "Eduardo Valentín Corlat", apodo: "Edu", posicion: "Defensa", posicionDetalle: "Central", fechaNacimiento: "17/02/2009", lugarNacimiento: "Madrid", origen: "Getafe (2018)", foto: "https://assets.realmadrid.com/is/image/realmadrid/EDUARDO%20CORLAT_HE10856?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/eduardo-valentin-corlat" },
           { nombre: "Rubén Díaz Villaverde", apodo: "Rubén", posicion: "Defensa", posicionDetalle: "Lateral izquierdo", fechaNacimiento: "18/01/2009", lugarNacimiento: "Madrid", origen: "Colmenar Viejo (2016)", foto: "https://assets.realmadrid.com/is/image/realmadrid/RUBEN%20DIAZ_HE10709?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/ruben-diaz-villaverde" },
           { nombre: "Jesús Palacios Paya", apodo: "Palacios", posicion: "Defensa", posicionDetalle: "Lateral izquierdo", fechaNacimiento: "23/08/2009", lugarNacimiento: "Madrid", origen: "Real Murcia (2014)", foto: "https://assets.realmadrid.com/is/image/realmadrid/JESUS%20PALACIOS_HE10831?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/jesus-palacios-paya" },
@@ -1066,7 +1212,7 @@
           { nombre: "Raul Lema Diez", apodo: "Raúl Lema", posicion: "Centrocampista", dorsal: null, fechaNacimiento: "03/12/2010", lugarNacimiento: "Mugía (La Coruña)", seleccion: null, origen: "Deportivo de la Coruña (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/RAUL_LEMA_HE10843?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "juvenil-b/raul-lema-diez" },
           { nombre: "Alejandro Manuel Mora González", apodo: "Álex Mora", posicion: "Delantero", posicionDetalle: "Delantero centro", fechaNacimiento: "29/01/2008", lugarNacimiento: "Ceuta", seleccion: "Sub-16 España", origen: "Betis (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEJANDRO%20MORA_HE10819?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/alejandro-manuel-mora-gonzalez" },
           { nombre: "Pablo Martínez Mena", apodo: "Pablo Martínez", posicion: "Delantero", posicionDetalle: "Delantero centro", fechaNacimiento: "12/03/2009", lugarNacimiento: "Madrid", origen: "Rayo Vallecano (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/PABLO%20MARTINEZ_HE10845?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/pablo-martinez-mena" },
-          { nombre: "Pablo Ibáñez Hernández", apodo: "Pablo Ibáñez", posicion: "Delantero", fechaNacimiento: "16/01/2009", lugarNacimiento: "Madrid", origen: "Getafe (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/PABLO%20IBAÑEZ_HE10853?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/pablo-ibanez-hernandez" },
+          { nombre: "Pablo Ibáñez Hernández", apodo: "Pablo Ibáñez", posicion: "Delantero", fechaNacimiento: "16/01/2009", lugarNacimiento: "Madrid", origen: "Getafe (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/PABLO%20IBA%C3%91EZ_HE10853?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/pablo-ibanez-hernandez" },
           { nombre: "Carlos Sánchez Romero", apodo: "Carlos", posicion: "Delantero", posicionDetalle: "Extremo derecho", fechaNacimiento: "20/04/2010", lugarNacimiento: "Madrid", origen: "Getafe (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/CARLOS%20SANCHEZ_HE10727?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-b/carlos-sanchez-romero" }
         ]
       },
@@ -1094,7 +1240,7 @@
           { nombre: "Clifford Nana Boadi Kusi Gyamfuaa", apodo: "Clifford", posicion: "Centrocampista", dorsal: null, fechaNacimiento: "17/04/2010", lugarNacimiento: "Vic (Barcelona)", seleccion: null, origen: "Damm (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/CLIFFORD_NANA_BOADI_HE10775?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "juvenil-c/clifford-nana-boadi-kusi-gyamfuaa" },
           { nombre: "Daniel Manso Santacruz", apodo: "Dani Manso", posicion: "Centrocampista", dorsal: null, fechaNacimiento: "31/12/2010", lugarNacimiento: "Gavá (Barcelona)", seleccion: null, origen: "Parla Escuela (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/DANIEL_MANSO_HE10751?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "juvenil-c/daniel-manso-santacruz" },
           { nombre: "Javier Useros Cabello", apodo: "Useros", posicion: "Centrocampista", dorsal: null, fechaNacimiento: "12/05/2010", lugarNacimiento: "Madrid (España)", seleccion: null, origen: "Rayo Ciudad de Alcobendas (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/JAVIER_USEROS_HE10773?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "juvenil-c/javier-useros-cabello" },
-          { nombre: "Unai Ordóñez Carretero", apodo: "Unai", posicion: "Delantero", posicionDetalle: "Delantero centro", fechaNacimiento: "29/10/2010", lugarNacimiento: "Madrid", origen: "Getafe (2016)", foto: "https://assets.realmadrid.com/is/image/realmadrid/UNAI_ORDOÑEZ_HE10749?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-c/unai-ordonez-carretero" },
+          { nombre: "Unai Ordóñez Carretero", apodo: "Unai", posicion: "Delantero", posicionDetalle: "Delantero centro", fechaNacimiento: "29/10/2010", lugarNacimiento: "Madrid", origen: "Getafe (2016)", foto: "https://assets.realmadrid.com/is/image/realmadrid/UNAI_ORDO%C3%91EZ_HE10749?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "juvenil-c/unai-ordonez-carretero" },
           { nombre: "Manuel Navarro Gonzalez", apodo: "Manu", posicion: "Delantero", dorsal: null, fechaNacimiento: "13/05/2010", lugarNacimiento: "Sevilla (España)", seleccion: null, origen: "Betis (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MANUEL_NAVARRO_HE10723?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "juvenil-c/manuel-navarro-gonzalez" },
           { nombre: "Aaron Silva Tome", apodo: "Aarón", posicion: "Delantero", dorsal: null, fechaNacimiento: "22/09/2010", lugarNacimiento: "Madrid (España)", seleccion: null, origen: "Leganés (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/AARON_SILVA_HE10716?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "juvenil-c/aaron-silva-tome" }
         ]
@@ -1114,7 +1260,7 @@
           { nombre: "Daniel Garcia Lago Diaz", apodo: "Lago", posicion: "Defensa", dorsal: null, fechaNacimiento: "01/09/2011", lugarNacimiento: "Colmenar Viejo", seleccion: null, origen: "Leganés (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/DANIEL-GARCIA-LAGO_HE10780?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "cadete-a/daniel-garcia-lago-diaz" },
           { nombre: "Andrian Bielsa Diaz", apodo: "Adrián Bielsa", posicion: "Defensa", dorsal: null, fechaNacimiento: "12/11/2011", lugarNacimiento: "Madrid", seleccion: null, origen: "Atlético de Madrid (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ADRIAN-BIELSA_HE10815?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "cadete-a/andrian-bielsa-diaz" },
           { nombre: "Beltrán Guillén Pérez de Tudela", apodo: "Beltrán", posicion: "Centrocampista", fechaNacimiento: "25/07/2011", lugarNacimiento: "Madrid", origen: "AD Villa Rosa (2020)", foto: "https://assets.realmadrid.com/is/image/realmadrid/BELTRAN-GUILLEN_HE16570?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "cadete-a/beltran-guillen-perez-de-tudela" },
-          { nombre: "Thiago Muñoz Heredia", apodo: "Thiago Heredia", posicion: "Centrocampista", fechaNacimiento: "14/01/2011", lugarNacimiento: "Madrid", origen: "Móstoles URJC (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/THIAGO-MUÑOZ-HEREDIA_HE16585?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "cadete-a/thiago-munoz-heredia" },
+          { nombre: "Thiago Muñoz Heredia", apodo: "Thiago Heredia", posicion: "Centrocampista", fechaNacimiento: "14/01/2011", lugarNacimiento: "Madrid", origen: "Móstoles URJC (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/THIAGO-MU%C3%91OZ-HEREDIA_HE16585?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "cadete-a/thiago-munoz-heredia" },
           { nombre: "David García Martin", apodo: "David", posicion: "Centrocampista", fechaNacimiento: "06/11/2011", lugarNacimiento: "Madrid", origen: "Flecha Negra (2016)", foto: "https://assets.realmadrid.com/is/image/realmadrid/DAVID-GARCIA_HE16553?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "cadete-a/david-garcia-martin" },
           { nombre: "Hugo Álvarez Alba", apodo: "Hugo Álvarez", posicion: "Centrocampista", fechaNacimiento: "30/10/2011", lugarNacimiento: "Madrid", origen: "Real Oviedo (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/HUGO-ALVAREZ_HE16574?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "cadete-a/hugo-alvarez-alba" },
           { nombre: "Adrián García Gómez", apodo: "Adrián García", posicion: "Centrocampista", fechaNacimiento: "19/03/2011", lugarNacimiento: "Madrid", origen: "Trival Valderas (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ADRIAN-GARCIA_HE16577?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "cadete-a/adrian-garcia-gomez" },
@@ -1163,7 +1309,7 @@
         categoria: "Infantil - División de Honor", temporada: "2026/27",
         jugadores: [
           { nombre: "Enzo Martínez García", apodo: "Enzo", posicion: "Portero", fechaNacimiento: "17/04/2013", lugarNacimiento: "Madrid", origen: "SP&AL Serranillos (2020)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ENZO%20MARTINEZ_DB10035_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/enzo-martinez-garcia" },
-          { nombre: "Yago Núñez López", apodo: "Yago", posicion: "Portero", fechaNacimiento: "08/09/2013", lugarNacimiento: "Madrid", origen: "Celta (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/YAGO%20NUÑEZ_DB10044_1500X2000%201?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/yago-nunez-lopez" },
+          { nombre: "Yago Núñez López", apodo: "Yago", posicion: "Portero", fechaNacimiento: "08/09/2013", lugarNacimiento: "Madrid", origen: "Celta (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/YAGO%20NU%C3%91EZ_DB10044_1500X2000%201?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/yago-nunez-lopez" },
           { nombre: "Andres Estaire Ballvé", apodo: "Andrés", posicion: "Portero", fechaNacimiento: "22/01/2013", lugarNacimiento: "Madrid", origen: "La Moraleja C.F. (2019)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ANDRES%20ESTAIRE_DB10037_1500X2000%201?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/andres-estaire-ballve" },
           { nombre: "Álvaro Cuervo Cuesta", apodo: "Álvaro Cuervo", posicion: "Defensa", fechaNacimiento: "11/06/2013", lugarNacimiento: "Madrid", origen: "Rayo Vallecano (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALVARO-CUERVO_2627?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/alvaro-cuervo-cuesta" },
           { nombre: "Álvaro Montoro Briones", apodo: "Álvaro Montoro", posicion: "Defensa", fechaNacimiento: "03/03/2013", lugarNacimiento: "Madrid", origen: "Móstoles URJC (2017)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALVARO-MONTORO_2627?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/alvaro-montoro-briones" },
@@ -1184,7 +1330,7 @@
           { nombre: "Eduardo Malo Erezuma", apodo: "Edu", posicion: "Delantero", fechaNacimiento: "30/05/2013", lugarNacimiento: "Bilbao", origen: "Atlético de Madrid (2019)", foto: "https://assets.realmadrid.com/is/image/realmadrid/EDU-MALO_2627?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/eduardo-malo-erezuma" },
           { nombre: "Ignacio Villanueva Vázquez", apodo: "Nacho", posicion: "Delantero", fechaNacimiento: "14/04/2013", lugarNacimiento: "Madrid", origen: "San Tirso (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/NACHO-VILLANUEVA_HE16707?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/ignacio-villanueva-vazquez" },
           { nombre: "Alejandro Martínez García", apodo: "Alejandro Martínez", posicion: "Delantero", posicionDetalle: "Delantero centro", fechaNacimiento: "05/11/2013", lugarNacimiento: "Madrid", origen: "Rayo Ciudad Alcobendas (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEJANDRO-MARTINEZ_2627?$Desktop$&fit=wrap&wid=420&hei=560", dorsal: null, perfilRM: "infantil-a/alejandro-martinez-garcia" },
-          { nombre: "Mario Ibanez Martinez", apodo: "Mario", posicion: "Delantero", dorsal: null, fechaNacimiento: "13/05/2013", lugarNacimiento: "Logroño (La Rioja)", seleccion: null, origen: "Villegas (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARIO-IBAÑEZ_HE16696?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "infantil-a/mario-ibanez-martinez" },
+          { nombre: "Mario Ibanez Martinez", apodo: "Mario", posicion: "Delantero", dorsal: null, fechaNacimiento: "13/05/2013", lugarNacimiento: "Logroño (La Rioja)", seleccion: null, origen: "Villegas (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MARIO-IBA%C3%91EZ_HE16696?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "infantil-a/mario-ibanez-martinez" },
           { nombre: "Samuel Osipovych", apodo: "Samuel", posicion: "Delantero", dorsal: null, fechaNacimiento: "21/03/2013", lugarNacimiento: "Kiev (Ucrania)", seleccion: null, origen: "Leganés (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/SAMUEL-ASIPOVYCH_HE16694?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "infantil-a/samuel-osipovych" }
         ]
       },
@@ -1277,7 +1423,7 @@
           { dorsal: 2, nombre: "Amín El Madkouri Ramli", apodo: "Amin", posicion: "Defensa", posicionDetalle: "Lateral derecho", fechaNacimiento: "06/07/2016", lugarNacimiento: "Marruecos", origen: "Galapagar (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/AMIN%20EL%20MADKOURI_DB10141_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "alevin-c/amin-el-madkouri-ramli" },
           { nombre: "Pablo Campos Caballero", apodo: "Pablo", posicion: "Defensa", dorsal: null, fechaNacimiento: "14/04/2016", lugarNacimiento: "Madrid", seleccion: null, origen: "Atlético de Madrid (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/PABLO%20CAMPOS_DB10172_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "alevin-c/pablo-campos-caballero" },
           { nombre: "Alex Garcia Cediel", apodo: "Álex García", posicion: "Defensa", dorsal: null, fechaNacimiento: "13/04/2016", lugarNacimiento: "Madrid", seleccion: null, origen: "Leganés (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEX%20GARCIA_DB10164_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "alevin-c/alex-garcia-cediel" },
-          { nombre: "Lorenzo Munoz Nunez", apodo: "Lorenzo", posicion: "Defensa", dorsal: null, fechaNacimiento: "16/04/2016", lugarNacimiento: "Madrid", seleccion: null, origen: "Unión Zona Norte (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LORENZO%20MUÑOZ_DB10133_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "alevin-c/lorenzo-munoz-nunez" },
+          { nombre: "Lorenzo Munoz Nunez", apodo: "Lorenzo", posicion: "Defensa", dorsal: null, fechaNacimiento: "16/04/2016", lugarNacimiento: "Madrid", seleccion: null, origen: "Unión Zona Norte (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LORENZO%20MU%C3%91OZ_DB10133_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "alevin-c/lorenzo-munoz-nunez" },
           { nombre: "Lucas Santos Pereira", apodo: "Lucas Santos", posicion: "Defensa", dorsal: null, fechaNacimiento: "15/01/2016", lugarNacimiento: "Madrid", seleccion: null, origen: "Atlético de Madrid (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LUCAS%20SANTOS%20PEREIRA_DB10158_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "alevin-c/lucas-santos-pereira" },
           { dorsal: 8, nombre: "Hugo Zazo Sanz", apodo: "Hugo Zazo", posicion: "Centrocampista", fechaNacimiento: "03/06/2016", lugarNacimiento: "Madrid", origen: "Fundación Leganés (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/HUGO%20ZAZO_DB10127_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "alevin-c/hugo-zazo-sanz" },
           { nombre: "Lucas Striano Martinez", apodo: "Lucas Striano", posicion: "Centrocampista", dorsal: null, fechaNacimiento: "28/04/2016", lugarNacimiento: "Alcobendas", seleccion: null, origen: "Rayo C. Alcobendas (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LUCAS%20STRIANO_DB10159_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "alevin-c/lucas-striano-martinez" },
@@ -1300,10 +1446,10 @@
           { nombre: "Rodrigo Cordero Boudard", apodo: "Rodrigo", posicion: "Defensa", dorsal: null, fechaNacimiento: "14/03/2017", lugarNacimiento: "Madrid", seleccion: null, origen: "Getafe (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/RODRIGO%20CORDERO_DB10233_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-a/rodrigo-cordero-boudard" },
           { nombre: "Alvaro Escudero Cobos", apodo: "Álvaro", posicion: "Defensa", dorsal: null, fechaNacimiento: "01/01/2017", lugarNacimiento: "Getafe", seleccion: null, origen: "Getafe (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALVARO%20ESCUDERO_DB10209_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-a/alvaro-escudero-cobos" },
           { nombre: "Ruben Mickael", apodo: "Rubén", posicion: "Defensa", dorsal: null, fechaNacimiento: "09/03/2017", lugarNacimiento: "Madrid", seleccion: null, origen: "Rayo Ciudad Alcobendas (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/RUBEN%20VARANE_DB10229_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-a/ruben-mickael" },
-          { dorsal: 6, nombre: "Luca Muñoz Heredia", apodo: "Luca Heredia", posicion: "Centrocampista", posicionDetalle: "Medio", fechaNacimiento: "13/03/2017", lugarNacimiento: "Madrid", origen: "Colegio Antavilla (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LUCA%20MUÑOZ_DB10250_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/luca-munoz-heredia" },
+          { dorsal: 6, nombre: "Luca Muñoz Heredia", apodo: "Luca Heredia", posicion: "Centrocampista", posicionDetalle: "Medio", fechaNacimiento: "13/03/2017", lugarNacimiento: "Madrid", origen: "Colegio Antavilla (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LUCA%20MU%C3%91OZ_DB10250_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/luca-munoz-heredia" },
           { dorsal: 10, nombre: "Mateo Pinto Ledesma", apodo: "Mateo", posicion: "Centrocampista", posicionDetalle: "Medio", fechaNacimiento: "09/08/2017", lugarNacimiento: "Madrid", origen: "Complutense Alcalá (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MATEO%20PINTO_DB10268_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/mateo-pinto-ledesma" },
           { nombre: "Liam Martin Ventura", apodo: "Liam", posicion: "Centrocampista", dorsal: null, fechaNacimiento: "14/02/2017", lugarNacimiento: "Madrid", seleccion: null, origen: "Atlético de Madrid (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LIAM%20MARTINEZ_DB10201_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-a/liam-martin-ventura" },
-          { dorsal: 9, nombre: "Nicolás Courtois Domínguez", apodo: "Nicolás", posicion: "Delantero", fechaNacimiento: "02/05/2017", lugarNacimiento: "Boadilla del Monte", origen: "Nuevo Boadilla (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/NICOLÁS-COURTOIS_SG13092_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/nicolas-courtois-dominguez" },
+          { dorsal: 9, nombre: "Nicolás Courtois Domínguez", apodo: "Nicolás", posicion: "Delantero", fechaNacimiento: "02/05/2017", lugarNacimiento: "Boadilla del Monte", origen: "Nuevo Boadilla (2021)", foto: "https://assets.realmadrid.com/is/image/realmadrid/NICOL%C3%81S-COURTOIS_SG13092_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/nicolas-courtois-dominguez" },
           { dorsal: 11, nombre: "Jared Ibrahim Denyaro", apodo: "Jared", posicion: "Delantero", posicionDetalle: "Medio", fechaNacimiento: "21/05/2017", lugarNacimiento: "Madrid", origen: "CD Leganés (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/JARED%20DENYARO_DB10274_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/jared-ibrahim-denyaro-strong" },
           { nombre: "Daniel Mingo Caro", apodo: "Dani", posicion: "Delantero", dorsal: null, fechaNacimiento: "13/01/2017", lugarNacimiento: "Torrejón de Ardoz", seleccion: null, origen: "Atlético de Madrid (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/DANIEL%20MINGO_DB10206_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-a/daniel-mingo-caro" },
           { nombre: "Alejandro Perez Arribas", apodo: "Alejo", posicion: "Delantero", dorsal: null, fechaNacimiento: "02/01/2017", lugarNacimiento: "Getafe", seleccion: null, origen: "Getafe (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEJO%20PEREZ_DB10270_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-a/alejandro-perez-arribas" }
@@ -1313,19 +1459,19 @@
         categoria: "Benjamín - División de Honor F7", temporada: "2026/27",
         jugadores: [
           { dorsal: 13, nombre: "Alejandro Curto Olmos", apodo: "Alejandro Curto", posicion: "Portero", posicionDetalle: "Portero", fechaNacimiento: "17/02/2018", lugarNacimiento: "Majadahonda", origen: "FPA Las Rozas (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEX-HURTO_SG13081_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/alejandro-curto-olmos" },
-          { dorsal: 1, nombre: "Guillermo Millán Arias", apodo: "Guille", posicion: "Portero", posicionDetalle: "Portero", fechaNacimiento: "26/03/2018", lugarNacimiento: "Leganés", origen: "Unión Carrascal (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/GUILLERMO-MILLÁN_SG13056_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/guillermo-millan-arias" },
+          { dorsal: 1, nombre: "Guillermo Millán Arias", apodo: "Guille", posicion: "Portero", posicionDetalle: "Portero", fechaNacimiento: "26/03/2018", lugarNacimiento: "Leganés", origen: "Unión Carrascal (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/GUILLERMO-MILL%C3%81N_SG13056_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/guillermo-millan-arias" },
           { dorsal: 1, nombre: "Jaime Crespo Larraz", apodo: "Jaime", posicion: "Portero", posicionDetalle: "Portero", fechaNacimiento: "08/04/2018", lugarNacimiento: "Madrid", origen: "Esperanza (2025)", foto: "https://assets.realmadrid.com/is/image/realmadrid/JAIME-CRESPO_SG13075_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-b/jaime-crespo-larraz" },
           { dorsal: 5, nombre: "Lucas Yagüe Murillo", apodo: "Yagüe", posicion: "Defensa", posicionDetalle: "Central", fechaNacimiento: "07/02/2018", lugarNacimiento: "Alcalá de Henares", origen: "Espartales Sur (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LUCAS-YAGUE_SG13066_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/lucas-yague-murillo" },
           { dorsal: 8, nombre: "Noeh Arkine Hernández", apodo: "Noeh", posicion: "Defensa", posicionDetalle: "Lateral derecho", fechaNacimiento: "02/04/2018", lugarNacimiento: "Madrid", origen: "Moratalaz (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/NOEH-ARKINE_SG13051_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/noeh-arkine-hernandez" },
-          { dorsal: 11, nombre: "Rubén Ramos López", apodo: "Rubén", posicion: "Centrocampista", posicionDetalle: "Lateral izquierdo", fechaNacimiento: "13/02/2018", lugarNacimiento: "Fuenlabrada", origen: "Dux Academy (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/RUBÉN-RAMOS_SG13089_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/ruben-ramos-lopez" },
+          { dorsal: 11, nombre: "Rubén Ramos López", apodo: "Rubén", posicion: "Centrocampista", posicionDetalle: "Lateral izquierdo", fechaNacimiento: "13/02/2018", lugarNacimiento: "Fuenlabrada", origen: "Dux Academy (2022)", foto: "https://assets.realmadrid.com/is/image/realmadrid/RUB%C3%89N-RAMOS_SG13089_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/ruben-ramos-lopez" },
           { dorsal: 16, nombre: "Uziel Benoit Ndom Payano", apodo: "Uziel", posicion: "Centrocampista", posicionDetalle: "Lateral derecho", fechaNacimiento: "25/02/2018", lugarNacimiento: "Valdemoro", origen: "Ciudad de Getafe (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/USIEL-ENDOM_SG13100_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/uziel-benoit-ndom-payano" },
           { dorsal: 6, nombre: "Miguel Arizmendi Castillo", apodo: "Miguel", posicion: "Centrocampista", posicionDetalle: "Mediocentro", fechaNacimiento: "07/01/2018", lugarNacimiento: "Madrid", origen: "Colegio San Agustín (2025)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MIGUEL-ARIZMENDI_SG13071_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/miguel-arizmendi-castillo" },
-          { dorsal: 9, nombre: "Nicolás Carrasco Alonso", apodo: "Nico", posicion: "Delantero", posicionDetalle: "Delantero", fechaNacimiento: "13/01/2018", lugarNacimiento: "Argés (Toledo)", origen: "Argés (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/NICOLÁS-CARRASCO_SG13105_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/nicolas-carrasco-alonso" },
+          { dorsal: 9, nombre: "Nicolás Carrasco Alonso", apodo: "Nico", posicion: "Delantero", posicionDetalle: "Delantero", fechaNacimiento: "13/01/2018", lugarNacimiento: "Argés (Toledo)", origen: "Argés (2023)", foto: "https://assets.realmadrid.com/is/image/realmadrid/NICOL%C3%81S-CARRASCO_SG13105_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/nicolas-carrasco-alonso" },
           { dorsal: 2, nombre: "Alejandro Brihuega Barrios", apodo: "Alejandro", posicion: "Delantero", posicionDetalle: "Lateral derecho", fechaNacimiento: "15/01/2018", lugarNacimiento: "Madrid", origen: "Liceo Europeo (2024)", foto: "https://assets.realmadrid.com/is/image/realmadrid/ALEJANDRO-BRIUBER_SG13048_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/alejandro-brihuega-barrios" },
-          { dorsal: 12, nombre: "Luca Porlán Bennett", apodo: "Luca", posicion: "Delantero", posicionDetalle: "Delantero", fechaNacimiento: "08/07/2018", lugarNacimiento: "Houston (Estados Unidos)", origen: "Santa Ana (2025)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LUCA-PORLÁN_SG13064_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/luca-porlan-bennett" },
+          { dorsal: 12, nombre: "Luca Porlán Bennett", apodo: "Luca", posicion: "Delantero", posicionDetalle: "Delantero", fechaNacimiento: "08/07/2018", lugarNacimiento: "Houston (Estados Unidos)", origen: "Santa Ana (2025)", foto: "https://assets.realmadrid.com/is/image/realmadrid/LUCA-PORL%C3%81N_SG13064_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/luca-porlan-bennett" },
           { dorsal: 3, nombre: "Dylan Cuevas López", apodo: "Dylan", posicion: "Delantero", posicionDetalle: "Lateral derecho", fechaNacimiento: "27/01/2018", lugarNacimiento: "Fuenlabrada", origen: "Fundación Rayo Vallecano (2025)", foto: "https://assets.realmadrid.com/is/image/realmadrid/DILAN-CUEVAS_SG13045_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "prebenjamin-a/dylan-cuevas-lopez" },
           { nombre: "Iker Cayetano Batoure", apodo: "Iker Cayetano", posicion: "Delantero", dorsal: null, fechaNacimiento: "18/04/2018", lugarNacimiento: "Madrid", seleccion: null, origen: "Atlético de Madrid (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/IKER-CAYETANO_SG13085_1500X2000-1?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/iker-cayetano-batoure" },
-          { nombre: "Matias Foz Lopez", apodo: "Matías", posicion: "Delantero", dorsal: null, fechaNacimiento: "03/02/2018", lugarNacimiento: "Madrid", seleccion: null, origen: "EFMO Boadilla (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MATÍAS-FOZ_SG13097_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/matias-foz-lopez" }
+          { nombre: "Matias Foz Lopez", apodo: "Matías", posicion: "Delantero", dorsal: null, fechaNacimiento: "03/02/2018", lugarNacimiento: "Madrid", seleccion: null, origen: "EFMO Boadilla (2026)", foto: "https://assets.realmadrid.com/is/image/realmadrid/MAT%C3%8DAS-FOZ_SG13097_1500X2000?$Desktop$&fit=wrap&wid=420&hei=560", perfilRM: "benjamin-b/matias-foz-lopez" }
         ]
       },
       "Prebenjamín A": {
@@ -2415,14 +2561,24 @@
       const [password, setPassword] = useState("");
       const [error, setError] = useState("");
 
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
         if (USERS[username] && USERS[username] === password) {
           sessionStorage.setItem("lfUser", username);
           onLogin(username);
-        } else {
-          setError("Usuario o contraseña incorrectos");
+          return;
         }
+        // Usuarios creados desde el panel de administración (contraseña guardada como hash)
+        try {
+          var h = await lfSha256(password);
+          var ok = lfLocalUsers().some(function(u){ return u.usuario === username && u.hash === h; });
+          if (!ok && supabaseClient) {
+            var res = await supabaseClient.from('usuarios').select('usuario').eq('usuario', username).eq('hash', h).limit(1);
+            ok = !!(res && res.data && res.data.length);
+          }
+          if (ok) { sessionStorage.setItem("lfUser", username); onLogin(username); return; }
+        } catch(err) {}
+        setError("Usuario o contraseña incorrectos");
       };
 
       return (
@@ -2444,7 +2600,7 @@
     }
 
     /* ===== SIDEBAR COMPONENT ===== */
-    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, showCalendario, onShowCalendario, showProcedencia, onShowProcedencia, showGeneraciones, onShowGeneraciones, showRadar, onShowRadar, showBajas, onShowBajas, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
+    function Sidebar({ selectedTeam, onSelectTeam, user, onLogout, isOpen, onClose, showNews, onShowNews, showCaptacion, onShowCaptacion, showPromociones, onShowPromociones, showInternacionales, onShowInternacionales, showCalendario, onShowCalendario, showProcedencia, onShowProcedencia, showGeneraciones, onShowGeneraciones, showRadar, onShowRadar, showBajas, onShowBajas, showAdmin, onShowAdmin, allPlayers, onGlobalSearchSelect, onGoHome, showHome }) {
       const [searchQ, setSearchQ] = useState("");
       const [searchOpen, setSearchOpen] = useState(false);
 
@@ -2524,7 +2680,7 @@
                         className={`sidebar-item ${isActive ? 'active' : ''}`}
                         onClick={() => { onSelectTeam(team); onClose(); }}
                       >
-                        <span className="sidebar-dot" style={{background: isActive ? 'var(--accent)' : '#475569'}}></span>
+                        <span className="sidebar-dot" style={{background: isActive ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                         <span>{team}</span>
                         <span style={{marginLeft:'auto',fontSize:'11px',color:'#475569'}}>{data ? data.jugadores.length : ''}</span>
                       </div>
@@ -2537,64 +2693,73 @@
                 className={`sidebar-item ${showNews ? 'active' : ''}`}
                 onClick={() => { onShowNews(); onClose(); }}
               >
-                <span className="sidebar-dot" style={{background: showNews ? 'var(--accent)' : '#475569'}}></span>
+                <span className="sidebar-dot" style={{background: showNews ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                 <span>Noticias</span>
               </div>
               <div
                 className={`sidebar-item ${showCaptacion ? 'active' : ''}`}
                 onClick={() => { onShowCaptacion(); onClose(); }}
               >
-                <span className="sidebar-dot" style={{background: showCaptacion ? 'var(--accent)' : '#475569'}}></span>
+                <span className="sidebar-dot" style={{background: showCaptacion ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                 <span>Captación 26/27</span>
               </div>
               <div
                 className={`sidebar-item ${showPromociones ? 'active' : ''}`}
                 onClick={() => { onShowPromociones(); onClose(); }}
               >
-                <span className="sidebar-dot" style={{background: showPromociones ? 'var(--accent)' : '#475569'}}></span>
+                <span className="sidebar-dot" style={{background: showPromociones ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                 <span>Promociones</span>
               </div>
               <div
                 className={`sidebar-item ${showInternacionales ? 'active' : ''}`}
                 onClick={() => { onShowInternacionales(); onClose(); }}
               >
-                <span className="sidebar-dot" style={{background: showInternacionales ? 'var(--accent)' : '#475569'}}></span>
+                <span className="sidebar-dot" style={{background: showInternacionales ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                 <span>Internacionales</span>
               </div>
               <div
                 className={`sidebar-item ${showCalendario ? 'active' : ''}`}
                 onClick={() => { onShowCalendario(); onClose(); }}
               >
-                <span className="sidebar-dot" style={{background: showCalendario ? 'var(--accent)' : '#475569'}}></span>
+                <span className="sidebar-dot" style={{background: showCalendario ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                 <span>Calendario</span>
               </div>
               <div
                 className={`sidebar-item ${showProcedencia ? 'active' : ''}`}
                 onClick={() => { onShowProcedencia(); onClose(); }}
               >
-                <span className="sidebar-dot" style={{background: showProcedencia ? 'var(--accent)' : '#475569'}}></span>
+                <span className="sidebar-dot" style={{background: showProcedencia ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                 <span>Procedencia</span>
               </div>
               <div
                 className={`sidebar-item ${showGeneraciones ? 'active' : ''}`}
                 onClick={() => { onShowGeneraciones(); onClose(); }}
               >
-                <span className="sidebar-dot" style={{background: showGeneraciones ? 'var(--accent)' : '#475569'}}></span>
+                <span className="sidebar-dot" style={{background: showGeneraciones ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                 <span>Generaciones</span>
               </div>
               <div
                 className={`sidebar-item ${showBajas ? 'active' : ''}`}
                 onClick={() => { onShowBajas(); onClose(); }}
               >
-                <span className="sidebar-dot" style={{background: showBajas ? 'var(--accent)' : '#475569'}}></span>
+                <span className="sidebar-dot" style={{background: showBajas ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                 <span>Bajas 25-26</span>
               </div>
+              {isAdmin(user) && (
+                <div
+                  className={`sidebar-item ${showAdmin ? 'active' : ''}`}
+                  onClick={() => { onShowAdmin(); onClose(); }}
+                >
+                  <span className="sidebar-dot" style={{background: showAdmin ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
+                  <span>Administración</span>
+                </div>
+              )}
               {user === "AlvaroLopez" && (
                 <div
                   className={`sidebar-item ${showRadar ? 'active' : ''}`}
                   onClick={() => { onShowRadar(); onClose(); }}
                 >
-                  <span className="sidebar-dot" style={{background: showRadar ? 'var(--accent)' : '#475569'}}></span>
+                  <span className="sidebar-dot" style={{background: showRadar ? 'var(--pink)' : 'rgba(236,229,216,0.32)'}}></span>
                   <span>Radar Rival</span>
                 </div>
               )}
@@ -4442,95 +4607,266 @@
       const totalIntl = allPlayers.filter(function(p){ return p.seleccion; }).length;
 
       return (
-        <div className="home-wrap">
-          <div className="home-hero">
-            <img src={CREST_URL} alt="Real Madrid" className="home-crest" />
-            <h1 className="home-title">La Fábrica</h1>
-            <p className="home-sub">Temporada 2026/27 · Cantera masculina del Real Madrid</p>
-          </div>
-
-          <div className="home-stats">
-            <div className="home-stat">
-              <div className="home-stat-value">{totalEquipos}</div>
-              <div className="home-stat-label">Equipos</div>
-            </div>
-            <div className="home-stat">
-              <div className="home-stat-value">{totalJugadores}</div>
-              <div className="home-stat-label">Jugadores</div>
-            </div>
-            <div className="home-stat">
-              <div className="home-stat-value">{totalIntl}</div>
-              <div className="home-stat-label">Internacionales</div>
-            </div>
-          </div>
-
-          <div className="home-section-title">Destacados</div>
-          <div className="home-grid">
-            <div className="home-card home-card-featured" onClick={function(){ onSelectTeam("Juvenil A"); }}>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/UEFA_Youth_League.svg/250px-UEFA_Youth_League.svg.png" alt="UEFA Youth League" className="home-card-logo" />
-              <div className="home-card-title">Campeones de la Youth League</div>
-              <div className="home-card-sub">Juvenil A · Final vs Brujas (pens. 4-2) · 20/04/2026</div>
-            </div>
-            <div className="home-card" onClick={function(){ onSelectTeam("Castilla"); }}>
-              <div className="home-card-title">Premier League International Cup</div>
-              <div className="home-card-sub">Castilla · Semifinal vs Dinamo Zagreb (por confirmar)</div>
-            </div>
-          </div>
-
-          {upcomingBirthdays && upcomingBirthdays.length > 0 && (
-            <>
-              <div className="home-section-title">Próximos cumpleaños</div>
-              <div className="home-bdays">
-                {upcomingBirthdays.slice(0, 10).map(function(item, i){
-                  var p = item.player;
-                  var isToday = item.daysUntil === 0;
-                  var displayName = getDisplayName(p);
-                  return (
-                    <div key={i} className={"bday-card" + (isToday ? " today" : "")} onClick={function(){ if (onGlobalSearchSelect) onGlobalSearchSelect(p.equipo, p.apodo); else onSelectTeam(p.equipo); }}>
-                      {p.foto ? (
-                        <img src={p.foto} alt={displayName} className="bday-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
-                      ) : null}
-                      <div className="bday-photo-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{bdayInitials(displayName)}</div>
-                      <div className="bday-info">
-                        <div className="bday-name">{displayName}</div>
-                        <div className="bday-meta">{p.equipo} · cumple {item.newAge}</div>
-                        <div className={"bday-date" + (isToday ? " today-text" : "")}>{formatBdayDate(item)}</div>
-                      </div>
-                    </div>
-                  );
-                })}
+        <div className="fh">
+          <section className="fh-hero">
+            <div className="fh-hero-inner">
+              <img src={CREST_URL} alt="" className="fh-crest" />
+              <div className="fh-eyebrow">Cantera masculina · Temporada 2026/27</div>
+              <h1 className="fh-title">La Fábrica</h1>
+              <p className="fh-lead">De Debutante al Castilla. Todas las plantillas, la trayectoria y el seguimiento de cada jugador de la cantera.</p>
+              <div className="fh-ctas">
+                <button className="fh-cta" onClick={function(){ onSelectTeam("Castilla"); }}>
+                  <span>Ver plantillas</span><span className="fh-cta-circle">›</span>
+                </button>
+                <button className="fh-cta" onClick={onShowPromociones}>
+                  <span>Promociones</span><span className="fh-cta-circle">›</span>
+                </button>
               </div>
-            </>
-          )}
+            </div>
+            <div className="fh-stats">
+              <div className="fh-stat"><div className="fh-stat-val">{totalEquipos}</div><div className="fh-stat-lbl">Equipos</div></div>
+              <div className="fh-stat"><div className="fh-stat-val">{totalJugadores}</div><div className="fh-stat-lbl">Jugadores</div></div>
+              <div className="fh-stat"><div className="fh-stat-val">{totalIntl}</div><div className="fh-stat-lbl">Internacionales</div></div>
+              <div className="fh-stat"><div className="fh-stat-val">{promociones.length}</div><div className="fh-stat-lbl">Promociones</div></div>
+            </div>
+          </section>
 
-          <div className="home-section-title">Acceso rápido</div>
-          <div className="home-grid">
-            <div className="home-card" onClick={onShowPromociones}>
-              <div className="home-card-title">Promociones</div>
-              <div className="home-card-sub">{promociones.length} jugadores jugando por encima de su categoría</div>
+          <div className="fh-body">
+            <div className="fh-sec-head">
+              <div className="fh-sec-eyebrow">Palmarés y competiciones</div>
+              <h2 className="fh-sec-title">Destacados</h2>
             </div>
-            <div className="home-card" onClick={onShowNews}>
-              <div className="home-card-title">Noticias</div>
-              <div className="home-card-sub">Última hora de la cantera en tiempo real</div>
+            <div className="fh-feature-grid">
+              <div className="fh-feature fh-feature-dark" onClick={function(){ onSelectTeam("Juvenil A"); }}>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/UEFA_Youth_League.svg/250px-UEFA_Youth_League.svg.png" alt="UEFA Youth League" className="fh-feature-logo" />
+                <span className="fh-cta-circle fh-feature-arrow">›</span>
+                <div className="fh-feature-kicker">Juvenil A · 2025/26</div>
+                <div className="fh-feature-title">Campeones de la Youth League</div>
+                <div className="fh-feature-sub">Final frente al Brujas · 4-2 en los penaltis · 20/04/2026</div>
+              </div>
+              <div className="fh-feature fh-feature-ivory" onClick={function(){ onSelectTeam("Castilla"); }}>
+                <span className="fh-cta-circle fh-feature-arrow">›</span>
+                <div className="fh-feature-kicker">Castilla · 2025/26</div>
+                <div className="fh-feature-title">Premier League International Cup</div>
+                <div className="fh-feature-sub">Semifinal frente al Dinamo Zagreb</div>
+              </div>
             </div>
-            <div className="home-card" onClick={onShowCaptacion}>
-              <div className="home-card-title">Captación 26/27</div>
-              <div className="home-card-sub">Sugerencias de fichajes para la próxima temporada</div>
+
+            <div className="fh-sec-head">
+              <div className="fh-sec-eyebrow">{totalEquipos} categorías</div>
+              <h2 className="fh-sec-title">Equipos</h2>
+            </div>
+            <div className="fh-teams">
+              {Object.keys(canteraData).map(function(team){
+                var n = canteraData[team].jugadores.length;
+                return (
+                  <div key={team} className="fh-team" onClick={function(){ onSelectTeam(team); }}>
+                    <div className="fh-team-cat">{canteraData[team].categoria}</div>
+                    <div className="fh-team-name">{team}</div>
+                    <div className="fh-team-foot">
+                      <span className="fh-team-count">{n > 0 ? n + " jugadores" : "Pendiente de publicar"}</span>
+                      <span className="fh-cta-circle fh-cta-circle-sm">›</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {upcomingBirthdays && upcomingBirthdays.length > 0 && (
+              <>
+                <div className="fh-sec-head">
+                  <div className="fh-sec-eyebrow">Próximos días</div>
+                  <h2 className="fh-sec-title">Cumpleaños</h2>
+                </div>
+                <div className="fh-scroll">
+                  {upcomingBirthdays.slice(0, 12).map(function(item, i){
+                    var p = item.player;
+                    var isToday = item.daysUntil === 0;
+                    var displayName = getDisplayName(p);
+                    return (
+                      <div key={i} className={"bday-card" + (isToday ? " today" : "")} onClick={function(){ if (onGlobalSearchSelect) onGlobalSearchSelect(p.equipo, p.apodo); else onSelectTeam(p.equipo); }}>
+                        {p.foto ? (
+                          <img src={p.foto} alt={displayName} className="bday-photo" onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+                        ) : null}
+                        <div className="bday-photo-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{bdayInitials(displayName)}</div>
+                        <div className="bday-info">
+                          <div className="bday-name">{displayName}</div>
+                          <div className="bday-meta">{p.equipo} · cumple {item.newAge}</div>
+                          <div className={"bday-date" + (isToday ? " today-text" : "")}>{formatBdayDate(item)}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            <div className="fh-sec-head">
+              <div className="fh-sec-eyebrow">Herramientas</div>
+              <h2 className="fh-sec-title">Acceso rápido</h2>
+            </div>
+            <div className="fh-quick">
+              <div className="fh-team fh-quick-tile" onClick={onShowPromociones}>
+                <div className="fh-team-cat">{promociones.length} jugadores</div>
+                <div className="fh-team-name">Promociones</div>
+                <div className="fh-team-foot"><span className="fh-team-count">Por encima de su categoría natural</span><span className="fh-cta-circle fh-cta-circle-sm">›</span></div>
+              </div>
+              <div className="fh-team fh-quick-tile" onClick={onShowNews}>
+                <div className="fh-team-cat">En tiempo real</div>
+                <div className="fh-team-name">Noticias</div>
+                <div className="fh-team-foot"><span className="fh-team-count">Última hora de la cantera</span><span className="fh-cta-circle fh-cta-circle-sm">›</span></div>
+              </div>
+              <div className="fh-team fh-quick-tile" onClick={onShowCaptacion}>
+                <div className="fh-team-cat">Temporada 2026/27</div>
+                <div className="fh-team-name">Captación</div>
+                <div className="fh-team-foot"><span className="fh-team-count">Sugerencias de fichajes</span><span className="fh-cta-circle fh-cta-circle-sm">›</span></div>
+              </div>
             </div>
           </div>
+        </div>
+      );
+    }
 
-          <div className="home-section-title">Equipos</div>
-          <div className="home-teams-grid">
-            {Object.keys(canteraData).map(function(team){
-              var color = (PROY_COLORS && PROY_COLORS[team]) ? PROY_COLORS[team].border : 'var(--accent)';
-              return (
-                <div key={team} className="home-team-card" onClick={function(){ onSelectTeam(team); }}>
-                  <span className="home-team-dot" style={{background: color}}></span>
-                  <span className="home-team-name">{team}</span>
-                  <span className="home-team-count">{canteraData[team].jugadores.length}</span>
+    /* ===== PANEL DE ADMINISTRACIÓN (solo ADMIN_USERS) ===== */
+    function AdminPanel({ user }) {
+      const [list, setList] = useState(function(){ return lfLocalUsers(); });
+      const [remote, setRemote] = useState(null);
+      const [nombre, setNombre] = useState("");
+      const [usuario, setUsuario] = useState("");
+      const [pass, setPass] = useState(function(){ return lfGenPassword(12); });
+      const [msg, setMsg] = useState("");
+      const [created, setCreated] = useState(null);
+      const [busy, setBusy] = useState(false);
+
+      function suggest(n) {
+        return (n || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z\s]/g, "").split(/\s+/).filter(Boolean).slice(0, 2)
+          .map(function(w){ return w[0].toUpperCase() + w.slice(1).toLowerCase(); }).join("");
+      }
+
+      useEffect(function(){
+        if (!supabaseClient) { setRemote(false); return; }
+        supabaseClient.from('usuarios').select('usuario,nombre,creado_por,created_at').order('created_at', { ascending: false })
+          .then(function(res){
+            if (res.error) { setRemote(false); return; }
+            setRemote(true);
+            var map = {};
+            lfLocalUsers().forEach(function(u){ map[u.usuario] = u; });
+            (res.data || []).forEach(function(u){ map[u.usuario] = Object.assign({}, map[u.usuario] || {}, u, { remoto: true }); });
+            setList(Object.keys(map).map(function(k){ return map[k]; }));
+          }, function(){ setRemote(false); });
+      }, []);
+
+      async function crear() {
+        var u = usuario.trim(), p = pass;
+        if (!u || !p) { setMsg("Escribe un usuario y una contraseña."); return; }
+        if (!/^[A-Za-z0-9._-]{3,30}$/.test(u)) { setMsg("El usuario solo puede tener letras, números, punto, guion o guion bajo (3-30)."); return; }
+        if (USERS[u] || list.some(function(x){ return x.usuario === u; })) { setMsg("Ese usuario ya existe."); return; }
+        setBusy(true);
+        var h = await lfSha256(p);
+        var rec = { usuario: u, nombre: nombre.trim() || null, hash: h, creado_por: user, created_at: new Date().toISOString() };
+        var locals = lfLocalUsers(); locals.unshift(rec); lfSaveLocalUsers(locals);
+        var remotoOk = false;
+        if (supabaseClient) { try { var r = await supabaseClient.from('usuarios').insert(rec); remotoOk = !r.error; } catch(e) {} }
+        setList([Object.assign({}, rec, { remoto: remotoOk })].concat(list));
+        setCreated({ usuario: u, pass: p, remoto: remotoOk });
+        setNombre(""); setUsuario(""); setPass(lfGenPassword(12)); setMsg(""); setBusy(false);
+      }
+
+      async function resetear(u) {
+        var p = lfGenPassword(12); var h = await lfSha256(p);
+        lfSaveLocalUsers(lfLocalUsers().map(function(x){ return x.usuario === u ? Object.assign({}, x, { hash: h }) : x; }));
+        var ok = false;
+        if (supabaseClient) { try { var r = await supabaseClient.from('usuarios').update({ hash: h }).eq('usuario', u); ok = !r.error; } catch(e) {} }
+        setCreated({ usuario: u, pass: p, remoto: ok, reset: true });
+      }
+
+      async function borrar(u) {
+        if (!confirm("¿Eliminar el usuario " + u + "? Dejará de poder entrar.")) return;
+        lfSaveLocalUsers(lfLocalUsers().filter(function(x){ return x.usuario !== u; }));
+        if (supabaseClient) { try { await supabaseClient.from('usuarios').delete().eq('usuario', u); } catch(e) {} }
+        setList(list.filter(function(x){ return x.usuario !== u; }));
+        if (created && created.usuario === u) setCreated(null);
+      }
+
+      function copiar(t) {
+        try { navigator.clipboard.writeText(t).then(function(){ setMsg("Copiado al portapapeles."); }); } catch(e) {}
+      }
+
+      var fixed = Object.keys(USERS);
+      var credText = created ? ("La Fábrica 26/27\nhttps://lafabricarm.vercel.app\nUsuario: " + created.usuario + "\nContraseña: " + created.pass) : "";
+      var card = { background:'var(--surface)', border:'1px solid var(--border-light)', borderRadius:'20px', padding:'24px', boxShadow:'0 1px 2px rgba(16,24,40,.04), 0 14px 34px -20px rgba(16,24,40,.2)' };
+      var label = { fontSize:'10.5px', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', color:'var(--text-3)', marginBottom:'6px', display:'block' };
+      var input = { width:'100%', padding:'11px 14px', border:'1px solid var(--border)', borderRadius:'12px', fontSize:'14px', background:'var(--surface)', color:'var(--text)', outline:'none', fontFamily:'inherit' };
+      var ghost = { padding:'8px 14px', borderRadius:'999px', border:'1px solid var(--border)', background:'var(--surface)', color:'var(--accent)', fontSize:'12px', fontWeight:600, cursor:'pointer' };
+
+      return (
+        <div style={{padding:'22px 28px 40px', maxWidth:'1100px'}}>
+          <div style={{fontSize:'11px', fontWeight:700, letterSpacing:'.28em', textTransform:'uppercase', color:'var(--pink)', marginBottom:'6px'}}>Solo administrador</div>
+          <h2 style={{margin:'0 0 6px', fontSize:'30px', fontWeight:800, textTransform:'uppercase', letterSpacing:'-0.02em', color:'var(--accent)'}}>Gestión de usuarios</h2>
+          <p style={{margin:'0 0 22px', fontSize:'13px', color:'var(--text-2)'}}>
+            {remote === null ? "Comprobando la base de datos…" : remote
+              ? "Sincronizado con la base de datos: los usuarios que crees funcionan en cualquier dispositivo."
+              : "La base de datos no está disponible ahora mismo: los usuarios que crees solo funcionarán en este navegador hasta que se active la tabla de usuarios."}
+          </p>
+
+          <div style={{display:'grid', gridTemplateColumns:'minmax(0,1.1fr) minmax(0,1fr)', gap:'18px', alignItems:'start'}} className="admin-grid">
+            <div style={card}>
+              <div style={{fontSize:'16px', fontWeight:800, color:'var(--accent)', marginBottom:'16px', textTransform:'uppercase', letterSpacing:'.02em'}}>Generar usuario</div>
+              <label style={label}>Nombre (opcional)</label>
+              <input style={input} value={nombre} placeholder="Ej. Juan Pérez" onChange={function(e){ var v = e.target.value; setNombre(v); if (!usuario || usuario === suggest(nombre)) setUsuario(suggest(v)); }} />
+              <div style={{height:'14px'}}></div>
+              <label style={label}>Usuario</label>
+              <input style={input} value={usuario} placeholder="Ej. JuanPerez" onChange={function(e){ setUsuario(e.target.value.replace(/\s/g, "")); }} />
+              <div style={{height:'14px'}}></div>
+              <label style={label}>Contraseña</label>
+              <div style={{display:'flex', gap:'8px'}}>
+                <input style={Object.assign({}, input, { fontFamily:'ui-monospace, SFMono-Regular, Menlo, monospace', letterSpacing:'.04em' })} value={pass} onChange={function(e){ setPass(e.target.value); }} />
+                <button style={ghost} onClick={function(){ setPass(lfGenPassword(12)); }} title="Generar otra">Generar</button>
+              </div>
+              <button className="login-btn" style={{marginTop:'18px'}} disabled={busy} onClick={crear}>{busy ? "Creando…" : "Crear usuario"}</button>
+              {msg && <div style={{marginTop:'10px', fontSize:'12.5px', color:'var(--text-2)'}}>{msg}</div>}
+
+              {created && (
+                <div style={{marginTop:'18px', padding:'16px', borderRadius:'14px', background:'var(--ivory)', border:'1px solid #ddd3bf'}}>
+                  <div style={{fontSize:'11px', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', color:'var(--accent)', marginBottom:'8px'}}>{created.reset ? "Contraseña restablecida" : "Usuario creado"}</div>
+                  <div style={{fontFamily:'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize:'14px', lineHeight:1.7, color:'var(--text)'}}>
+                    Usuario: <strong>{created.usuario}</strong><br />Contraseña: <strong>{created.pass}</strong>
+                  </div>
+                  <div style={{fontSize:'11.5px', color:'var(--text-2)', marginTop:'6px'}}>La contraseña solo se muestra ahora; guárdala o envíala antes de salir.{created.remoto ? "" : " (Guardado solo en este navegador.)"}</div>
+                  <button style={Object.assign({}, ghost, { marginTop:'10px' })} onClick={function(){ copiar(credText); }}>Copiar credenciales</button>
                 </div>
-              );
-            })}
+              )}
+            </div>
+
+            <div style={card}>
+              <div style={{fontSize:'16px', fontWeight:800, color:'var(--accent)', marginBottom:'14px', textTransform:'uppercase', letterSpacing:'.02em'}}>Usuarios ({fixed.length + list.length})</div>
+              {list.map(function(u){
+                return (
+                  <div key={u.usuario} style={{display:'flex', alignItems:'center', gap:'10px', padding:'10px 0', borderBottom:'1px solid #f2eee6'}}>
+                    <div style={{width:'34px', height:'34px', borderRadius:'50%', background:'var(--accent)', color:'#ECE5D8', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', fontWeight:700, flexShrink:0}}>{u.usuario.charAt(0).toUpperCase()}</div>
+                    <div style={{flex:1, minWidth:0}}>
+                      <div style={{fontSize:'14px', fontWeight:700}}>{u.usuario}</div>
+                      <div style={{fontSize:'11.5px', color:'var(--text-3)'}}>{u.nombre ? u.nombre + " · " : ""}creado por {u.creado_por || "—"}{u.created_at ? " · " + new Date(u.created_at).toLocaleDateString('es-ES') : ""}</div>
+                    </div>
+                    <button style={ghost} onClick={function(){ resetear(u.usuario); }}>Nueva clave</button>
+                    <button style={Object.assign({}, ghost, { color:'var(--del)' })} onClick={function(){ borrar(u.usuario); }}>Eliminar</button>
+                  </div>
+                );
+              })}
+              {fixed.map(function(u){
+                return (
+                  <div key={u} style={{display:'flex', alignItems:'center', gap:'10px', padding:'10px 0', borderBottom:'1px solid #f2eee6'}}>
+                    <div style={{width:'34px', height:'34px', borderRadius:'50%', background:'var(--ivory)', color:'var(--accent)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', fontWeight:700, flexShrink:0}}>{u.charAt(0).toUpperCase()}</div>
+                    <div style={{flex:1, minWidth:0}}>
+                      <div style={{fontSize:'14px', fontWeight:700}}>{u}</div>
+                      <div style={{fontSize:'11.5px', color:'var(--text-3)'}}>Usuario fijo de la app</div>
+                    </div>
+                    {isAdmin(u) && <span style={{fontSize:'10.5px', fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', padding:'3px 9px', borderRadius:'999px', background:'var(--accent)', color:'#ECE5D8'}}>Admin</span>}
+                    {isRestricted(u) && <span style={{fontSize:'10.5px', fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', padding:'3px 9px', borderRadius:'999px', background:'var(--pink-soft)', color:'var(--pink)'}}>Restringido</span>}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       );
@@ -4566,6 +4902,7 @@
       const [showAlvaroWelcome, setShowAlvaroWelcome] = useState(false);
       const [showRadar, setShowRadar] = useState(false);
       const [showBajas, setShowBajas] = useState(false);
+      const [showAdmin, setShowAdmin] = useState(false);
       const [bajasFilter, setBajasFilter] = useState("Todos");
       const [radarRivales, setRadarRivales] = useState(function() {
         try { return JSON.parse(localStorage.getItem("radar_rivales") || "{}"); } catch(e) { return {}; }
@@ -4845,6 +5182,7 @@
         setView("youth");
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
@@ -4966,6 +5304,7 @@
         setShowRadar(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -4985,6 +5324,7 @@
         setShowRadar(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         setPendingPlayerApodo(apodo);
       }, []);
 
@@ -4999,6 +5339,7 @@
         setShowRadar(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         setView("list");
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -5014,6 +5355,7 @@
         setShowRadar(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         loadCaptacion();
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
@@ -5024,6 +5366,7 @@
         setShowCaptacion(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -5050,6 +5393,7 @@
         setShowRadar(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -5064,6 +5408,7 @@
         setShowRadar(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -5078,11 +5423,28 @@
         setShowGeneraciones(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
+        try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
+      }, []);
+
+      const handleShowAdmin = useCallback(() => {
+        setShowAdmin(true);
+        setShowBajas(false);
+        setShowNews(false);
+        setShowCaptacion(false);
+        setShowPromociones(false);
+        setShowInternacionales(false);
+        setShowCalendario(false);
+        setShowProcedencia(false);
+        setShowGeneraciones(false);
+        setShowRadar(false);
+        setShowHome(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
       const handleShowBajas = useCallback(() => {
         setShowBajas(true);
+        setShowAdmin(false);
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
@@ -5144,6 +5506,7 @@
         setShowRadar(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -5155,6 +5518,7 @@
         setShowInternacionales(false);
         setShowHome(false);
         setShowBajas(false);
+        setShowAdmin(false);
         try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch(e) { window.scrollTo(0, 0); }
       }, []);
 
@@ -5408,6 +5772,8 @@
             onShowRadar={handleShowRadar}
             showBajas={showBajas}
             onShowBajas={handleShowBajas}
+            showAdmin={showAdmin}
+            onShowAdmin={handleShowAdmin}
             allPlayers={allPlayers}
             onGlobalSearchSelect={handleGlobalSearchSelect}
             onGoHome={handleGoHome}
@@ -5415,17 +5781,17 @@
           />
 
           <div className="main-content">
-            <header className="top-header">
+            <header className={"top-header" + (showHome ? " top-header-home" : "")}>
               <div className="header-left">
                 <button className="hamburger" onClick={() => setSidebarOpen(true)}>
                   <MenuIcon />
                 </button>
                 <div>
-                  <h1 className="team-title">{showHome ? 'Inicio' : showRadar ? 'Radar Rival' : showGeneraciones ? 'Generaciones' : showProcedencia ? 'Procedencia' : showCalendario ? 'Calendario' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : showBajas ? 'Bajas 25-26' : selectedTeam}</h1>
-                  <p className="team-category">{showHome ? 'La Fábrica 26/27 · Cantera masculina del Real Madrid' : showRadar ? 'Análisis de plantillas rivales próximas del Juvenil A' : showGeneraciones ? (generacionAnio ? `Generación ${generacionAnio} · ${(generacionGrouped && generacionGrouped.total) || 0} jugadores en ${(generacionGrouped && generacionGrouped.teams.length) || 0} equipos` : 'Selecciona un año para ver todos los jugadores nacidos esa temporada') : showProcedencia ? `Ranking de clubes y lugares de origen · ${allPlayers.length} jugadores analizados` : showCalendario ? `${calendario.partidos.length} partidos programados · actualizado ${calendario.actualizado}` : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : showBajas ? `${bajas2526.length} jugadores que ya no están en la web oficial · seguimiento temporada 26/27` : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
+                  <h1 className="team-title">{showHome ? 'Inicio' : showRadar ? 'Radar Rival' : showGeneraciones ? 'Generaciones' : showProcedencia ? 'Procedencia' : showCalendario ? 'Calendario' : showInternacionales ? 'Internacionales' : showPromociones ? 'Promociones' : showCaptacion ? 'Captación 26/27' : showNews ? 'Noticias' : showBajas ? 'Bajas 25-26' : showAdmin ? 'Administración' : selectedTeam}</h1>
+                  <p className="team-category">{showHome ? 'La Fábrica 26/27 · Cantera masculina del Real Madrid' : showRadar ? 'Análisis de plantillas rivales próximas del Juvenil A' : showGeneraciones ? (generacionAnio ? `Generación ${generacionAnio} · ${(generacionGrouped && generacionGrouped.total) || 0} jugadores en ${(generacionGrouped && generacionGrouped.teams.length) || 0} equipos` : 'Selecciona un año para ver todos los jugadores nacidos esa temporada') : showProcedencia ? `Ranking de clubes y lugares de origen · ${allPlayers.length} jugadores analizados` : showCalendario ? `${calendario.partidos.length} partidos programados · actualizado ${calendario.actualizado}` : showInternacionales ? `${internacionales.total} jugadores convocados por selecciones nacionales` : showPromociones ? `${promociones.length} jugadores en categoría superior a su generación natural` : showCaptacion ? 'Sugerencias de fichajes para la temporada 2026-2027' : showNews ? 'Últimas noticias de la cantera del Real Madrid' : showAdmin ? 'Usuarios y contraseñas de acceso' : showBajas ? `${bajas2526.length} jugadores que ya no están en la web oficial · seguimiento temporada 26/27` : `${currentTeam.categoria} · ${stats.total} jugadores${stats.intl > 0 ? ` · ${stats.intl} internacionales` : ''}`}</p>
                 </div>
               </div>
-              {!showHome && !showRadar && !showGeneraciones && !showProcedencia && !showCalendario && !showNews && !showCaptacion && !showPromociones && !showInternacionales && !showBajas && (
+              {!showHome && !showRadar && !showGeneraciones && !showProcedencia && !showCalendario && !showNews && !showCaptacion && !showPromociones && !showInternacionales && !showBajas && !showAdmin && (
                 <div className="header-stats">
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--por)'}}>{stats.por}</div><div className="header-stat-label">POR</div></div>
                   <div className="header-stat"><div className="header-stat-val" style={{color:'var(--def)'}}>{stats.def}</div><div className="header-stat-label">DEF</div></div>
@@ -5857,6 +6223,8 @@
               </div>
             ) : showNews ? (
               <NewsView />
+            ) : showAdmin && isAdmin(user) ? (
+              <AdminPanel user={user} />
             ) : showBajas ? (
               (function(){
                 var tipos = ["Todos","Venta","Cesión","Libre","Fin de cesión","Desconocido"];
@@ -5968,13 +6336,26 @@
                     {filteredPlayers.map((player, i) => {
                       const ps = getPositionStyle(player.posicion);
                       const isExpanded = expandedPlayer === i;
+                      const bandOf = function(p){ var r = positionRank(p); return r <= 1.5 ? 'Porteros' : r <= 4.5 ? 'Defensas' : r <= 7.5 ? 'Centrocampistas' : 'Delanteros'; };
+                      const band = bandOf(player);
+                      const showGroup = i === 0 || bandOf(filteredPlayers[i - 1]) !== band;
+                      const bandCount = showGroup ? filteredPlayers.filter(function(x){ return bandOf(x) === band; }).length : 0;
+                      const initials = (player.apodo || '').split(' ').map(function(w){ return w[0]; }).join('').substring(0, 2).toUpperCase();
+                      const age = (function(f){ if (!f) return null; var p = f.split('/'); if (p.length !== 3) return null; var b = new Date(+p[2], +p[1] - 1, +p[0]); var n = new Date(); var a = n.getFullYear() - b.getFullYear(); var mm = n.getMonth() - b.getMonth(); if (mm < 0 || (mm === 0 && n.getDate() < b.getDate())) a--; return a; })(player.fechaNacimiento);
                       return (
                         <div key={i}>
+                          {showGroup && (
+                            <div className="roster-group">{band}<span className="roster-group-count">{bandCount}</span></div>
+                          )}
                           <div className={`table-row ${isExpanded ? 'expanded' : ''}`} onClick={() => setExpandedPlayer(isExpanded ? null : i)}>
                             <div className="row-num">{player.dorsal || (i + 1)}</div>
-                            <div>
-                              <div className="player-name">{player.apodo}</div>
-                              <div className="player-fullname">{player.nombre}</div>
+                            <div className="roster-player">
+                              {player.foto ? <img className="roster-avatar" src={player.foto} alt="" loading="lazy" onError={function(e){ e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} /> : null}
+                              <div className="roster-avatar-fb" style={{display: player.foto ? 'none' : 'flex', background: getFieldColor(player.posicion)}}>{initials}</div>
+                              <div style={{minWidth:0}}>
+                                <div className="player-name">{player.apodo}</div>
+                                <div className="player-fullname">{player.nombre}</div>
+                              </div>
                             </div>
                             <div>
                               <span className="pos-badge" style={{background:ps.bg, color:ps.text}}>
@@ -5982,7 +6363,7 @@
                                 {player.posicionDetalle || (player.posicion === "Centrocampista" ? "Medio" : player.posicion)}
                               </span>
                             </div>
-                            <div className="birth-date">{player.fechaNacimiento || '-'}</div>
+                            <div className="birth-date">{player.fechaNacimiento || '-'}{age != null && <div className="roster-age">{age} años</div>}</div>
                             <div className="birth-place">{player.lugarNacimiento || '-'}</div>
                             <div className="birth-place">{player.origen || '-'}</div>
                             <div className="chevron"><ChevronIcon open={isExpanded} /></div>
