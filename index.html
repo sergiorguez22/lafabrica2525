@@ -955,6 +955,28 @@
     .top-header-home .hamburger { pointer-events:auto; color:#ECE5D8; }
     .fh-hero { min-height:100vh; padding-top:96px; }
     @media (max-width:768px) { .fh-hero { min-height:100svh; padding-top:84px; } }
+
+    /* ===== CLASIFICACIÓN 26/27 ===== */
+    .clf-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin:4px 0 16px; flex-wrap:wrap; }
+    .clf-eyebrow { font-size:11px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--pink); margin-bottom:6px; }
+    .clf-title { font-size:24px; font-weight:800; letter-spacing:-0.015em; text-transform:uppercase; color:var(--accent); line-height:1.1; }
+    .clf-rm { text-align:right; }
+    .clf-rm-pos { font-size:40px; font-weight:800; line-height:1; color:var(--accent); letter-spacing:-0.03em; }
+    .clf-rm-lbl { font-size:12px; color:var(--text-2); margin-top:4px; }
+    .clf-table { width:100%; border-collapse:collapse; font-size:13.5px; font-variant-numeric:tabular-nums; }
+    .clf-table th { padding:14px 10px; font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--text-3); text-align:center; border-bottom:1px solid var(--border-light); background:var(--surface); }
+    .clf-table td { padding:12px 10px; text-align:center; border-bottom:1px solid #f2eee6; color:var(--text-2); }
+    .clf-table .l { text-align:left; }
+    .clf-table td.pos { width:44px; font-weight:800; color:var(--text-3); }
+    .clf-table td.name { font-weight:600; color:var(--text); }
+    .clf-table td.pts { font-weight:800; color:var(--text); }
+    .clf-table tr.rm td { background:#f6f2ea; }
+    .clf-table tr.rm td:first-child { box-shadow:inset 3px 0 0 var(--accent); color:var(--accent); }
+    .clf-table tr.rm td.name, .clf-table tr.rm td.pts { color:var(--accent); font-weight:800; }
+    .clf-table tbody tr:hover td { background:#faf8f3; }
+    .clf-table.nogoals .hm { display:none; }
+    .clf-src { font-size:11px; color:var(--text-3); margin-top:10px; }
+    @media (max-width:768px) { .clf-table .hm { display:none; } .clf-title { font-size:19px; } .clf-rm-pos { font-size:30px; } }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
@@ -2078,320 +2100,299 @@
     /* ===== CLASIFICACIONES ===== */
     const clasificaciones = {
       "Castilla": {
-        liga: "Grupo 1 - Primera Federación", jornada: 32,
+        liga: "Primera Federación Grupo 2", jornada: 7, fuente: "https://www.besoccer.es/competicion/clasificacion/primera_division_rfef/2027/grupo2",
         equipos: [
-                { pos: 1, nombre: "Tenerife", pj: 32, pg: 19, pe: 9, pp: 4, gf: 52, gc: 19, pts: 66 },
-                { pos: 2, nombre: "Celta Vigo II", pj: 32, pg: 16, pe: 9, pp: 7, gf: 52, gc: 42, pts: 57 },
-                { pos: 3, nombre: "RM Castilla", pj: 32, pg: 14, pe: 7, pp: 11, gf: 51, gc: 41, pts: 49 },
-                { pos: 4, nombre: "Zamora", pj: 32, pg: 13, pe: 10, pp: 9, gf: 43, gc: 37, pts: 49 },
-                { pos: 5, nombre: "Pontevedra", pj: 32, pg: 12, pe: 13, pp: 7, gf: 38, gc: 24, pts: 49 },
-                { pos: 6, nombre: "Barakaldo", pj: 32, pg: 12, pe: 12, pp: 8, gf: 41, gc: 33, pts: 48 },
-                { pos: 7, nombre: "Ponferradina", pj: 32, pg: 13, pe: 8, pp: 11, gf: 36, gc: 28, pts: 47 },
-                { pos: 8, nombre: "Unionistas", pj: 32, pg: 13, pe: 8, pp: 11, gf: 45, gc: 42, pts: 47 },
-                { pos: 9, nombre: "Lugo", pj: 32, pg: 11, pe: 12, pp: 9, gf: 32, gc: 34, pts: 45 },
-                { pos: 10, nombre: "Mérida", pj: 32, pg: 12, pe: 9, pp: 11, gf: 42, gc: 45, pts: 45 },
-                { pos: 11, nombre: "Arenas Getxo", pj: 32, pg: 13, pe: 5, pp: 14, gf: 38, gc: 47, pts: 44 },
-                { pos: 12, nombre: "Bilbao Athletic", pj: 32, pg: 12, pe: 8, pp: 12, gf: 33, gc: 36, pts: 44 },
-                { pos: 13, nombre: "Racing Ferrol", pj: 32, pg: 12, pe: 6, pp: 14, gf: 35, gc: 41, pts: 42 },
-                { pos: 14, nombre: "Real Avilés", pj: 32, pg: 11, pe: 7, pp: 14, gf: 46, gc: 53, pts: 40 },
-                { pos: 15, nombre: "Ourense", pj: 32, pg: 9, pe: 10, pp: 13, gf: 36, gc: 37, pts: 37 },
-                { pos: 16, nombre: "Talavera", pj: 32, pg: 9, pe: 8, pp: 15, gf: 32, gc: 41, pts: 35 },
-                { pos: 17, nombre: "Guadalajara", pj: 32, pg: 9, pe: 8, pp: 15, gf: 35, gc: 47, pts: 35 },
-                { pos: 18, nombre: "Cacereño", pj: 32, pg: 7, pe: 13, pp: 12, gf: 30, gc: 41, pts: 34 },
-                { pos: 19, nombre: "Osasuna Promesas", pj: 32, pg: 7, pe: 9, pp: 16, gf: 23, gc: 38, pts: 30 },
-                { pos: 20, nombre: "Arenteiro", pj: 32, pg: 6, pe: 9, pp: 17, gf: 29, gc: 43, pts: 27 },
+                { pos: 1, nombre: "Real Zaragoza", pj: 6, pg: 5, pe: 0, pp: 1, gf: 12, gc: 6, pts: 15 },
+                { pos: 2, nombre: "Villarreal B", pj: 6, pg: 4, pe: 1, pp: 1, gf: 12, gc: 6, pts: 13 },
+                { pos: 3, nombre: "Alcorcón", pj: 6, pg: 3, pe: 3, pp: 0, gf: 13, gc: 4, pts: 12 },
+                { pos: 4, nombre: "Real Murcia", pj: 6, pg: 4, pe: 0, pp: 2, gf: 10, gc: 7, pts: 12 },
+                { pos: 5, nombre: "FC Cartagena", pj: 6, pg: 3, pe: 2, pp: 1, gf: 9, gc: 4, pts: 11 },
+                { pos: 6, nombre: "Real Jaén", pj: 6, pg: 3, pe: 2, pp: 1, gf: 8, gc: 5, pts: 11 },
+                { pos: 7, nombre: "UD Ibiza", pj: 7, pg: 3, pe: 1, pp: 3, gf: 9, gc: 9, pts: 10 },
+                { pos: 8, nombre: "Hércules", pj: 6, pg: 3, pe: 1, pp: 2, gf: 5, gc: 5, pts: 10 },
+                { pos: 9, nombre: "Antequera CF", pj: 6, pg: 2, pe: 3, pp: 1, gf: 10, gc: 8, pts: 9 },
+                { pos: 10, nombre: "RM Castilla", pj: 7, pg: 2, pe: 3, pp: 2, gf: 8, gc: 7, pts: 9, esRM: true },
+                { pos: 11, nombre: "Huesca", pj: 6, pg: 2, pe: 3, pp: 1, gf: 7, gc: 7, pts: 9 },
+                { pos: 12, nombre: "Atlético Madrileño", pj: 6, pg: 2, pe: 2, pp: 2, gf: 11, gc: 8, pts: 8 },
+                { pos: 13, nombre: "UE Sant Andreu", pj: 6, pg: 2, pe: 2, pp: 2, gf: 7, gc: 7, pts: 8 },
+                { pos: 14, nombre: "Gimnàstic Tarragona", pj: 6, pg: 2, pe: 1, pp: 3, gf: 7, gc: 9, pts: 7 },
+                { pos: 15, nombre: "Algeciras CF", pj: 6, pg: 2, pe: 1, pp: 3, gf: 8, gc: 11, pts: 7 },
+                { pos: 16, nombre: "Águilas FC", pj: 6, pg: 1, pe: 2, pp: 3, gf: 5, gc: 10, pts: 5 },
+                { pos: 17, nombre: "Rayo Majadahonda", pj: 6, pg: 1, pe: 1, pp: 4, gf: 5, gc: 7, pts: 4 },
+                { pos: 18, nombre: "CE Europa", pj: 6, pg: 1, pe: 1, pp: 4, gf: 4, gc: 10, pts: 4 },
+                { pos: 19, nombre: "CD Teruel", pj: 6, pg: 0, pe: 2, pp: 4, gf: 2, gc: 12, pts: 2 },
+                { pos: 20, nombre: "Juventud Torremolinos", pj: 6, pg: 0, pe: 1, pp: 5, gf: 6, gc: 16, pts: 1 }
         ]
       },
       "Real Madrid C": {
-        liga: "Segunda División RFEF", jornada: 31,
+        liga: "Segunda Federación Grupo 5", jornada: 5, fuente: "https://www.besoccer.es/competicion/clasificacion/segunda_division_rfef/2027/grupo5",
         equipos: [
-                { pos: 1, nombre: "Sanse", pj: 31, pg: 19, pe: 7, pp: 5, gf: 46, gc: 23, pts: 64 },
-                { pos: 2, nombre: "Majadahonda", pj: 31, pg: 18, pe: 9, pp: 4, gf: 48, gc: 23, pts: 63 },
-                { pos: 3, nombre: "Getafe B", pj: 31, pg: 15, pe: 9, pp: 7, gf: 51, gc: 32, pts: 54 },
-                { pos: 4, nombre: "Conquense", pj: 31, pg: 14, pe: 12, pp: 5, gf: 40, gc: 28, pts: 54 },
-                { pos: 5, nombre: "CD Coria", pj: 31, pg: 14, pe: 9, pp: 8, gf: 44, gc: 33, pts: 51 },
-                { pos: 6, nombre: "Tenerife B", pj: 31, pg: 14, pe: 5, pp: 12, gf: 52, gc: 49, pts: 47 },
-                { pos: 7, nombre: "Alcalá", pj: 31, pg: 13, pe: 8, pp: 10, gf: 38, gc: 37, pts: 47 },
-                { pos: 8, nombre: "Orihuela", pj: 31, pg: 11, pe: 10, pp: 10, gf: 42, gc: 38, pts: 43 },
-                { pos: 9, nombre: "Elche Ilicitano ", pj: 31, pg: 10, pe: 11, pp: 10, gf: 50, gc: 48, pts: 41 },
-                { pos: 10, nombre: "Las Palmas B", pj: 31, pg: 10, pe: 8, pp: 13, gf: 39, gc: 40, pts: 38 },
-                { pos: 11, nombre: "Intercity", pj: 31, pg: 9, pe: 10, pp: 12, gf: 38, gc: 43, pts: 37 },
-                { pos: 12, nombre: "Navalcarnero", pj: 31, pg: 9, pe: 9, pp: 13, gf: 35, gc: 41, pts: 36 },
-                { pos: 13, nombre: "R Madrid C", pj: 31, pg: 9, pe: 7, pp: 15, gf: 38, gc: 44, pts: 34 },
-                { pos: 14, nombre: "Fuenlabrada", pj: 31, pg: 8, pe: 9, pp: 14, gf: 31, gc: 39, pts: 33 },
-                { pos: 15, nombre: "Moscardó", pj: 31, pg: 9, pe: 6, pp: 16, gf: 37, gc: 54, pts: 33 },
-                { pos: 16, nombre: "Quintanar", pj: 31, pg: 9, pe: 5, pp: 17, gf: 31, gc: 41, pts: 32 },
-                { pos: 17, nombre: "Rayo B", pj: 31, pg: 9, pe: 3, pp: 19, gf: 30, gc: 55, pts: 30 },
-                { pos: 18, nombre: "Socuéllamos", pj: 31, pg: 6, pe: 9, pp: 16, gf: 29, gc: 51, pts: 27 },
+                { pos: 1, nombre: "Atlético C", pj: 5, pg: 4, pe: 0, pp: 1, gf: 8, gc: 5, pts: 12 },
+                { pos: 2, nombre: "Numancia", pj: 5, pg: 3, pe: 2, pp: 0, gf: 5, gc: 0, pts: 11 },
+                { pos: 3, nombre: "UD Sanse", pj: 5, pg: 3, pe: 1, pp: 1, gf: 7, gc: 3, pts: 10 },
+                { pos: 4, nombre: "UB Conquense", pj: 5, pg: 3, pe: 1, pp: 1, gf: 10, gc: 7, pts: 10 },
+                { pos: 5, nombre: "Real Valladolid Promesas", pj: 5, pg: 3, pe: 0, pp: 2, gf: 11, gc: 4, pts: 9 },
+                { pos: 6, nombre: "Salamanca UDS", pj: 5, pg: 3, pe: 0, pp: 2, gf: 7, gc: 5, pts: 9 },
+                { pos: 7, nombre: "CF Talavera", pj: 5, pg: 2, pe: 2, pp: 1, gf: 7, gc: 5, pts: 8 },
+                { pos: 8, nombre: "Gimnástica Segoviana", pj: 5, pg: 2, pe: 1, pp: 2, gf: 11, gc: 10, pts: 7 },
+                { pos: 9, nombre: "CDA Navalcarnero", pj: 5, pg: 2, pe: 1, pp: 2, gf: 8, gc: 8, pts: 7 },
+                { pos: 10, nombre: "RSD Alcalá", pj: 5, pg: 2, pe: 0, pp: 3, gf: 10, gc: 10, pts: 6 },
+                { pos: 11, nombre: "Real Ávila", pj: 5, pg: 2, pe: 0, pp: 3, gf: 5, gc: 8, pts: 6 },
+                { pos: 12, nombre: "CD Guadalajara", pj: 5, pg: 1, pe: 2, pp: 2, gf: 8, gc: 9, pts: 5 },
+                { pos: 13, nombre: "CD Atlético Paso", pj: 5, pg: 1, pe: 2, pp: 2, gf: 3, gc: 5, pts: 5 },
+                { pos: 14, nombre: "Atlético Albacete", pj: 5, pg: 1, pe: 2, pp: 2, gf: 7, gc: 15, pts: 5 },
+                { pos: 15, nombre: "Atlético Tordesillas", pj: 5, pg: 1, pe: 1, pp: 3, gf: 8, gc: 10, pts: 4 },
+                { pos: 16, nombre: "CS Puertollano", pj: 5, pg: 1, pe: 1, pp: 3, gf: 2, gc: 8, pts: 4 },
+                { pos: 17, nombre: "Getafe B", pj: 5, pg: 0, pe: 3, pp: 2, gf: 3, gc: 5, pts: 3 },
+                { pos: 18, nombre: "Real Madrid C", pj: 5, pg: 0, pe: 3, pp: 2, gf: 1, gc: 4, pts: 3, esRM: true }
         ]
       },
       "Juvenil A": {
-        liga: "División de Honor Juvenil", jornada: 27,
+        liga: "División de Honor Juvenil Grupo V", jornada: 4, fuente: "https://www.besoccer.es/competicion/clasificacion/division_honor_juvenil/2027/grupo5",
         equipos: [
-                { pos: 1, nombre: "Juvenil A", pj: 27, pg: 25, pe: 1, pp: 1, gf: 95, gc: 13, pts: 76 },
-                { pos: 2, nombre: "Atl. Madrid", pj: 27, pg: 18, pe: 6, pp: 3, gf: 70, gc: 16, pts: 60 },
-                { pos: 3, nombre: "Rayo Vallecano", pj: 27, pg: 14, pe: 8, pp: 5, gf: 57, gc: 35, pts: 50 },
-                { pos: 4, nombre: "Leganés", pj: 27, pg: 14, pe: 4, pp: 9, gf: 39, gc: 31, pts: 46 },
-                { pos: 5, nombre: "Las Rozas", pj: 27, pg: 11, pe: 10, pp: 6, gf: 53, gc: 45, pts: 43 },
-                { pos: 6, nombre: "Valladolid", pj: 27, pg: 12, pe: 6, pp: 9, gf: 36, gc: 32, pts: 42 },
-                { pos: 7, nombre: "Sp. Hortaleza", pj: 27, pg: 12, pe: 4, pp: 11, gf: 35, gc: 48, pts: 40 },
-                { pos: 8, nombre: "Unión Adarve", pj: 27, pg: 10, pe: 8, pp: 9, gf: 27, gc: 34, pts: 38 },
-                { pos: 9, nombre: "Unionistas", pj: 27, pg: 10, pe: 3, pp: 14, gf: 38, gc: 53, pts: 33 },
-                { pos: 10, nombre: "Getafe", pj: 27, pg: 8, pe: 8, pp: 11, gf: 42, gc: 40, pts: 32 },
-                { pos: 11, nombre: "Trival", pj: 27, pg: 8, pe: 4, pp: 15, gf: 36, gc: 52, pts: 28 },
-                { pos: 12, nombre: "Rayo Alcob.", pj: 27, pg: 7, pe: 7, pp: 13, gf: 27, gc: 40, pts: 28 },
-                { pos: 13, nombre: "Badajoz", pj: 27, pg: 7, pe: 5, pp: 15, gf: 21, gc: 47, pts: 26 },
-                { pos: 14, nombre: "Burgos", pj: 27, pg: 4, pe: 10, pp: 13, gf: 24, gc: 40, pts: 22 },
-                { pos: 15, nombre: "Diocesano", pj: 27, pg: 4, pe: 7, pp: 16, gf: 23, gc: 58, pts: 19 },
-                { pos: 16, nombre: "La Cruz Villanovense ", pj: 27, pg: 4, pe: 5, pp: 18, gf: 22, gc: 61, pts: 17 },
+                { pos: 1, nombre: "Rayo Vallecano U19", pj: 4, pg: 4, pe: 0, pp: 0, gf: 9, gc: 2, pts: 12 },
+                { pos: 2, nombre: "Getafe Sub 19", pj: 4, pg: 3, pe: 1, pp: 0, gf: 12, gc: 0, pts: 10 },
+                { pos: 3, nombre: "Real Madrid Sub 19", pj: 4, pg: 3, pe: 1, pp: 0, gf: 12, gc: 0, pts: 10, esRM: true },
+                { pos: 4, nombre: "Leganés U19", pj: 4, pg: 3, pe: 1, pp: 0, gf: 12, gc: 3, pts: 10 },
+                { pos: 5, nombre: "Atlético Sub 19", pj: 4, pg: 2, pe: 1, pp: 1, gf: 8, gc: 6, pts: 7 },
+                { pos: 6, nombre: "Rayo Majadahonda U19", pj: 4, pg: 2, pe: 0, pp: 2, gf: 5, gc: 5, pts: 6 },
+                { pos: 7, nombre: "Sporting Hortaleza U19", pj: 4, pg: 2, pe: 0, pp: 2, gf: 7, gc: 8, pts: 6 },
+                { pos: 8, nombre: "Talavera de la Reina U19", pj: 4, pg: 2, pe: 0, pp: 2, gf: 6, gc: 8, pts: 6 },
+                { pos: 9, nombre: "Rayo C. Alcobendas U19", pj: 4, pg: 2, pe: 0, pp: 2, gf: 7, gc: 10, pts: 6 },
+                { pos: 10, nombre: "Alcorcón U19", pj: 4, pg: 1, pe: 2, pp: 1, gf: 7, gc: 6, pts: 5 },
+                { pos: 11, nombre: "Trival Valderas U19", pj: 4, pg: 1, pe: 1, pp: 2, gf: 5, gc: 9, pts: 4 },
+                { pos: 12, nombre: "Albacete U19", pj: 4, pg: 0, pe: 3, pp: 1, gf: 3, gc: 4, pts: 3 },
+                { pos: 13, nombre: "Las Rozas CF U19", pj: 4, pg: 0, pe: 1, pp: 3, gf: 0, gc: 6, pts: 1 },
+                { pos: 14, nombre: "Mérida AD U19", pj: 4, pg: 0, pe: 1, pp: 3, gf: 4, gc: 11, pts: 1 },
+                { pos: 15, nombre: "CD Toledo U19", pj: 4, pg: 0, pe: 1, pp: 3, gf: 4, gc: 13, pts: 1 },
+                { pos: 16, nombre: "Unión Adarve Sub 19", pj: 4, pg: 0, pe: 1, pp: 3, gf: 0, gc: 10, pts: 1 }
         ]
       },
       "Juvenil B": {
-        liga: "División Nacional Grupo XII", jornada: 27,
+        liga: "Liga Nacional Juvenil Grupo XII", jornada: 4, fuente: "https://www.besoccer.es/competicion/clasificacion/nacional_juvenil/2027/grupo12",
         equipos: [
-                { pos: 1, nombre: "Real Madrid", pj: 27, pg: 23, pe: 4, pp: 0, gf: 0, gc: 0, pts: 73 },
-                { pos: 2, nombre: "Atletico de Madrid B", pj: 27, pg: 18, pe: 6, pp: 3, gf: 0, gc: 0, pts: 60 },
-                { pos: 3, nombre: "Leganés B", pj: 27, pg: 16, pe: 8, pp: 3, gf: 0, gc: 0, pts: 56 },
-                { pos: 4, nombre: "Rayo Majadahonda", pj: 27, pg: 12, pe: 8, pp: 7, gf: 0, gc: 0, pts: 44 },
-                { pos: 5, nombre: "Getafe B", pj: 27, pg: 10, pe: 10, pp: 7, gf: 0, gc: 0, pts: 40 },
-                { pos: 6, nombre: "Alcorcón", pj: 27, pg: 11, pe: 5, pp: 11, gf: 0, gc: 0, pts: 38 },
-                { pos: 7, nombre: "Torrejón", pj: 27, pg: 11, pe: 5, pp: 11, gf: 0, gc: 0, pts: 38 },
-                { pos: 8, nombre: "Alcalá", pj: 27, pg: 10, pe: 7, pp: 10, gf: 0, gc: 0, pts: 37 },
-                { pos: 9, nombre: "Móstoles", pj: 27, pg: 10, pe: 7, pp: 10, gf: 0, gc: 0, pts: 37 },
-                { pos: 10, nombre: "Rayo Vallecano B", pj: 27, pg: 9, pe: 8, pp: 10, gf: 0, gc: 0, pts: 35 },
-                { pos: 11, nombre: "Rayo Ciudad de Alcobendas B", pj: 27, pg: 10, pe: 5, pp: 12, gf: 0, gc: 0, pts: 35 },
-                { pos: 12, nombre: "Carabanchel", pj: 27, pg: 8, pe: 7, pp: 12, gf: 0, gc: 0, pts: 31 },
-                { pos: 13, nombre: "Atlético Chopera Alcobendas 04", pj: 27, pg: 8, pe: 6, pp: 13, gf: 0, gc: 0, pts: 30 },
-                { pos: 14, nombre: "Unión Adarve B", pj: 27, pg: 8, pe: 5, pp: 14, gf: 0, gc: 0, pts: 29 },
-                { pos: 15, nombre: "Fuenlabrada", pj: 27, pg: 8, pe: 5, pp: 14, gf: 0, gc: 0, pts: 29 },
-                { pos: 16, nombre: "Las Rozas B", pj: 27, pg: 8, pe: 3, pp: 16, gf: 0, gc: 0, pts: 27 },
-                { pos: 17, nombre: "Ciudad de Getafe", pj: 27, pg: 6, pe: 5, pp: 16, gf: 0, gc: 0, pts: 23 },
-                { pos: 18, nombre: "Parla Escuela Fair Play", pj: 27, pg: 2, pe: 6, pp: 19, gf: 0, gc: 0, pts: 12 },
+                { pos: 1, nombre: "Real Madrid Sub 19 B", pj: 4, pg: 4, pe: 0, pp: 0, gf: 14, gc: 2, pts: 12, esRM: true },
+                { pos: 2, nombre: "Rayo C. Alcobendas Sub 19 B", pj: 4, pg: 3, pe: 1, pp: 0, gf: 10, gc: 7, pts: 10 },
+                { pos: 3, nombre: "Leganés U19 B", pj: 4, pg: 3, pe: 0, pp: 1, gf: 11, gc: 4, pts: 9 },
+                { pos: 4, nombre: "Alcorcón U19 B", pj: 4, pg: 3, pe: 0, pp: 1, gf: 9, gc: 6, pts: 9 },
+                { pos: 5, nombre: "Fuenlabrada U19", pj: 4, pg: 3, pe: 0, pp: 1, gf: 7, gc: 6, pts: 9 },
+                { pos: 6, nombre: "Getafe U19 B", pj: 4, pg: 2, pe: 1, pp: 1, gf: 9, gc: 6, pts: 7 },
+                { pos: 7, nombre: "Atlético U19 B", pj: 4, pg: 2, pe: 1, pp: 1, gf: 8, gc: 6, pts: 7 },
+                { pos: 8, nombre: "Sporting Hortaleza B", pj: 4, pg: 2, pe: 1, pp: 1, gf: 10, gc: 9, pts: 7 },
+                { pos: 9, nombre: "Rayo Vallecano Sub 19 B", pj: 4, pg: 2, pe: 0, pp: 2, gf: 7, gc: 5, pts: 6 },
+                { pos: 10, nombre: "Aravaca Sub 19", pj: 4, pg: 2, pe: 0, pp: 2, gf: 10, gc: 11, pts: 6 },
+                { pos: 11, nombre: "CD Móstoles URJC Sub 19", pj: 4, pg: 1, pe: 1, pp: 2, gf: 10, gc: 11, pts: 4 },
+                { pos: 12, nombre: "Chopera Alcobendas Sub 19", pj: 4, pg: 1, pe: 1, pp: 2, gf: 6, gc: 10, pts: 4 },
+                { pos: 13, nombre: "Real Carabanchel Sub 19", pj: 4, pg: 1, pe: 1, pp: 2, gf: 6, gc: 10, pts: 4 },
+                { pos: 14, nombre: "Unión Adarve U19 B", pj: 4, pg: 1, pe: 0, pp: 3, gf: 7, gc: 10, pts: 3 },
+                { pos: 15, nombre: "Torrejón Sub 19", pj: 4, pg: 1, pe: 0, pp: 3, gf: 5, gc: 9, pts: 3 },
+                { pos: 16, nombre: "RSD Alcalá U19", pj: 4, pg: 1, pe: 0, pp: 3, gf: 3, gc: 7, pts: 3 },
+                { pos: 17, nombre: "Las Rozas Sub 19 B", pj: 4, pg: 0, pe: 1, pp: 3, gf: 5, gc: 9, pts: 1 },
+                { pos: 18, nombre: "Rivas Sub 19", pj: 4, pg: 0, pe: 0, pp: 4, gf: 3, gc: 12, pts: 0 }
         ]
       },
       "Juvenil C": {
-        liga: "1ª División Autonómica Grupo 1", jornada: 26,
+        liga: "Primera División Autonómica Juvenil Madrid, Grupo 2", jornada: 4, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=1&competicion=26737715&grupo=26737716&jornada=4",
         equipos: [
-                { pos: 1, nombre: "Real Madrid", pj: 26, pg: 22, pe: 3, pp: 1, gf: 0, gc: 0, pts: 69 },
-                { pos: 2, nombre: "Rayo Majadahonda B", pj: 27, pg: 17, pe: 3, pp: 7, gf: 0, gc: 0, pts: 54 },
-                { pos: 3, nombre: "Sporting Hortaleza B", pj: 27, pg: 16, pe: 5, pp: 7, gf: 0, gc: 0, pts: 53 },
-                { pos: 4, nombre: "Aravaca", pj: 27, pg: 16, pe: 4, pp: 7, gf: 0, gc: 0, pts: 52 },
-                { pos: 5, nombre: "Nuevo Boadilla", pj: 27, pg: 14, pe: 5, pp: 8, gf: 0, gc: 0, pts: 47 },
-                { pos: 6, nombre: "San Sebastián de los Reyes", pj: 27, pg: 14, pe: 3, pp: 10, gf: 0, gc: 0, pts: 45 },
-                { pos: 7, nombre: "Complutense Alcalá", pj: 27, pg: 13, pe: 6, pp: 8, gf: 0, gc: 0, pts: 45 },
-                { pos: 8, nombre: "Colmenar Viejo", pj: 26, pg: 14, pe: 3, pp: 9, gf: 0, gc: 0, pts: 45 },
-                { pos: 9, nombre: "Atlético Chopera Alcobendas B", pj: 26, pg: 11, pe: 9, pp: 6, gf: 0, gc: 0, pts: 42 },
-                { pos: 10, nombre: "Juventud Sanse", pj: 27, pg: 11, pe: 6, pp: 10, gf: 0, gc: 0, pts: 39 },
-                { pos: 11, nombre: "Rayo Ciudad Alcobendas C", pj: 27, pg: 10, pe: 5, pp: 12, gf: 0, gc: 0, pts: 35 },
-                { pos: 12, nombre: "Móstoles C", pj: 27, pg: 9, pe: 3, pp: 15, gf: 0, gc: 0, pts: 30 },
-                { pos: 13, nombre: "E.F.M.O Boadilla", pj: 27, pg: 7, pe: 5, pp: 15, gf: 0, gc: 0, pts: 26 },
-                { pos: 14, nombre: "Moratalaz", pj: 27, pg: 6, pe: 5, pp: 16, gf: 0, gc: 0, pts: 23 },
-                { pos: 15, nombre: "Deportivo Santa Ana", pj: 27, pg: 5, pe: 6, pp: 16, gf: 0, gc: 0, pts: 21 },
-                { pos: 16, nombre: "F.P.A Las Rozas", pj: 25, pg: 5, pe: 2, pp: 18, gf: 0, gc: 0, pts: 20 },
-                { pos: 17, nombre: "Torrejón B", pj: 27, pg: 4, pe: 5, pp: 18, gf: 0, gc: 0, pts: 17 },
-                { pos: 18, nombre: "México Paracuellos", pj: 27, pg: 4, pe: 6, pp: 17, gf: 0, gc: 0, pts: 15 },
+                { pos: 1, nombre: "REAL MADRID C.F. 'C'", pj: 4, pg: 4, pe: 0, pp: 0, gf: 18, gc: 6, pts: 12, esRM: true },
+                { pos: 2, nombre: "C.D. CANILLAS 'A'", pj: 4, pg: 4, pe: 0, pp: 0, gf: 13, gc: 1, pts: 12 },
+                { pos: 3, nombre: "U.D. SAN SEBASTIAN DE LOS REYES S.A.D. 'B'", pj: 4, pg: 3, pe: 1, pp: 0, gf: 12, gc: 5, pts: 10 },
+                { pos: 4, nombre: "C.D. DAGANZO 'A'", pj: 4, pg: 2, pe: 2, pp: 0, gf: 10, gc: 7, pts: 8 },
+                { pos: 5, nombre: "DEPORTIVO A.V. SANTA ANA 'A'", pj: 4, pg: 2, pe: 1, pp: 1, gf: 7, gc: 5, pts: 7 },
+                { pos: 6, nombre: "C.D. VICALVARO 'A'", pj: 4, pg: 2, pe: 1, pp: 1, gf: 7, gc: 5, pts: 7 },
+                { pos: 7, nombre: "E.F. CIUDAD DE GETAFE 'B'", pj: 4, pg: 2, pe: 1, pp: 1, gf: 7, gc: 8, pts: 7 },
+                { pos: 8, nombre: "A.D. SPORTING HORTALEZA 'C'", pj: 4, pg: 2, pe: 0, pp: 2, gf: 3, gc: 3, pts: 6 },
+                { pos: 9, nombre: "A.D. COMPLUTENSE ALCALA 'A'", pj: 4, pg: 2, pe: 0, pp: 2, gf: 5, gc: 6, pts: 6 },
+                { pos: 10, nombre: "RIVAS FUTBOL CLUB 'B'", pj: 4, pg: 1, pe: 2, pp: 1, gf: 3, gc: 3, pts: 5 },
+                { pos: 11, nombre: "JUVENTUD SANSE 'A'", pj: 4, pg: 1, pe: 2, pp: 1, gf: 7, gc: 11, pts: 5 },
+                { pos: 12, nombre: "R.S.D. ALCALA S.A.D. 'B'", pj: 4, pg: 1, pe: 1, pp: 2, gf: 8, gc: 7, pts: 4 },
+                { pos: 13, nombre: "PERISO CLUB DE FUTBOL 'A'", pj: 4, pg: 1, pe: 1, pp: 2, gf: 4, gc: 6, pts: 4 },
+                { pos: 14, nombre: "ESCUELA MUNICIPAL DE COBEÑA 'A'", pj: 4, pg: 0, pe: 3, pp: 1, gf: 5, gc: 8, pts: 3 },
+                { pos: 15, nombre: "CLUB POLID. PARLA ESCUELA - FAIR PLAY 'B'", pj: 4, pg: 1, pe: 0, pp: 3, gf: 4, gc: 10, pts: 3 },
+                { pos: 16, nombre: "A.D. ESPERANZA 'A'", pj: 4, pg: 0, pe: 1, pp: 3, gf: 2, gc: 5, pts: 1 },
+                { pos: 17, nombre: "S.A.D. FUNDACION ESCUELA DE FUTBOL AFE 'A'", pj: 4, pg: 0, pe: 0, pp: 4, gf: 2, gc: 10, pts: 0 },
+                { pos: 18, nombre: "S.A.D. FUNDACION RAYO VALLECANO 'B'", pj: 4, pg: 0, pe: 0, pp: 4, gf: 5, gc: 16, pts: 0 }
         ]
       },
       "Cadete A": {
-        liga: "Superliga Cadete Grupo \u00danico", jornada: 25,
+        liga: "Superliga Cadete Madrid (Grupo Único)", jornada: 2, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=1&competicion=26738047&grupo=26738048&jornada=2",
         equipos: [
-                { pos: 1, nombre: "Real Madrid", pj: 23, pg: 21, pe: 1, pp: 0, gf: 0, gc: 0, pts: 67 },
-                { pos: 2, nombre: "Atl\u00e9tico de Madrid", pj: 25, pg: 18, pe: 2, pp: 5, gf: 0, gc: 0, pts: 56 },
-                { pos: 3, nombre: "Legan\u00e9s", pj: 24, pg: 17, pe: 3, pp: 4, gf: 0, gc: 0, pts: 54 },
-                { pos: 4, nombre: "Rayo Vallecano", pj: 25, pg: 15, pe: 5, pp: 5, gf: 0, gc: 0, pts: 50 },
-                { pos: 5, nombre: "Rayo Majadahonda", pj: 25, pg: 11, pe: 8, pp: 6, gf: 0, gc: 0, pts: 41 },
-                { pos: 6, nombre: "Getafe", pj: 25, pg: 11, pe: 7, pp: 7, gf: 0, gc: 0, pts: 40 },
-                { pos: 7, nombre: "Rayo Ciudad Alcobendas", pj: 25, pg: 11, pe: 6, pp: 8, gf: 0, gc: 0, pts: 39 },
-                { pos: 8, nombre: "Alcorc\u00f3n", pj: 25, pg: 10, pe: 6, pp: 9, gf: 0, gc: 0, pts: 36 },
-                { pos: 9, nombre: "Las Rozas", pj: 24, pg: 10, pe: 4, pp: 10, gf: 0, gc: 0, pts: 34 },
-                { pos: 10, nombre: "Parla Escuela-Fair Play", pj: 25, pg: 7, pe: 5, pp: 13, gf: 0, gc: 0, pts: 26 },
-                { pos: 11, nombre: "Real Carabanchel", pj: 25, pg: 5, pe: 10, pp: 10, gf: 0, gc: 0, pts: 25 },
-                { pos: 12, nombre: "Uni\u00f3n Adarve", pj: 25, pg: 5, pe: 7, pp: 13, gf: 0, gc: 0, pts: 22 },
-                { pos: 13, nombre: "Atl\u00e9tico Chopera Alcobendas 04", pj: 25, pg: 6, pe: 4, pp: 15, gf: 0, gc: 0, pts: 22 },
-                { pos: 14, nombre: "Nuevo Boadilla", pj: 25, pg: 5, pe: 6, pp: 14, gf: 0, gc: 0, pts: 21 },
-                { pos: 15, nombre: "Torrej\u00f3n", pj: 25, pg: 3, pe: 5, pp: 17, gf: 0, gc: 0, pts: 14 },
-                { pos: 16, nombre: "Sese\u00f1a", pj: 25, pg: 1, pe: 3, pp: 21, gf: 0, gc: 0, pts: 6 },
+                { pos: 1, nombre: "CLUB ATLETICO DE MADRID S.A.D. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 7, gc: 1, pts: 6 },
+                { pos: 2, nombre: "REAL MADRID C.F. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 6, gc: 0, pts: 6, esRM: true },
+                { pos: 3, nombre: "GETAFE C.F. S.A.D. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 4, gc: 1, pts: 6 },
+                { pos: 4, nombre: "RAYO VALLECANO DE MADRID S.A.D. 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 7, gc: 0, pts: 4 },
+                { pos: 5, nombre: "C.F. RAYO MAJADAHONDA SAD 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 3, gc: 2, pts: 4 },
+                { pos: 6, nombre: "A.D. ALCORCON S.A.D. 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 2, gc: 1, pts: 4 },
+                { pos: 7, nombre: "A.D. UNION ADARVE 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 1, gc: 0, pts: 4 },
+                { pos: 8, nombre: "ATLETICO CHOPERA ALCOBENDAS 04 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 3, gc: 2, pts: 3 },
+                { pos: 9, nombre: "C.F. FUENLABRADA S.A.D. 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 2, gc: 4, pts: 3 },
+                { pos: 10, nombre: "C.D. LEGANES S.A.D. 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 3, gc: 4, pts: 1 },
+                { pos: 11, nombre: "CLUB POLID. PARLA ESCUELA - FAIR PLAY 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 1, gc: 2, pts: 1 },
+                { pos: 12, nombre: "C.F. TRIVAL VALDERAS ALCORCON 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 0, gc: 2, pts: 1 },
+                { pos: 13, nombre: "LAS ROZAS C.F. 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 0, gc: 4, pts: 1 },
+                { pos: 14, nombre: "A.D. TORREJON C.F. 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 0, gc: 3, pts: 0 },
+                { pos: 15, nombre: "RAYO CIUDAD ALCOBENDAS C.F. 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 1, gc: 5, pts: 0 },
+                { pos: 16, nombre: "REAL C.D. CARABANCHEL 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 1, gc: 10, pts: 0 }
         ]
       },
       "Cadete B": {
-        liga: "Divisi\u00f3n de Honor Grupo 1", jornada: 25,
+        liga: "División de Honor Cadete Madrid, Grupo 1", jornada: 2, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=1&competicion=26738054&grupo=26738055&jornada=2",
         equipos: [
-                { pos: 1, nombre: "Atl\u00e9tico de Madrid B", pj: 24, pg: 23, pe: 1, pp: 0, gf: 0, gc: 0, pts: 70 },
-                { pos: 2, nombre: "Real Madrid", pj: 23, pg: 21, pe: 0, pp: 2, gf: 0, gc: 0, pts: 63 },
-                { pos: 3, nombre: "Getafe C", pj: 25, pg: 17, pe: 0, pp: 8, gf: 0, gc: 0, pts: 51 },
-                { pos: 4, nombre: "Torrej\u00f3n B", pj: 24, pg: 13, pe: 5, pp: 6, gf: 0, gc: 0, pts: 44 },
-                { pos: 5, nombre: "Atl\u00e9tico Chopera Alcobendas 04 B", pj: 25, pg: 13, pe: 4, pp: 8, gf: 0, gc: 0, pts: 43 },
-                { pos: 6, nombre: "Galapagar", pj: 24, pg: 12, pe: 5, pp: 7, gf: 0, gc: 0, pts: 41 },
-                { pos: 7, nombre: "Alcal\u00e1", pj: 23, pg: 11, pe: 4, pp: 8, gf: 0, gc: 0, pts: 37 },
-                { pos: 8, nombre: "Sporting Hortaleza", pj: 24, pg: 10, pe: 3, pp: 11, gf: 0, gc: 0, pts: 33 },
-                { pos: 9, nombre: "Rayo Majadahonda B", pj: 25, pg: 9, pe: 5, pp: 11, gf: 0, gc: 0, pts: 32 },
-                { pos: 10, nombre: "Fuenlabrada B", pj: 25, pg: 7, pe: 5, pp: 13, gf: 0, gc: 0, pts: 26 },
-                { pos: 11, nombre: "San Sebasti\u00e1n de los Reyes", pj: 25, pg: 7, pe: 4, pp: 14, gf: 0, gc: 0, pts: 25 },
-                { pos: 12, nombre: "Uni\u00f3n Adarve B", pj: 25, pg: 6, pe: 5, pp: 14, gf: 0, gc: 0, pts: 23 },
-                { pos: 13, nombre: "F.P.A Las Rozas", pj: 24, pg: 6, pe: 4, pp: 14, gf: 0, gc: 0, pts: 22 },
-                { pos: 14, nombre: "Deportivo Santa Ana", pj: 25, pg: 5, pe: 6, pp: 14, gf: 0, gc: 0, pts: 21 },
-                { pos: 15, nombre: "M\u00e9xico Paracuellos", pj: 24, pg: 5, pe: 1, pp: 18, gf: 0, gc: 0, pts: 16 },
-                { pos: 16, nombre: "Rayo Ciudad Alcobendas B", pj: 25, pg: 2, pe: 4, pp: 19, gf: 0, gc: 0, pts: 10 },
+                { pos: 1, nombre: "REAL MADRID C.F. 'B'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 10, gc: 1, pts: 6, esRM: true },
+                { pos: 2, nombre: "R.S.D. ALCALA S.A.D. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 8, gc: 0, pts: 6 },
+                { pos: 3, nombre: "ATLETICO CHOPERA ALCOBENDAS 04 'B'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 7, gc: 1, pts: 6 },
+                { pos: 4, nombre: "CLUB ATLETICO DE MADRID S.A.D. 'B'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 5, gc: 2, pts: 4 },
+                { pos: 5, nombre: "U.D. SAN SEBASTIAN DE LOS REYES S.A.D. 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 5, gc: 3, pts: 4 },
+                { pos: 6, nombre: "GETAFE C.F. S.A.D. 'C'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 4, gc: 3, pts: 4 },
+                { pos: 7, nombre: "C.D. CANILLAS 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 2, gc: 6, pts: 3 },
+                { pos: 8, nombre: "S.A.D. FUNDACION RAYO VALLECANO 'A'", pj: 2, pg: 0, pe: 2, pp: 0, gf: 5, gc: 5, pts: 2 },
+                { pos: 9, nombre: "ARAVACA C.F. - CEIBA 'A'", pj: 2, pg: 0, pe: 2, pp: 0, gf: 3, gc: 3, pts: 2 },
+                { pos: 10, nombre: "C.F. RAYO MAJADAHONDA SAD 'B'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 4, gc: 5, pts: 1 },
+                { pos: 11, nombre: "A.D. SPORTING HORTALEZA 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 2, gc: 3, pts: 1 },
+                { pos: 12, nombre: "A.D. TORREJON C.F. 'B'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 2, gc: 5, pts: 1 },
+                { pos: 13, nombre: "S.A.D. FUNDACION C.D. LEGANES 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 1, gc: 4, pts: 1 },
+                { pos: 14, nombre: "C.D. GALAPAGAR 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 2, gc: 6, pts: 1 },
+                { pos: 15, nombre: "A.D. UNION ADARVE 'B'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 1, gc: 7, pts: 0 },
+                { pos: 16, nombre: "C.D.E. F.P.A. LAS ROZAS 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 1, gc: 8, pts: 0 }
         ]
       },
       "Infantil A": {
-        liga: "Superliga Infantil Grupo \u00danico", jornada: 25,
+        liga: "Superliga Infantil Madrid (Grupo Único)", jornada: 2, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=1&competicion=26738049&grupo=26738050&jornada=2",
         equipos: [
-                { pos: 1, nombre: "Atl\u00e9tico de Madrid", pj: 25, pg: 23, pe: 0, pp: 2, gf: 0, gc: 0, pts: 69 },
-                { pos: 2, nombre: "Real Madrid", pj: 25, pg: 23, pe: 0, pp: 2, gf: 0, gc: 0, pts: 69 },
-                { pos: 3, nombre: "Rayo Vallecano", pj: 25, pg: 21, pe: 2, pp: 2, gf: 0, gc: 0, pts: 65 },
-                { pos: 4, nombre: "Getafe", pj: 25, pg: 15, pe: 3, pp: 7, gf: 0, gc: 0, pts: 48 },
-                { pos: 5, nombre: "Legan\u00e9s", pj: 25, pg: 13, pe: 4, pp: 8, gf: 0, gc: 0, pts: 43 },
-                { pos: 6, nombre: "Colegio Miramadrid-Paracuellos", pj: 25, pg: 11, pe: 3, pp: 11, gf: 0, gc: 0, pts: 36 },
-                { pos: 7, nombre: "Parla Escuela-Fair Play", pj: 25, pg: 10, pe: 5, pp: 10, gf: 0, gc: 0, pts: 35 },
-                { pos: 8, nombre: "Rayo Ciudad Alcobendas", pj: 25, pg: 10, pe: 3, pp: 12, gf: 0, gc: 0, pts: 33 },
-                { pos: 9, nombre: "Trival Valderas Alcorc\u00f3n", pj: 25, pg: 9, pe: 4, pp: 12, gf: 0, gc: 0, pts: 31 },
-                { pos: 10, nombre: "Periso", pj: 25, pg: 8, pe: 6, pp: 11, gf: 0, gc: 0, pts: 30 },
-                { pos: 11, nombre: "Torrej\u00f3n", pj: 25, pg: 8, pe: 5, pp: 12, gf: 0, gc: 0, pts: 29 },
-                { pos: 12, nombre: "Uni\u00f3n Adarve", pj: 25, pg: 7, pe: 4, pp: 14, gf: 0, gc: 0, pts: 25 },
-                { pos: 13, nombre: "Alcorc\u00f3n", pj: 25, pg: 6, pe: 4, pp: 15, gf: 0, gc: 0, pts: 22 },
-                { pos: 14, nombre: "Rayo Majadahonda", pj: 25, pg: 3, pe: 5, pp: 17, gf: 0, gc: 0, pts: 14 },
-                { pos: 15, nombre: "Atl\u00e9tico Chopera Alcobendas 04", pj: 25, pg: 2, pe: 6, pp: 17, gf: 0, gc: 0, pts: 12 },
-                { pos: 16, nombre: "Rivas", pj: 25, pg: 2, pe: 4, pp: 19, gf: 0, gc: 0, pts: 10 },
+                { pos: 1, nombre: "REAL MADRID C.F. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 15, gc: 0, pts: 6, esRM: true },
+                { pos: 2, nombre: "CLUB ATLETICO DE MADRID S.A.D. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 9, gc: 0, pts: 6 },
+                { pos: 3, nombre: "RAYO CIUDAD ALCOBENDAS C.F. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 2, gc: 0, pts: 6 },
+                { pos: 4, nombre: "RAYO VALLECANO DE MADRID S.A.D. 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 6, gc: 1, pts: 4 },
+                { pos: 5, nombre: "SAD COLEGIO MIRAMADRID - PARACUELLOS 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 5, gc: 1, pts: 4 },
+                { pos: 6, nombre: "GETAFE C.F. S.A.D. 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 5, gc: 3, pts: 4 },
+                { pos: 7, nombre: "A.D. TORREJON C.F. 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 4, gc: 2, pts: 3 },
+                { pos: 8, nombre: "A.D. SPORTING HORTALEZA 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 3, gc: 6, pts: 3 },
+                { pos: 9, nombre: "C.D. LEGANES S.A.D. 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 2, gc: 7, pts: 3 },
+                { pos: 10, nombre: "C.F. TRIVAL VALDERAS ALCORCON 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 1, gc: 2, pts: 1 },
+                { pos: 11, nombre: "REAL C.D. CARABANCHEL 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 0, gc: 1, pts: 1 },
+                { pos: 12, nombre: "PERISO CLUB DE FUTBOL 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 2, gc: 6, pts: 1 },
+                { pos: 13, nombre: "CLUB POLID. PARLA ESCUELA - FAIR PLAY 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 1, gc: 6, pts: 1 },
+                { pos: 14, nombre: "A.D. UNION ADARVE 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 2, gc: 10, pts: 1 },
+                { pos: 15, nombre: "R.S.D. ALCALA S.A.D. 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 4, gc: 8, pts: 0 },
+                { pos: 16, nombre: "E.F.M.O. BOADILLA 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 0, gc: 8, pts: 0 }
         ]
       },
       "Infantil B": {
-        liga: "División de Honor Grupo 1", jornada: 25,
+        liga: "División de Honor Infantil Madrid, Grupo 1", jornada: 2, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=1&competicion=26737811&grupo=26737812&jornada=2",
         equipos: [
-                { pos: 1, nombre: "Atlético de Madrid", pj: 25, pg: 20, pe: 3, pp: 2, gf: 0, gc: 0, pts: 63 },
-                { pos: 2, nombre: "Real Madrid", pj: 25, pg: 20, pe: 2, pp: 3, gf: 0, gc: 0, pts: 62 },
-                { pos: 3, nombre: "Alcalá", pj: 25, pg: 17, pe: 1, pp: 7, gf: 0, gc: 0, pts: 52 },
-                { pos: 4, nombre: "Getafe C", pj: 25, pg: 15, pe: 6, pp: 4, gf: 0, gc: 0, pts: 51 },
-                { pos: 5, nombre: "Aravaca Ceiba", pj: 25, pg: 15, pe: 4, pp: 6, gf: 0, gc: 0, pts: 49 },
-                { pos: 6, nombre: "Sporting Hortaleza", pj: 25, pg: 14, pe: 3, pp: 8, gf: 0, gc: 0, pts: 45 },
-                { pos: 7, nombre: "San Fernando", pj: 25, pg: 11, pe: 5, pp: 9, gf: 0, gc: 0, pts: 38 },
-                { pos: 8, nombre: "Las Rozas", pj: 25, pg: 10, pe: 5, pp: 10, gf: 0, gc: 0, pts: 35 },
-                { pos: 9, nombre: "Colmenar Viejo", pj: 25, pg: 10, pe: 2, pp: 13, gf: 0, gc: 0, pts: 32 },
-                { pos: 10, nombre: "Chamartín Vergara-Alcobendas", pj: 25, pg: 8, pe: 6, pp: 11, gf: 0, gc: 0, pts: 30 },
-                { pos: 11, nombre: "Football Dreams Experience", pj: 25, pg: 7, pe: 7, pp: 11, gf: 0, gc: 0, pts: 28 },
-                { pos: 12, nombre: "Rayo Ciudad Alcobendas B", pj: 25, pg: 8, pe: 1, pp: 16, gf: 0, gc: 0, pts: 25 },
-                { pos: 13, nombre: "Pozuelo de Alarcón", pj: 25, pg: 6, pe: 4, pp: 15, gf: 0, gc: 0, pts: 22 },
-                { pos: 14, nombre: "México-Paracuellos", pj: 25, pg: 5, pe: 3, pp: 17, gf: 0, gc: 0, pts: 18 },
-                { pos: 15, nombre: "F.P.A Las Rozas", pj: 25, pg: 3, pe: 5, pp: 17, gf: 0, gc: 0, pts: 14 },
-                { pos: 16, nombre: "Unión Zona Norte", pj: 25, pg: 1, pe: 3, pp: 21, gf: 0, gc: 0, pts: 6 },
+                { pos: 1, nombre: "LAS ROZAS C.F. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 8, gc: 0, pts: 6 },
+                { pos: 2, nombre: "GETAFE C.F. S.A.D. 'C'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 7, gc: 2, pts: 6 },
+                { pos: 3, nombre: "C.D.E. FOOTBALL DREAMS EXPERIENCE 'A'", pj: 2, pg: 1, pe: 1, pp: 0, gf: 3, gc: 2, pts: 4 },
+                { pos: 4, nombre: "C.F. RAYO MAJADAHONDA SAD 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 7, gc: 0, pts: 3 },
+                { pos: 5, nombre: "REAL MADRID C.F. 'B'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 6, gc: 2, pts: 3, esRM: true },
+                { pos: 6, nombre: "C.D. GALAPAGAR 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 4, gc: 3, pts: 3 },
+                { pos: 7, nombre: "RAYO CIUDAD ALCOBENDAS C.F. 'B'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 2, gc: 2, pts: 3 },
+                { pos: 8, nombre: "SAD COLEGIO MIRAMADRID - PARACUELLOS 'B'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 1, gc: 2, pts: 3 },
+                { pos: 9, nombre: "A.D. VILLA ROSA 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 3, gc: 6, pts: 3 },
+                { pos: 10, nombre: "A.D. COLMENAR VIEJO 'A'", pj: 1, pg: 0, pe: 1, pp: 0, gf: 2, gc: 2, pts: 1 },
+                { pos: 11, nombre: "C.D. SAN FERNANDO 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 3, gc: 4, pts: 1 },
+                { pos: 12, nombre: "ATLETICO CHOPERA ALCOBENDAS 04 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 3, gc: 6, pts: 1 },
+                { pos: 13, nombre: "CLUB ATLETICO DE MADRID S.A.D. 'B'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 14, nombre: "ARAVACA C.F. - CEIBA 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 15, nombre: "C.D. CHAMARTIN VERGARA - ALCOBENDAS 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 1, gc: 7, pts: 0 },
+                { pos: 16, nombre: "C.F. POZUELO DE ALARCON 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 0, gc: 11, pts: 0 }
         ]
       },
       "Alevín A": {
-        liga: "Superliga Alevín Grupo Único", jornada: 25,
+        liga: "Superliga Alevín Madrid (Grupo Único)", jornada: 3, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=1&competicion=26738128&grupo=26738129&jornada=3",
         equipos: [
-                { pos: 1, nombre: "Atlético de Madrid", pj: 25, pg: 23, pe: 2, pp: 0, gf: 0, gc: 0, pts: 71 },
-                { pos: 2, nombre: "Real Madrid", pj: 24, pg: 21, pe: 1, pp: 2, gf: 0, gc: 0, pts: 64 },
-                { pos: 3, nombre: "Rayo Vallecano", pj: 24, pg: 18, pe: 3, pp: 3, gf: 0, gc: 0, pts: 57 },
-                { pos: 4, nombre: "Getafe", pj: 25, pg: 13, pe: 5, pp: 7, gf: 0, gc: 0, pts: 44 },
-                { pos: 5, nombre: "Aravaca", pj: 25, pg: 12, pe: 6, pp: 7, gf: 0, gc: 0, pts: 42 },
-                { pos: 6, nombre: "Nuevo Boadilla", pj: 25, pg: 12, pe: 3, pp: 10, gf: 0, gc: 0, pts: 39 },
-                { pos: 7, nombre: "Leganés", pj: 25, pg: 10, pe: 8, pp: 7, gf: 0, gc: 0, pts: 38 },
-                { pos: 8, nombre: "Rayo Majadahonda", pj: 25, pg: 11, pe: 4, pp: 10, gf: 0, gc: 0, pts: 37 },
-                { pos: 9, nombre: "Colegio Miramadrid-Paracuellos", pj: 25, pg: 10, pe: 5, pp: 10, gf: 0, gc: 0, pts: 35 },
-                { pos: 10, nombre: "Rayo Ciudad Alcobendas", pj: 25, pg: 9, pe: 3, pp: 13, gf: 0, gc: 0, pts: 30 },
-                { pos: 11, nombre: "Alcalá", pj: 25, pg: 8, pe: 4, pp: 13, gf: 0, gc: 0, pts: 28 },
-                { pos: 12, nombre: "Atlético Chopera Alcobendas 04", pj: 25, pg: 4, pe: 10, pp: 11, gf: 0, gc: 0, pts: 22 },
-                { pos: 13, nombre: "Unión Adarve", pj: 25, pg: 6, pe: 4, pp: 15, gf: 0, gc: 0, pts: 22 },
-                { pos: 14, nombre: "Parla Escuela-Fair Play", pj: 25, pg: 2, pe: 6, pp: 16, gf: 0, gc: 0, pts: 12 },
-                { pos: 15, nombre: "Móstoles U.R.J.C", pj: 25, pg: 2, pe: 5, pp: 18, gf: 0, gc: 0, pts: 11 },
-                { pos: 16, nombre: "Carabanchel", pj: 25, pg: 3, pe: 1, pp: 11, gf: 0, gc: 0, pts: 10 },
+                { pos: 1, nombre: "RAYO VALLECANO DE MADRID S.A.D.", pj: 3, pg: 3, pe: 0, pp: 0, gf: 10, gc: 3, pts: 9 },
+                { pos: 2, nombre: "CLUB ATLETICO DE MADRID S.A.D. 'A'", pj: 3, pg: 2, pe: 1, pp: 0, gf: 12, gc: 2, pts: 7 },
+                { pos: 3, nombre: "GETAFE C.F. S.A.D. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 5, gc: 0, pts: 6 },
+                { pos: 4, nombre: "RAYO CIUDAD ALCOBENDAS C.F. 'A'", pj: 2, pg: 2, pe: 0, pp: 0, gf: 4, gc: 0, pts: 6 },
+                { pos: 5, nombre: "C.D. LEGANES S.A.D. 'A'", pj: 3, pg: 2, pe: 0, pp: 1, gf: 7, gc: 4, pts: 6 },
+                { pos: 6, nombre: "REAL MADRID C.F.", pj: 2, pg: 1, pe: 1, pp: 0, gf: 8, gc: 1, pts: 4, esRM: true },
+                { pos: 7, nombre: "SAD COLEGIO MIRAMADRID - PARACUELLOS 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 2, gc: 1, pts: 3 },
+                { pos: 8, nombre: "ATLETICO CHOPERA ALCOBENDAS 04 'A'", pj: 2, pg: 1, pe: 0, pp: 1, gf: 3, gc: 5, pts: 3 },
+                { pos: 9, nombre: "C.F. RAYO MAJADAHONDA SAD 'A'", pj: 2, pg: 0, pe: 2, pp: 0, gf: 2, gc: 2, pts: 2 },
+                { pos: 10, nombre: "ARAVACA C.F. - CEIBA 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 2, gc: 3, pts: 1 },
+                { pos: 11, nombre: "C.F. TRIVAL VALDERAS ALCORCON 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 2, gc: 3, pts: 1 },
+                { pos: 12, nombre: "C.D. NUEVO BOADILLA 'A'", pj: 2, pg: 0, pe: 1, pp: 1, gf: 2, gc: 4, pts: 1 },
+                { pos: 13, nombre: "S.A.D. FUNDACION RAYO VALLECANO 'A'", pj: 3, pg: 0, pe: 1, pp: 2, gf: 2, gc: 9, pts: 1 },
+                { pos: 14, nombre: "R.S.D. ALCALA S.A.D. 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 1, gc: 8, pts: 0 },
+                { pos: 15, nombre: "LAS ROZAS C.F. 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 0, gc: 8, pts: 0 },
+                { pos: 16, nombre: "RIVAS FUTBOL CLUB 'A'", pj: 2, pg: 0, pe: 0, pp: 2, gf: 2, gc: 11, pts: 0 }
         ]
       },
       "Alevín B": {
-        liga: "División de Honor Alevín F-7 Grupo 1", jornada: 22,
+        liga: "División de Honor Alevín F-7 Madrid, Grupo 1", jornada: 1, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=2&competicion=26737923&grupo=26737924&jornada=1",
         equipos: [
-                { pos: 1, nombre: "Real Madrid", pj: 22, pg: 21, pe: 1, pp: 0, gf: 0, gc: 0, pts: 64 },
-                { pos: 2, nombre: "Atlético de Madrid", pj: 22, pg: 21, pe: 1, pp: 0, gf: 0, gc: 0, pts: 64 },
-                { pos: 3, nombre: "Rayo Ciudad Alcobendas", pj: 22, pg: 14, pe: 2, pp: 6, gf: 0, gc: 0, pts: 44 },
-                { pos: 4, nombre: "Rayo Majadahonda", pj: 22, pg: 11, pe: 4, pp: 7, gf: 0, gc: 0, pts: 37 },
-                { pos: 5, nombre: "F.P.A Las Rozas", pj: 22, pg: 9, pe: 5, pp: 8, gf: 0, gc: 0, pts: 32 },
-                { pos: 6, nombre: "Getafe B", pj: 22, pg: 9, pe: 4, pp: 9, gf: 0, gc: 0, pts: 31 },
-                { pos: 7, nombre: "Atlético Chopera Alcobendas 04", pj: 22, pg: 8, pe: 5, pp: 9, gf: 0, gc: 0, pts: 29 },
-                { pos: 8, nombre: "Colegio Miramadrid-Paracuellos B", pj: 22, pg: 6, pe: 9, pp: 7, gf: 0, gc: 0, pts: 27 },
-                { pos: 9, nombre: "México - Paracuellos", pj: 22, pg: 7, pe: 6, pp: 9, gf: 0, gc: 0, pts: 27 },
-                { pos: 10, nombre: "Leganés B", pj: 22, pg: 7, pe: 5, pp: 10, gf: 0, gc: 0, pts: 26 },
-                { pos: 11, nombre: "Unión Adarve", pj: 22, pg: 6, pe: 2, pp: 14, gf: 0, gc: 0, pts: 20 },
-                { pos: 12, nombre: "Alcalá", pj: 22, pg: 4, pe: 4, pp: 14, gf: 0, gc: 0, pts: 16 },
-                { pos: 13, nombre: "Las Rozas", pj: 22, pg: 3, pe: 5, pp: 14, gf: 0, gc: 0, pts: 14 },
-                { pos: 14, nombre: "Aravaca Ceiba", pj: 22, pg: 0, pe: 3, pp: 19, gf: 0, gc: 0, pts: 3 },
+                { pos: 1, nombre: "REAL MADRID C.F. 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 6, gc: 0, pts: 3, esRM: true },
+                { pos: 2, nombre: "A.D. TORREJON C.F. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 3, nombre: "A.D. UNION ADARVE 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 4, nombre: "C.D. MINIFUTBOL TORRELODONES 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 5, nombre: "C.D.E. F.P.A. LAS ROZAS 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 6, nombre: "C.F. RAYO MAJADAHONDA SAD 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 7, nombre: "CD DV7 MADRID 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 8, nombre: "CLUB ESCUELA DE FUTBOL CONCEPCION 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 9, nombre: "GETAFE C.F. S.A.D. 'B'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 10, nombre: "MEXICO F.C. S.A.D. - PARACUELLOS 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 11, nombre: "RAYO CIUDAD ALCOBENDAS C.F. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 12, nombre: "SAD COLEGIO MIRAMADRID - PARACUELLOS 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 13, nombre: "VILLALBILLA C.F. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 14, nombre: "ATLETICO CHOPERA ALCOBENDAS 04 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 6, pts: 0 }
         ]
       },
       "Alevín C": {
-        liga: "División de Honor Alevín F-7 Grupo 2", jornada: 22,
+        liga: "División de Honor Alevín F-7 Madrid, Grupo 2", jornada: 1, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=2&competicion=26737923&grupo=26737925&jornada=1",
         equipos: [
-                { pos: 1, nombre: "Real Madrid", pj: 22, pg: 22, pe: 0, pp: 0, gf: 0, gc: 0, pts: 66 },
-                { pos: 2, nombre: "Toni Kroos Academy", pj: 22, pg: 17, pe: 2, pp: 3, gf: 0, gc: 0, pts: 53 },
-                { pos: 3, nombre: "Getafe", pj: 22, pg: 16, pe: 3, pp: 3, gf: 0, gc: 0, pts: 51 },
-                { pos: 4, nombre: "Leganés", pj: 23, pg: 14, pe: 2, pp: 7, gf: 0, gc: 0, pts: 44 },
-                { pos: 5, nombre: "Colegio Miramadrid-Paracuellos", pj: 22, pg: 13, pe: 3, pp: 6, gf: 0, gc: 0, pts: 42 },
-                { pos: 6, nombre: "Rayo Vallecano", pj: 22, pg: 13, pe: 1, pp: 8, gf: 0, gc: 0, pts: 40 },
-                { pos: 7, nombre: "Nuevo Boadilla", pj: 22, pg: 11, pe: 1, pp: 10, gf: 0, gc: 0, pts: 34 },
-                { pos: 8, nombre: "Illescas", pj: 23, pg: 11, pe: 1, pp: 11, gf: 0, gc: 0, pts: 34 },
-                { pos: 9, nombre: "Móstoles URJC", pj: 22, pg: 8, pe: 2, pp: 12, gf: 0, gc: 0, pts: 26 },
-                { pos: 10, nombre: "Tajamar", pj: 23, pg: 7, pe: 1, pp: 15, gf: 0, gc: 0, pts: 22 },
-                { pos: 11, nombre: "Fundación Rayo Vallecano", pj: 22, pg: 6, pe: 1, pp: 15, gf: 0, gc: 0, pts: 19 },
-                { pos: 12, nombre: "Rayo Majadahonda B", pj: 23, pg: 4, pe: 1, pp: 18, gf: 0, gc: 0, pts: 13 },
-                { pos: 13, nombre: "Unión Valdebernardo", pj: 22, pg: 4, pe: 0, pp: 18, gf: 0, gc: 0, pts: 12 },
-                { pos: 14, nombre: "Auto-Escuela Simancas", pj: 22, pg: 1, pe: 0, pp: 21, gf: 0, gc: 0, pts: 3 },
+                { pos: 1, nombre: "REAL MADRID C.F. 'B'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 11, gc: 0, pts: 3, esRM: true },
+                { pos: 2, nombre: "A.D. ALCORCON S.A.D. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 3, nombre: "C.D. ASOC RETIRO SUR 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 4, nombre: "C.D. LEGANES S.A.D. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 5, nombre: "C.D. MOSTOLES U.R.J.C. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 6, nombre: "C.D. NUEVO BOADILLA 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 7, nombre: "C.D. TAJAMAR 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 8, nombre: "C.F. TRIVAL VALDERAS ALCORCON 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 9, nombre: "CDE TONI KROOS ACADEMY 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 10, nombre: "CLUB ATLETICO DE MADRID S.A.D. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 11, nombre: "GETAFE C.F. S.A.D. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 12, nombre: "RAYO VALLECANO DE MADRID S.A.D. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 13, nombre: "SAD COLEGIO MIRAMADRID - PARACUELLOS 'B'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 14, nombre: "A.D. ILLESCAS 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 11, pts: 0 }
         ]
       },
       "Benjamín A": {
-        liga: "División de Honor Benjamín F7 Grupo 1", jornada: 19,
+        liga: "División de Honor Benjamín F-7 Madrid, Grupo 2 (Valdebebas)", jornada: 1, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=2&competicion=26738273&grupo=26738275&jornada=1", sinGoles: true,
         equipos: [
-                { pos: 1, nombre: "Real Madrid", pj: 19, pg: 19, pe: 0, pp: 0, gf: 0, gc: 0, pts: 57 },
-                { pos: 2, nombre: "Getafe B", pj: 19, pg: 16, pe: 0, pp: 3, gf: 0, gc: 0, pts: 48 },
-                { pos: 3, nombre: "Rayo Majadahonda", pj: 20, pg: 13, pe: 2, pp: 5, gf: 0, gc: 0, pts: 41 },
-                { pos: 4, nombre: "DV7 Madrid", pj: 19, pg: 12, pe: 3, pp: 4, gf: 0, gc: 0, pts: 39 },
-                { pos: 5, nombre: "Nuevo Boadilla", pj: 19, pg: 9, pe: 5, pp: 5, gf: 0, gc: 0, pts: 32 },
-                { pos: 6, nombre: "Las Rozas", pj: 20, pg: 9, pe: 2, pp: 9, gf: 0, gc: 0, pts: 29 },
-                { pos: 7, nombre: "Getafe C", pj: 19, pg: 8, pe: 2, pp: 9, gf: 0, gc: 0, pts: 26 },
-                { pos: 8, nombre: "Alcorcón", pj: 19, pg: 6, pe: 4, pp: 9, gf: 0, gc: 0, pts: 22 },
-                { pos: 9, nombre: "San Fernando Escolapios Pozuelo", pj: 19, pg: 6, pe: 1, pp: 12, gf: 0, gc: 0, pts: 19 },
-                { pos: 10, nombre: "F.P.A Las Rozas", pj: 19, pg: 4, pe: 4, pp: 11, gf: 0, gc: 0, pts: 16 },
-                { pos: 11, nombre: "Móstoles URJC", pj: 20, pg: 4, pe: 4, pp: 12, gf: 0, gc: 0, pts: 16 },
-                { pos: 12, nombre: "Municipal Arroyomolinos", pj: 20, pg: 4, pe: 3, pp: 13, gf: 0, gc: 0, pts: 15 },
-                { pos: 13, nombre: "Villaviciosa de Odón", pj: 18, pg: 0, pe: 0, pp: 18, gf: 0, gc: 0, pts: 0 },
+                { pos: 1, nombre: "C.D. FUTBOL TRES CANTOS 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 2, nombre: "GETAFE C.F. S.A.D. 'E'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 3, nombre: "RAYO CIUDAD ALCOBENDAS C.F. 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 4, nombre: "RAYO VALLECANO DE MADRID S.A.D. 'B'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 5, nombre: "U.D. SAN SEBASTIAN DE LOS REYES S.A.D. 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 6, nombre: "ADEPO PALOMERAS 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 7, nombre: "JUVENTUD SANSE 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 8, nombre: "REAL MADRID C.F. 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0, esRM: true },
+                { pos: 9, nombre: "ATLETICO CHOPERA ALCOBENDAS 04 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 10, nombre: "C.D.E. ACADEMIA DE FUTBOL ALCOBENDAS 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 11, nombre: "CDB UNION DEPORTIVA ARGANZUELA 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 12, nombre: "GREDOS SAN DIEGO-MORATALAZ 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 13, nombre: "RAYO CIUDAD ALCOBENDAS C.F. 'B'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 }
         ]
       },
       "Benjamín B": {
-        liga: "División de Honor Benjamín F7 Grupo 3", jornada: 20,
+        liga: "División de Honor Benjamín F-7 Madrid, Grupo 3 (Valdebebas)", jornada: 1, fuente: "https://www.rffm.es/competicion/clasificaciones?temporada=22&tipojuego=2&competicion=26738273&grupo=26738276&jornada=1", sinGoles: true,
         equipos: [
-                { pos: 1, nombre: "Real Madrid", pj: 20, pg: 17, pe: 3, pp: 0, gf: 0, gc: 0, pts: 54 },
-                { pos: 2, nombre: "Fundación ADF", pj: 19, pg: 13, pe: 2, pp: 4, gf: 0, gc: 0, pts: 41 },
-                { pos: 3, nombre: "Unión Adarve", pj: 19, pg: 12, pe: 4, pp: 3, gf: 0, gc: 0, pts: 40 },
-                { pos: 4, nombre: "Canillas", pj: 20, pg: 12, pe: 3, pp: 5, gf: 0, gc: 0, pts: 39 },
-                { pos: 5, nombre: "Fútbol Tres Cantos", pj: 19, pg: 8, pe: 6, pp: 5, gf: 0, gc: 0, pts: 30 },
-                { pos: 6, nombre: "Sporting Hortaleza", pj: 20, pg: 9, pe: 3, pp: 8, gf: 0, gc: 0, pts: 30 },
-                { pos: 7, nombre: "Fundación Rayo Vallecano C", pj: 19, pg: 7, pe: 5, pp: 7, gf: 0, gc: 0, pts: 26 },
-                { pos: 8, nombre: "Rayo Vallecano B", pj: 19, pg: 7, pe: 3, pp: 9, gf: 0, gc: 0, pts: 24 },
-                { pos: 9, nombre: "Getafe E", pj: 20, pg: 6, pe: 5, pp: 9, gf: 0, gc: 0, pts: 23 },
-                { pos: 10, nombre: "Leganés B", pj: 19, pg: 7, pe: 2, pp: 10, gf: 0, gc: 0, pts: 23 },
-                { pos: 11, nombre: "Fundación Rayo Vallecano B", pj: 19, pg: 7, pe: 2, pp: 10, gf: 0, gc: 0, pts: 23 },
-                { pos: 12, nombre: "Oña Sanchinarro", pj: 19, pg: 1, pe: 0, pp: 18, gf: 0, gc: 0, pts: 3 },
-                { pos: 13, nombre: "Dosa", pj: 20, pg: 0, pe: 2, pp: 18, gf: 0, gc: 0, pts: 2 },
+                { pos: 1, nombre: "A.D. ESPERANZA 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 2, nombre: "A.D. UNION ADARVE 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 3, nombre: "C.D. DOSA 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 4, nombre: "ESCUELA FUTBOL BARRIO PILAR 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 5, nombre: "REAL MADRID C.F. 'B'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3, esRM: true },
+                { pos: 6, nombre: "UNION ZONA NORTE 'A'", pj: 1, pg: 1, pe: 0, pp: 0, gf: 1, gc: 0, pts: 3 },
+                { pos: 7, nombre: "C.D. CANILLAS 'A'", pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, pts: 0 },
+                { pos: 8, nombre: "A.D. OÑA SANCHINARRO 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 9, nombre: "A.D. SPORTING HORTALEZA 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 10, nombre: "CLUB ESCUELA DE FUTBOL CONCEPCION 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 11, nombre: "CLUB FUENTELARREYNA 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 12, nombre: "FUNDACION ADF 'A'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 },
+                { pos: 13, nombre: "RAYO CIUDAD ALCOBENDAS C.F. 'C'", pj: 1, pg: 0, pe: 0, pp: 1, gf: 0, gc: 1, pts: 0 }
         ]
-      },
-      "Prebenjamín A": {
-        liga: "Segunda Fase Primera División Autonómica Prebenjamín - Subgrupo 4A", jornada: 16,
-        equipos: [
-                { pos: 1, nombre: "Real Madrid", pj: 16, pg: 16, pe: 0, pp: 0, gf: 0, gc: 0, pts: 48 },
-                { pos: 2, nombre: "San Agustín", pj: 16, pg: 11, pe: 2, pp: 3, gf: 0, gc: 0, pts: 35 },
-                { pos: 3, nombre: "Rivas Fútbol Club", pj: 16, pg: 10, pe: 2, pp: 4, gf: 0, gc: 0, pts: 32 },
-                { pos: 4, nombre: "Unión Zona Norte", pj: 16, pg: 9, pe: 1, pp: 6, gf: 0, gc: 0, pts: 28 },
-                { pos: 5, nombre: "Canillas", pj: 16, pg: 7, pe: 1, pp: 8, gf: 0, gc: 0, pts: 22 },
-                { pos: 6, nombre: "Dosa", pj: 16, pg: 6, pe: 1, pp: 9, gf: 0, gc: 0, pts: 19 },
-        ]
-      },
-      "Prebenjamín B": {
-        liga: "Segunda Fase Primera División Autonómica Prebenjamín - Subgrupo 5A", jornada: 15,
-        equipos: [
-                { pos: 1, nombre: "Unión Adarve", pj: 15, pg: 13, pe: 1, pp: 1, gf: 0, gc: 0, pts: 40 },
-                { pos: 2, nombre: "Real Madrid", pj: 15, pg: 10, pe: 0, pp: 5, gf: 0, gc: 0, pts: 30 },
-                { pos: 3, nombre: "Arroyofresno", pj: 15, pg: 9, pe: 1, pp: 5, gf: 0, gc: 0, pts: 28 },
-                { pos: 4, nombre: "Fundación Rayo Vallecano B", pj: 15, pg: 8, pe: 2, pp: 5, gf: 0, gc: 0, pts: 26 },
-                { pos: 5, nombre: "Escuela de Fútbol Concepción", pj: 14, pg: 8, pe: 0, pp: 6, gf: 0, gc: 0, pts: 24 },
-        ]
-      },
+      }
     };
 
     /* ===== NOTICIAS ===== */
@@ -2878,45 +2879,44 @@
     /* ===== CLASSIFICATION VIEW ===== */
     function ClassificationView({ teamName }) {
       const data = clasificaciones[teamName];
-      if (!data) return <div className="empty-state">Clasificación no disponible para {teamName}</div>;
-
+      if (!data) return <div className="empty-state">La clasificación de {teamName} aún no está disponible esta temporada.</div>;
+      const rmRow = data.equipos.find(function(e){ return e.esRM; });
       return (
         <div className="content-area">
-          <div style={{marginBottom:'12px',fontSize:'13px',color:'var(--text-2)'}}>
-            {data.liga} · Jornada {data.jornada}
+          <div className="clf-head">
+            <div>
+              <div className="clf-eyebrow">Temporada 2026/27 · Jornada {data.jornada}</div>
+              <div className="clf-title">{data.liga}</div>
+            </div>
+            {rmRow && (
+              <div className="clf-rm">
+                <div className="clf-rm-pos">{rmRow.pos}º</div>
+                <div className="clf-rm-lbl">{rmRow.pts} pts · {rmRow.pg}V {rmRow.pe}E {rmRow.pp}D</div>
+              </div>
+            )}
           </div>
           <div className="table-container">
-            <table style={{width:'100%',borderCollapse:'collapse',fontSize:'13px'}}>
+            <table className={"clf-table" + (data.sinGoles ? " nogoals" : "")}>
               <thead>
-                <tr style={{background:'var(--border-light)',borderBottom:'1px solid var(--border)'}}>
-                  <th style={{padding:'10px 12px',textAlign:'center',width:'36px',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>Pos</th>
-                  <th style={{padding:'10px 12px',textAlign:'left',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>Equipo</th>
-                  <th style={{padding:'10px 8px',textAlign:'center',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>PJ</th>
-                  <th style={{padding:'10px 8px',textAlign:'center',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>PG</th>
-                  <th style={{padding:'10px 8px',textAlign:'center',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>PE</th>
-                  <th style={{padding:'10px 8px',textAlign:'center',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>PP</th>
-                  <th style={{padding:'10px 8px',textAlign:'center',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>GF</th>
-                  <th style={{padding:'10px 8px',textAlign:'center',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>GC</th>
-                  <th style={{padding:'10px 12px',textAlign:'center',fontSize:'11px',fontWeight:600,color:'var(--text-2)'}}>Pts</th>
-                </tr>
+                <tr><th>#</th><th className="l">Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th className="hm">GF</th><th className="hm">GC</th><th className="hm">DG</th><th>Pts</th></tr>
               </thead>
               <tbody>
-                {data.equipos.map((eq, i) => (
-                  <tr key={i} style={{borderBottom:'1px solid var(--border-light)',background:eq.esRM?'var(--accent-light)':'transparent',fontWeight:eq.esRM?600:400}}>
-                    <td style={{padding:'10px 12px',textAlign:'center',color:'var(--text-3)',fontSize:'12px'}}>{eq.pos}</td>
-                    <td style={{padding:'10px 12px',color:eq.esRM?'var(--accent)':'var(--text)'}}>{eq.nombre}</td>
-                    <td style={{padding:'10px 8px',textAlign:'center'}}>{eq.pj}</td>
-                    <td style={{padding:'10px 8px',textAlign:'center',color:'var(--def)'}}>{eq.pg}</td>
-                    <td style={{padding:'10px 8px',textAlign:'center',color:'var(--por)'}}>{eq.pe}</td>
-                    <td style={{padding:'10px 8px',textAlign:'center',color:'var(--del)'}}>{eq.pp}</td>
-                    <td style={{padding:'10px 8px',textAlign:'center'}}>{eq.gf}</td>
-                    <td style={{padding:'10px 8px',textAlign:'center'}}>{eq.gc}</td>
-                    <td style={{padding:'10px 12px',textAlign:'center',fontWeight:700,color:eq.esRM?'var(--accent)':'var(--text)'}}>{eq.pts}</td>
-                  </tr>
-                ))}
+                {data.equipos.map(function(eq, i){
+                  var dg = (eq.gf || 0) - (eq.gc || 0);
+                  return (
+                    <tr key={i} className={eq.esRM ? "rm" : ""}>
+                      <td className="pos">{eq.pos}</td>
+                      <td className="l name">{eq.nombre}</td>
+                      <td>{eq.pj}</td><td>{eq.pg}</td><td>{eq.pe}</td><td>{eq.pp}</td>
+                      <td className="hm">{eq.gf}</td><td className="hm">{eq.gc}</td><td className="hm">{dg > 0 ? "+" + dg : dg}</td>
+                      <td className="pts">{eq.pts}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
+          {data.fuente && <div className="clf-src">Fuente: {data.fuente.split('//').pop().split('/')[0]}</div>}
         </div>
       );
     }

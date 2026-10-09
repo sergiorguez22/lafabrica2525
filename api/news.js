@@ -15,7 +15,9 @@ function decode(s) {
     .replace(/&#(\d+);/g, function (_, n) { return String.fromCharCode(+n); })
     .replace(/&amp;/g, '&');
 }
-function stripHtml(s) { return decode(s).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+var NAMED = { aacute:'á', eacute:'é', iacute:'í', oacute:'ó', uacute:'ú', Aacute:'Á', Eacute:'É', Iacute:'Í', Oacute:'Ó', Uacute:'Ú', ntilde:'ñ', Ntilde:'Ñ', uuml:'ü', Uuml:'Ü', iexcl:'¡', iquest:'¿', nbsp:' ', laquo:'«', raquo:'»', ldquo:'“', rdquo:'”', lsquo:'‘', rsquo:'’', hellip:'…', ndash:'–', mdash:'—', ordf:'ª', ordm:'º', ccedil:'ç', agrave:'à', egrave:'è', ograve:'ò' };
+function named(s) { return s.replace(/&([a-zA-Z]+);/g, function (m, n) { return NAMED[n] || m; }); }
+function stripHtml(s) { return named(decode(decode(s))).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
 function tag(xml, name) {
   var m = xml.match(new RegExp('<' + name + '(?:\\s[^>]*)?>([\\s\\S]*?)</' + name + '>', 'i'));
   return m ? m[1] : '';
@@ -66,6 +68,13 @@ module.exports = async function handler(req, res) {
     .filter(function (it) {
       var k = it.titulo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '').slice(0, 60);
       if (seen[k]) return false; seen[k] = true; return true;
+    })
+    .filter(function (it) {
+      var t = it.titulo, f = (it.fuente || '').toLowerCase();
+      if (t.split(/\s+/).length < 4) return false;                       // titulares de una o dos palabras (p.ej. "DAZN")
+      if (/transfermarkt|betfair|bet365|codere|apuestas|sofascore|flashscore/.test(f)) return false;
+      if (/femenin|baloncesto|basket|euroliga|liga endesa|pron[oó]stico|cuotas|apuestas/i.test(t)) return false;
+      return true;
     })
     .slice(0, 40);
   res.setHeader('Cache-Control', 's-maxage=1800, stale-while-revalidate=3600');
