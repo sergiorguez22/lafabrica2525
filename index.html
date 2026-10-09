@@ -1005,6 +1005,51 @@
     .fh-stats { animation:fhUp 1s cubic-bezier(.2,.7,.2,1) 1.25s both; }
     @media (prefers-reduced-motion: reduce) { .fh-crest-wrap, .fh-crest-wrap::after, .fh-eyebrow, .fh-title, .fh-lead, .fh-ctas, .fh-stats, .loader-crest { animation:none !important; } }
     @media (max-width:768px) { .fh-crest-wrap { width:86px; } }
+
+    /* ===== INTRO DE CARGA "saque de centro" (estilo ferrari.com) ===== */
+    #loading-screen.intro { position:fixed; inset:0; z-index:9999; display:block !important; overflow:hidden; color:#ECE5D8; opacity:1 !important;
+      background:radial-gradient(1000px 640px at 50% 50%, #275039 0%, #1C3B2B 46%, #0e2117 100%) !important;
+      clip-path:inset(0 0 0 0); transition:clip-path 1s cubic-bezier(.77,0,.18,1) !important; }
+    .intro::before { content:''; position:absolute; inset:0; pointer-events:none; opacity:0; background:repeating-linear-gradient(90deg, rgba(236,229,216,.03) 0 90px, transparent 90px 180px); animation:iFade 1.4s ease .1s forwards; }
+    .intro-vignette { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at center, rgba(0,0,0,0) 52%, rgba(0,0,0,.38) 100%); }
+    .intro-line { position:absolute; left:0; right:0; top:50%; height:1px; transform:scaleX(0); background:linear-gradient(90deg, rgba(236,229,216,0), rgba(236,229,216,.34) 18%, rgba(236,229,216,.34) 82%, rgba(236,229,216,0)); animation:iLine 1.1s cubic-bezier(.65,0,.25,1) .15s forwards; }
+    .intro-circle { position:absolute; left:50%; top:50%; width:min(58vmin,420px); height:min(58vmin,420px); transform:translate(-50%,-50%) rotate(-90deg); overflow:visible; }
+    .intro-circle circle { fill:none; stroke:rgba(236,229,216,.34); stroke-width:.7; stroke-dasharray:616; stroke-dashoffset:616; animation:iDraw 1.3s cubic-bezier(.65,0,.25,1) .45s forwards; }
+    .intro-center { position:absolute; left:50%; top:50%; width:min(22vmin,150px); aspect-ratio:32/43; transform:translate(-50%,-50%); }
+    .intro-crest { width:100%; height:100%; display:block; opacity:0; transform:scale(1.28); filter:blur(18px); animation:iCrest 1.25s cubic-bezier(.2,.7,.2,1) .95s forwards; }
+    .intro-center::after { content:''; position:absolute; inset:0; pointer-events:none;
+      background:linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,.9) 50%, rgba(255,255,255,0) 62%); background-size:260% 100%; background-position:160% 0;
+      -webkit-mask:url(crest-ivory.svg) center/contain no-repeat; mask:url(crest-ivory.svg) center/contain no-repeat;
+      animation:iSheen 1.4s cubic-bezier(.4,0,.2,1) 1.95s both; }
+    .intro-text { position:absolute; left:0; right:0; top:calc(50% + min(29vmin,210px) + 28px); text-align:center; }
+    .intro-title { display:inline-block; font-size:clamp(22px, 4.4vmin, 36px); font-weight:800; text-transform:uppercase; letter-spacing:.95em; margin-right:-.95em; opacity:0; filter:blur(6px); animation:iTrack 1.5s cubic-bezier(.2,.7,.2,1) 1.45s forwards; }
+    .intro-sub { font-size:11px; font-weight:600; letter-spacing:.42em; margin-right:-.42em; text-transform:uppercase; color:rgba(236,229,216,.55); margin-top:16px; opacity:0; animation:iFade 1s ease 2.15s forwards; }
+    .intro-foot { position:absolute; left:0; right:0; bottom:0; }
+    .intro-status { text-align:center; font-size:10.5px; font-weight:600; letter-spacing:.26em; text-transform:uppercase; color:rgba(236,229,216,.38); padding-bottom:18px; }
+    .intro-bar { height:2px; background:rgba(236,229,216,.08); }
+    .intro-fill { height:100%; width:0; background:#ECE5D8; box-shadow:0 0 14px rgba(236,229,216,.55); transition:width .55s ease; }
+    .intro .loader-error { color:#fca5a5 !important; text-align:center; font-size:13px; max-width:320px; margin:0 auto 12px; }
+    .intro .loader-retry { display:block; margin:0 auto 22px !important; background:#ECE5D8 !important; color:#1C3B2B !important; border-radius:999px !important; padding:10px 22px !important; font-weight:700; }
+    #loading-screen.intro.intro-exit { clip-path:inset(0 0 100% 0); }
+    .intro-exit .intro-center { transition:transform .9s cubic-bezier(.77,0,.18,1), opacity .5s ease; transform:translate(-50%,-62%) scale(.9); opacity:0; }
+    .intro-exit .intro-text, .intro-exit .intro-foot { transition:transform .9s cubic-bezier(.77,0,.18,1), opacity .45s ease; transform:translateY(-28px); opacity:0; }
+    .intro.quick *, .intro.quick::before, .intro.quick .intro-center::after { animation-delay:0s !important; animation-duration:.45s !important; }
+    @keyframes iFade { to { opacity:1; } }
+    @keyframes iLine { to { transform:scaleX(1); } }
+    @keyframes iDraw { to { stroke-dashoffset:0; } }
+    @keyframes iCrest { to { opacity:1; transform:none; filter:blur(0) drop-shadow(0 18px 40px rgba(0,0,0,.4)); } }
+    @keyframes iSheen { from { background-position:160% 0; } to { background-position:-70% 0; } }
+    @keyframes iTrack { to { opacity:1; letter-spacing:.32em; margin-right:-.32em; filter:blur(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      .intro *, .intro::before, .intro-center::after { animation:none !important; opacity:1 !important; filter:none !important; }
+      .intro-center { transform:translate(-50%,-50%) !important; }
+      .intro-circle { transform:translate(-50%,-50%) rotate(-90deg) !important; }
+      .intro-circle circle { stroke-dashoffset:0; }
+      .intro-line { transform:scaleX(1) !important; }
+      .intro-title { letter-spacing:.32em; margin-right:-.32em; }
+    }
+    /* El Inicio arranca su animación cuando sube el telón */
+    body:not(.intro-done) .fh-crest-wrap, body:not(.intro-done) .fh-crest-wrap::after, body:not(.intro-done) .fh-eyebrow, body:not(.intro-done) .fh-title, body:not(.intro-done) .fh-lead, body:not(.intro-done) .fh-ctas, body:not(.intro-done) .fh-stats { animation-play-state:paused; }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
@@ -1015,12 +1060,19 @@
 <body>
 
   <!-- ===== LOADING SCREEN ===== -->
-  <div id="loading-screen">
-    <img src="crest-ivory.svg" alt="" class="loader-crest">
-    <div class="loader-title">La Fábrica 26/27</div>
-    <div class="loader-sub">Cantera Real Madrid</div>
-    <div class="loader-bar"><div class="loader-fill" id="loader-fill"></div></div>
-    <div id="loader-status" class="loader-sub">Cargando dependencias...</div>
+  <div id="loading-screen" class="intro">
+    <div class="intro-vignette"></div>
+    <div class="intro-line"></div>
+    <svg class="intro-circle" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="98"></circle></svg>
+    <div class="intro-center"><img src="crest-ivory.svg" alt="Real Madrid" class="intro-crest"></div>
+    <div class="intro-text">
+      <div class="intro-title">La Fábrica</div>
+      <div class="intro-sub">Cantera · Real Madrid · 26/27</div>
+    </div>
+    <div class="intro-foot">
+      <div id="loader-status" class="intro-status">Cargando…</div>
+      <div class="intro-bar"><div id="loader-fill" class="intro-fill"></div></div>
+    </div>
   </div>
 
   <!-- ===== APP ROOT ===== -->
@@ -1037,6 +1089,11 @@
         'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js'
       ];
       var names = ['React', 'ReactDOM', 'Babel', 'html2canvas', 'jsPDF'];
+      var introStart = Date.now();
+      var firstIntro = true;
+      try { firstIntro = !sessionStorage.getItem('lf_intro_seen'); sessionStorage.setItem('lf_intro_seen', '1'); } catch(e) {}
+      var MIN_INTRO = firstIntro ? 3100 : 500;
+      if (!firstIntro) document.getElementById('loading-screen').classList.add('quick');
       var loaded = 0;
       var fill = document.getElementById('loader-fill');
       var status = document.getElementById('loader-status');
@@ -1045,7 +1102,7 @@
         var pct = Math.round((loaded / deps.length) * 100);
         fill.style.width = pct + '%';
         if (loaded < deps.length) {
-          status.textContent = 'Cargando ' + names[loaded] + '...';
+          status.textContent = 'Calentando · ' + Math.round(loaded / names.length * 100) + '%';
         }
       }
 
@@ -1100,7 +1157,7 @@
           });
         })
         .then(function() {
-          status.textContent = 'Iniciando aplicacion...';
+          status.textContent = 'Saque de centro…';
           // Transform and execute app code
           var source = document.getElementById('app-source').textContent;
           try {
@@ -1112,12 +1169,15 @@
             showError('Error al compilar: ' + e.message);
             return;
           }
-          // Fade out loading screen
+          // Telón de salida de la intro (respeta su duración mínima)
+          fill.style.width = '100%';
+          var wait = Math.max(250, MIN_INTRO - (Date.now() - introStart));
           setTimeout(function() {
             var ls = document.getElementById('loading-screen');
-            ls.classList.add('fade-out');
-            setTimeout(function() { ls.style.display = 'none'; }, 700);
-          }, 200);
+            ls.classList.add('intro-exit');
+            document.body.classList.add('intro-done');
+            setTimeout(function() { ls.style.setProperty('display', 'none', 'important'); }, 1000);
+          }, wait);
         })
         .catch(function(err) {
           showError(err.message || 'Error de carga');
