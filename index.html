@@ -1206,6 +1206,41 @@
       .filters .roster-select-lbl { font-size:9.5px; letter-spacing:.1em; }
       .filters .roster-select select { font-size:13px; }
     }
+
+    /* ===== Procedencia por países/ciudades, botón Volver y Campo en móvil ===== */
+    .proc-sub { margin-left:9px; font-size:11px; font-weight:600; color:var(--text-3); }
+    .proc-row.open, .proc-row.open:hover { transform:none; }
+    .proc-cities { grid-column:1/-1; margin-top:10px; padding-top:8px; border-top:1px solid var(--border-light); display:flex; flex-direction:column; cursor:default; }
+    .proc-city + .proc-city { border-top:1px solid var(--border-light); }
+    .proc-city-head { width:100%; display:grid; grid-template-columns:minmax(0,1.2fr) minmax(40px,1fr) 34px 12px; align-items:center; gap:12px; padding:9px 4px; background:none; border:none; font:inherit; color:var(--text); cursor:pointer; text-align:left; }
+    .proc-city-head:hover .proc-city-name { color:var(--accent); }
+    .proc-city-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .proc-city-bar { height:4px; border-radius:2px; background:var(--border-light); overflow:hidden; }
+    .proc-city-bar i { display:block; height:100%; border-radius:2px; background:var(--accent); opacity:.7; }
+    .proc-city-count { text-align:right; font-size:13px; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; }
+    .proc-caret { width:7px; height:7px; border-right:2px solid var(--text-3); border-bottom:2px solid var(--text-3); transform:rotate(45deg) translate(-2px,-2px); transition:transform .2s; }
+    .proc-city.open .proc-caret { transform:rotate(-135deg) translate(-2px,-2px); }
+    .proc-city.open .proc-city-name { color:var(--accent); font-weight:800; }
+    .proc-city .proc-players { margin:0 0 10px; padding:2px 4px 0; border-top:none; }
+    .back-bar { position:sticky; top:0; z-index:18; padding:10px 28px; background:rgba(245,243,238,.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+    .back-btn { display:inline-flex; align-items:center; gap:10px; height:38px; padding:0 18px 0 14px; border-radius:999px; border:none; background:var(--accent); color:#ECE5D8; font:inherit; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; }
+    .back-btn:hover { background:#24503a; }
+    .back-arrow { width:8px; height:8px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); margin-left:3px; }
+    .field-dense .field-player-circle { width:32px; height:32px; font-size:10px; }
+    @media (max-width:768px) {
+      .proc-wrap { padding:16px 12px 24px; }
+      .proc-tabs { overflow-x:auto; scrollbar-width:none; }
+      .proc-tabs::-webkit-scrollbar { display:none; }
+      .proc-tab { white-space:nowrap; flex-shrink:0; }
+      .proc-row { grid-template-columns:28px 1fr 54px; gap:10px; padding:10px 12px; }
+      .proc-city-head { grid-template-columns:minmax(0,1.6fr) minmax(30px,1fr) 28px 12px; gap:10px; padding:11px 2px; }
+      .back-bar { padding:8px 12px; }
+      .field-container { padding:14px 10px 22px; }
+      .field-player-circle { width:32px; height:32px; font-size:10px; }
+      .field-player-name { font-size:9px; max-width:60px; margin-top:2px; }
+      .field-dense .field-player-circle { width:28px; height:28px; font-size:9px; border-width:1.5px; }
+      .field-dense .field-player-name { font-size:8.5px; max-width:56px; }
+    }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
@@ -3074,30 +3109,44 @@
         return g;
       }, [players]);
 
+      const [vw, setVw] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+      useEffect(() => {
+        const onResize = () => setVw(window.innerWidth);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+      }, []);
+      // Jugadores que caben por línea sin pisarse (círculo + nombre)
+      const maxPerLine = vw < 360 ? 4 : vw < 560 ? 5 : vw < 900 ? 6 : 7;
+
       const getPositions = () => {
-        const rows = [
-          { pos: "Portero", y: isF7 ? 87 : 88 },
-          { pos: "Defensa", y: isF7 ? 65 : 68 },
-          { pos: "Centrocampista", y: isF7 ? 42 : 45 },
-          { pos: "Delantero", y: isF7 ? 20 : 22 }
-        ];
+        // Cada posición se parte en las líneas que haga falta; todas las líneas se reparten a lo alto del campo
+        const lines = [];
+        ["Portero", "Defensa", "Centrocampista", "Delantero"].forEach(pos => {
+          const pls = grouped[pos];
+          if (!pls.length) return;
+          const nl = Math.ceil(pls.length / maxPerLine);
+          const per = Math.ceil(pls.length / nl);
+          for (let l = 0; l < nl; l++) lines.push({ per, players: pls.slice(l * per, (l + 1) * per) });
+        });
+        const yBottom = isF7 ? 87 : 88, yTop = lines.length > 4 ? 11 : (isF7 ? 20 : 22);
         const result = [];
-        rows.forEach(row => {
-          const pls = grouped[row.pos];
-          const n = pls.length;
-          pls.forEach((p, i) => {
-            const x = n === 1 ? 50 : 10 + (i * 80 / (n - 1));
-            result.push({ player: p, x, y: row.y });
+        lines.forEach((ln, li) => {
+          const y = lines.length === 1 ? 50 : yBottom - li * (yBottom - yTop) / (lines.length - 1);
+          const step = ln.per === 1 ? 0 : Math.min(72 / (ln.per - 1), 30);
+          const k = ln.players.length;
+          ln.players.forEach((p, i) => {
+            result.push({ player: p, x: 50 + (i - (k - 1) / 2) * step, y });
           });
         });
-        return result;
+        return { result, dense: lines.length > 6 };
       };
 
-      const positions = getPositions();
+      const layout = getPositions();
+      const positions = layout.result;
 
       return (
         <div className="field-container">
-          <div className={`field ${isF5 ? 'field-f5' : isF7 ? 'field-f7' : ''}`}>
+          <div className={`field ${isF5 ? 'field-f5' : isF7 ? 'field-f7' : ''}${layout.dense ? ' field-dense' : ''}`}>
             <div className="field-lines">
               <div className="field-center-line"></div>
               <div className="field-center-circle"></div>
@@ -5209,6 +5258,12 @@
       const [showProcedencia, setShowProcedencia] = useState(false);
       const [procedenciaTab, setProcedenciaTab] = useState("club");
       const [expandedProcedencia, setExpandedProcedencia] = useState(null);
+      const [expandedCity, setExpandedCity] = useState(null);
+      // Punto de retorno: sección y scroll desde donde se abrió un jugador
+      const [returnPoint, setReturnPoint] = useState(null);
+      const sectionRef = React.useRef(null);
+      const returnPointRef = React.useRef(null);
+      const pendingScrollRef = React.useRef(null);
       const [showGeneraciones, setShowGeneraciones] = useState(false);
       const [generacionAnio, setGeneracionAnio] = useState(null);
       const [showAlvaroWelcome, setShowAlvaroWelcome] = useState(false);
@@ -5533,7 +5588,30 @@
             return a.name.localeCompare(b.name);
           });
         }
-        return { clubs: toRanking(clubs), cities: toRanking(cities) };
+        // Lugar de nacimiento -> país y ciudad. "Ciudad (País)", "Ciudad (Provincia)" o solo "Ciudad"/"País"
+        var PAISES = { "España":"España", "Ghana":"Ghana", "Costa de Marfil":"Costa de Marfil", "USA":"Estados Unidos", "EEUU":"Estados Unidos", "Estados Unidos":"Estados Unidos", "Cuba":"Cuba", "Marruecos":"Marruecos", "Suecia":"Suecia", "Nigeria":"Nigeria", "Ucrania":"Ucrania", "Bulgaria":"Bulgaria", "Hungría":"Hungría", "Francia":"Francia", "Argentina":"Argentina", "Liberia":"Liberia", "Camerún":"Camerún", "Bielorrusia":"Bielorrusia", "Haití":"Haití", "Guinea Ecuatorial":"Guinea Ecuatorial", "Israel":"Israel", "Portugal":"Portugal", "Italia":"Italia", "Alemania":"Alemania", "Inglaterra":"Inglaterra", "Reino Unido":"Reino Unido", "Brasil":"Brasil", "Colombia":"Colombia", "Venezuela":"Venezuela", "Ecuador":"Ecuador", "Perú":"Perú", "México":"México", "Uruguay":"Uruguay", "Paraguay":"Paraguay", "Chile":"Chile", "Bolivia":"Bolivia", "República Dominicana":"República Dominicana", "Honduras":"Honduras", "Rumanía":"Rumanía", "Polonia":"Polonia", "Rusia":"Rusia", "Países Bajos":"Países Bajos", "Bélgica":"Bélgica", "Suiza":"Suiza", "Senegal":"Senegal", "Mali":"Mali", "Guinea":"Guinea", "Gambia":"Gambia", "Angola":"Angola", "Cabo Verde":"Cabo Verde", "China":"China", "Japón":"Japón" };
+        var countries = {};
+        allPlayers.forEach(function(p) {
+          if (!p.lugarNacimiento) return;
+          var raw = p.lugarNacimiento.trim(); if (!raw) return;
+          var m = /^(.*?)\s*\(([^)]+)\)\s*$/.exec(raw);
+          var pais, ciudad;
+          if (m) { pais = PAISES[m[2].trim()] || "España"; ciudad = m[1].trim(); }
+          else if (PAISES[raw]) { pais = PAISES[raw]; ciudad = null; }
+          else { pais = "España"; ciudad = raw; }
+          if (!countries[pais]) countries[pais] = { all: [], cities: {} };
+          countries[pais].all.push(p);
+          var ck = ciudad || "Ciudad sin especificar";
+          if (!countries[pais].cities[ck]) countries[pais].cities[ck] = [];
+          countries[pais].cities[ck].push(p);
+        });
+        var countryRanking = Object.keys(countries).map(function(k){
+          return { name: k, count: countries[k].all.length, players: countries[k].all, cities: toRanking(countries[k].cities) };
+        }).sort(function(a, b){
+          if (b.count !== a.count) return b.count - a.count;
+          return a.name.localeCompare(b.name);
+        });
+        return { clubs: toRanking(clubs), cities: toRanking(cities), countries: countryRanking };
       }, [allPlayers]);
 
       // Internacionales agrupados por selección
@@ -5598,7 +5676,22 @@
         return list;
       }, [allPlayers]);
 
+      const handleReturn = useCallback(function() {
+        var rp = returnPointRef.current;
+        if (!rp) return;
+        pendingScrollRef.current = rp.y;
+        setShowNews(false); setShowCaptacion(false); setShowCalendario(false); setShowRadar(false);
+        setShowHome(false); setShowBajas(false); setShowAdmin(false);
+        setShowProcedencia(rp.section === "Procedencia");
+        setShowInternacionales(rp.section === "Internacionales");
+        setShowPromociones(rp.section === "Promociones");
+        setShowGeneraciones(rp.section === "Generaciones");
+        setExpandedPlayer(null);
+        setReturnPoint(null);
+      }, []);
+
       const handleSelectTeam = useCallback((team) => {
+        setReturnPoint(null);
         setSelectedTeam(team);
         window.location.hash = team;
         setExpandedPlayer(null);
@@ -5621,6 +5714,8 @@
       }, []);
 
       const handleGlobalSearchSelect = useCallback(function(team, apodo) {
+        // Si se entra al jugador desde una sección de listas, recordar dónde estábamos
+        setReturnPoint(sectionRef.current ? { section: sectionRef.current, y: window.scrollY || window.pageYOffset || 0 } : null);
         setSelectedTeam(team);
         window.location.hash = team;
         setSearchTerm("");
@@ -5877,6 +5972,32 @@
         e.target.value = "";
       }
       function clearCalImport(){ setCalImport([]); setCalImportMsg(""); try{ localStorage.removeItem("cal_import_2627"); }catch(e){} }
+
+      sectionRef.current = showProcedencia ? "Procedencia" : showInternacionales ? "Internacionales" : showPromociones ? "Promociones" : showGeneraciones ? "Generaciones" : null;
+      returnPointRef.current = returnPoint;
+
+      // Al volver a la sección de origen, recuperar el scroll exacto
+      useEffect(function() {
+        if (pendingScrollRef.current == null) return;
+        var y = pendingScrollRef.current; pendingScrollRef.current = null;
+        var tries = 0;
+        (function go() {
+          window.scrollTo(0, y);
+          if (Math.abs((window.scrollY || window.pageYOffset || 0) - y) > 4 && tries++ < 15) setTimeout(go, 60);
+        })();
+      }, [showProcedencia, showInternacionales, showPromociones, showGeneraciones]);
+
+      // Si se abre otra sección distinta, el punto de retorno deja de tener sentido
+      useEffect(function() {
+        if (showNews || showCaptacion || showCalendario || showRadar || showHome || showBajas || showAdmin) setReturnPoint(null);
+      }, [showNews, showCaptacion, showCalendario, showRadar, showHome, showBajas, showAdmin]);
+
+      // Botón/gesto "atrás" del navegador (iPhone incluido): vuelve a la sección de origen
+      useEffect(function() {
+        function onPop() { if (returnPointRef.current) handleReturn(); }
+        window.addEventListener('popstate', onPop);
+        return function() { window.removeEventListener('popstate', onPop); };
+      }, [handleReturn]);
 
       // Expandir jugador tras búsqueda global cuando filteredPlayers se actualiza
       // OJO: expandedPlayer es un índice en filteredPlayers (que está ordenado tácticamente)
@@ -6278,16 +6399,37 @@
               </div>
             ) : showProcedencia ? (
               (function(){
-                var items = procedenciaTab === "club" ? procedenciaStats.clubs : procedenciaStats.cities;
+                var isClub = procedenciaTab === "club";
+                var items = isClub ? procedenciaStats.clubs : procedenciaStats.countries;
                 var topCount = items.length > 0 ? items[0].count : 1;
+                function chips(players) {
+                  return (
+                    <div className="proc-players">
+                      {players.map(function(p, j){
+                        var displayName = getDisplayName(p);
+                        var initials = displayName.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+                        return (
+                          <div key={j} className="proc-player-chip" onClick={function(e){ e.stopPropagation(); handleGlobalSearchSelect(p.equipo, p.apodo); }}>
+                            {p.foto ? (
+                              <img src={p.foto} alt={displayName} onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
+                            ) : null}
+                            <div className="proc-player-chip-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{initials}</div>
+                            <span>{displayName}</span>
+                            <span style={{color:'var(--text-3)',fontSize:'10px'}}>· {p.equipo}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                }
                 return (
                   <div className="proc-wrap">
                     <div className="proc-tabs">
-                      <button className={"proc-tab" + (procedenciaTab === "club" ? " active" : "")} onClick={function(){ setProcedenciaTab("club"); }}>
+                      <button className={"proc-tab" + (isClub ? " active" : "")} onClick={function(){ setProcedenciaTab("club"); }}>
                         Por club de origen ({procedenciaStats.clubs.length})
                       </button>
-                      <button className={"proc-tab" + (procedenciaTab === "city" ? " active" : "")} onClick={function(){ setProcedenciaTab("city"); }}>
-                        Por lugar de nacimiento ({procedenciaStats.cities.length})
+                      <button className={"proc-tab" + (!isClub ? " active" : "")} onClick={function(){ setProcedenciaTab("city"); }}>
+                        Por país y ciudad ({procedenciaStats.countries.length} países)
                       </button>
                     </div>
                     {items.length === 0 ? (
@@ -6300,32 +6442,36 @@
                           var rowClass = rank <= 3 ? 'top3' : '';
                           var pct = Math.round((item.count / topCount) * 100);
                           var isExpanded = expandedProcedencia === item.name;
+                          var multi = !isClub && item.cities.length > 1;
+                          var sub = isClub ? null : (multi ? item.cities.length + " ciudades" : (item.cities[0] && item.cities[0].name !== "Ciudad sin especificar" ? item.cities[0].name : null));
+                          var cityTop = multi ? item.cities[0].count : 1;
                           return (
-                            <div key={i} className={"proc-row " + rowClass} onClick={function(){ setExpandedProcedencia(isExpanded ? null : item.name); }}>
+                            <div key={(isClub ? "c:" : "p:") + item.name} className={"proc-row " + rowClass + (isExpanded ? " open" : "")} onClick={function(){ setExpandedProcedencia(isExpanded ? null : item.name); }}>
                               <div className={"proc-rank " + rankClass}>{rank}</div>
                               <div className="proc-info">
-                                <div className="proc-name">{item.name}</div>
+                                <div className="proc-name">{item.name}{sub ? <span className="proc-sub">{sub}</span> : null}</div>
                                 <div className="proc-bar"><div className="proc-bar-fill" style={{width: pct + '%'}}></div></div>
                               </div>
-                              <div className="proc-count">{item.count}<span className="proc-count-label">{item.count === 1 ? ' jug.' : ' jug.'}</span></div>
-                              {isExpanded && (
-                                <div className="proc-players">
-                                  {item.players.map(function(p, j){
-                                    var displayName = getDisplayName(p);
-                                    var initials = displayName.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+                              <div className="proc-count">{item.count}<span className="proc-count-label"> jug.</span></div>
+                              {isExpanded && (multi ? (
+                                <div className="proc-cities" onClick={function(e){ e.stopPropagation(); }}>
+                                  {item.cities.map(function(c){
+                                    var ckey = item.name + "|" + c.name;
+                                    var cOpen = expandedCity === ckey;
                                     return (
-                                      <div key={j} className="proc-player-chip" onClick={function(e){ e.stopPropagation(); handleGlobalSearchSelect(p.equipo, p.apodo); }}>
-                                        {p.foto ? (
-                                          <img src={p.foto} alt={displayName} onError={function(e){ e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} />
-                                        ) : null}
-                                        <div className="proc-player-chip-fallback" style={{display: p.foto ? 'none' : 'flex', background: getFieldColor(p.posicion)}}>{initials}</div>
-                                        <span>{displayName}</span>
-                                        <span style={{color:'var(--text-3)',fontSize:'10px'}}>· {p.equipo}</span>
+                                      <div key={c.name} className={"proc-city" + (cOpen ? " open" : "")}>
+                                        <button className="proc-city-head" onClick={function(){ setExpandedCity(cOpen ? null : ckey); }}>
+                                          <span className="proc-city-name">{c.name}</span>
+                                          <span className="proc-city-bar"><i style={{width: Math.max(4, Math.round((c.count / cityTop) * 100)) + '%'}}></i></span>
+                                          <span className="proc-city-count">{c.count}</span>
+                                          <span className="proc-caret"></span>
+                                        </button>
+                                        {cOpen && chips(c.players)}
                                       </div>
                                     );
                                   })}
                                 </div>
-                              )}
+                              ) : chips(item.players))}
                             </div>
                           );
                         })}
@@ -6589,6 +6735,11 @@
               })()
             ) : (
             <>
+            {returnPoint && (
+              <div className="back-bar">
+                <button className="back-btn" onClick={handleReturn}><span className="back-arrow"></span>Volver a {returnPoint.section}</button>
+              </div>
+            )}
             <div className="toolbar">
               <div className="view-toggle">
                 <button className={`view-btn ${view === 'list' ? 'active' : ''}`} onClick={() => setView('list')}>Plantilla</button>
