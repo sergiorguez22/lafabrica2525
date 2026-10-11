@@ -5506,7 +5506,7 @@
         setCalSync("guardando");
         return fetch("/api/calendario", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: items, por: sessionStorage.getItem("lfUser") || "" }) })
           .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-          .then(function(){ setCalSync("ok"); return true; })
+          .then(function(){ setCalSync("ok"); try { localStorage.setItem("cal_sync_ok", "1"); } catch(e) {} return true; })
           .catch(function(){ setCalSync("local"); return false; });
       };
       // Trae lo guardado en el servidor. Si el servidor aún no tiene nada y este dispositivo sí, lo sube (salvo migrar:false).
@@ -5521,10 +5521,19 @@
               if (locales.length && !(opts && opts.migrar === false)) calSubir(locales); else setCalSync("ok");
               return null;
             }
-            setCalImport(d.items);
-            try { localStorage.setItem("cal_import_2627", JSON.stringify(d.items)); } catch(e) {}
+            var items = d.items, primera = false;
+            try { primera = localStorage.getItem("cal_sync_ok") !== "1"; } catch(e) {}
+            if (primera) {
+              var mios = []; try { mios = JSON.parse(localStorage.getItem("cal_import_2627") || "[]"); } catch(e) {}
+              var fechas = {}; d.items.forEach(function(m){ fechas[m.fecha] = 1; });
+              var extra = mios.filter(function(m){ return m && m.fecha && !fechas[m.fecha]; });
+              if (extra.length) { items = d.items.concat(extra); if (!(opts && opts.migrar === false)) calSubir(items); }
+            }
+            try { localStorage.setItem("cal_sync_ok", "1"); } catch(e) {}
+            setCalImport(items);
+            try { localStorage.setItem("cal_import_2627", JSON.stringify(items)); } catch(e) {}
             setCalSync("ok");
-            return d.items;
+            return items;
           })
           .catch(function(){ setCalSync("local"); return null; });
       };
