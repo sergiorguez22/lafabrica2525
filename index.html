@@ -1408,16 +1408,11 @@
     const { useState, useMemo, useCallback, useEffect } = React;
 
     /* ===== USERS ===== */
-    const USERS = {
-      "Pacojor": "Sergio1999",
-      "SergioRguez": "sergitoferrari22",
-      "Pabli": "realmadrid",
-      "RaúlRubia": "prebenjaminb",
-      "JuanB": "realmadrid2026",
-      "Eneko": "realmadrid2026Bilbo",
-      "PabloVega": "realmadrid2026",
-      "AlvaroLopez": "YouthLeagueChampions"
-    };
+    // Los usuarios y sus contraseñas (cifradas) están en el servidor: api/usuarios.js. Aquí no hay ninguna.
+    function lfApiUsuarios(cuerpo) {
+      return fetch("/api/usuarios", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo) })
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ d = d || {}; d._status = r.status; return d; }); });
+    }
     const RESTRICTED_USERS = ["PabloVega"];
     function isRestricted(u) { return RESTRICTED_USERS.indexOf(u) >= 0; }
     /* ===== ADMINISTRACION DE USUARIOS ===== */
@@ -2893,25 +2888,25 @@
       const [username, setUsername] = useState("");
       const [password, setPassword] = useState("");
       const [error, setError] = useState("");
+      const [enviando, setEnviando] = useState(false);
 
       const handleSubmit = async (e) => {
         e.preventDefault();
-        if (USERS[username] && USERS[username] === password) {
-          sessionStorage.setItem("lfUser", username);
-          onLogin(username);
-          return;
-        }
-        // Usuarios creados desde el panel de administración (contraseña guardada como hash)
+        if (enviando) return;
+        setEnviando(true);
         try {
-          var h = await lfSha256(password);
-          var ok = lfLocalUsers().some(function(u){ return u.usuario === username && u.hash === h; });
-          if (!ok && supabaseClient) {
-            var res = await supabaseClient.from('usuarios').select('usuario').eq('usuario', username).eq('hash', h).limit(1);
-            ok = !!(res && res.data && res.data.length);
+          var d = await lfApiUsuarios({ accion: "login", usuario: username.trim(), password: password });
+          if (d._status === 200 && d.ok) {
+            sessionStorage.setItem("lfUser", d.usuario);
+            sessionStorage.setItem("lfToken", d.token || "");
+            onLogin(d.usuario);
+            return;
           }
-          if (ok) { sessionStorage.setItem("lfUser", username); onLogin(username); return; }
-        } catch(err) {}
-        setError("Usuario o contraseña incorrectos");
+          setError(d._status === 401 ? "Usuario o contraseña incorrectos" : "No se pudo comprobar el acceso. Inténtalo de nuevo en un momento.");
+        } catch(err) {
+          setError("Sin conexión con el servidor. Inténtalo de nuevo.");
+        }
+        setEnviando(false);
       };
 
       return (
@@ -2922,7 +2917,7 @@
             <p className="login-subtitle">Cantera Real Madrid</p>
             <input className="login-field" type="text" placeholder="Usuario" value={username} onChange={e => { setUsername(e.target.value); setError(""); }} autoComplete="off" />
             <input className="login-field" type="password" placeholder="Contraseña" value={password} onChange={e => { setPassword(e.target.value); setError(""); }} autoComplete="off" />
-            <button className="login-btn" type="submit">Acceder</button>
+            <button className="login-btn" type="submit" disabled={enviando}>{enviando ? "Comprobando…" : "Acceder"}</button>
             {error && <p className="login-error">{error}</p>}
             <p style={{marginTop:'18px', fontSize:'11px', lineHeight:1.5, color:'var(--text-3)', textAlign:'center', maxWidth:'320px', paddingTop:'16px', borderTop:'1px solid var(--border-light)'}}>
               Aplicación privada de uso interno. Proyecto personal <strong>no oficial</strong>, sin afiliación, patrocinio ni relación con el Real Madrid C. F. ni con ninguna entidad oficial. No solicita datos bancarios ni personales.
@@ -5333,8 +5328,8 @@
 
     /* ===== PANEL DE ADMINISTRACIÓN (solo ADMIN_USERS) ===== */
     function AdminPanel({ user }) {
-      const [list, setList] = useState(function(){ return lfLocalUsers(); });
-      const [remote, setRemote] = useState(null);
+      const [list, setList] = useState([]);
+      const [estado, setEstado] = useState("cargando");      // cargando | ok | sesion | error
       const [nombre, setNombre] = useState("");
       const [usuario, setUsuario] = useState("");
       const [pass, setPass] = useState(function(){ return lfGenPassword(12); });
@@ -5342,82 +5337,95 @@
       const [created, setCreated] = useState(null);
       const [busy, setBusy] = useState(false);
 
+      function token() { return sessionStorage.getItem("lfToken") || ""; }
       function suggest(n) {
-        return (n || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z\s]/g, "").split(/\s+/).filter(Boolean).slice(0, 2)
+        return (n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z\s]/g, "").split(/\s+/).filter(Boolean).slice(0, 2)
           .map(function(w){ return w[0].toUpperCase() + w.slice(1).toLowerCase(); }).join("");
       }
-
+      function cargar() {
+        return lfApiUsuarios({ accion: "listar", token: token() }).then(function(d){
+          if (d._status === 200 && d.ok) { setList(d.usuarios || []); setEstado("ok"); return true; }
+          setEstado(d._status === 401 ? "sesion" : "error"); return false;
+        }, function(){ setEstado("error"); return false; });
+      }
       useEffect(function(){
-        if (!supabaseClient) { setRemote(false); return; }
-        supabaseClient.from('usuarios').select('usuario,nombre,creado_por,created_at').order('created_at', { ascending: false })
-          .then(function(res){
-            if (res.error) { setRemote(false); return; }
-            setRemote(true);
-            var map = {};
-            lfLocalUsers().forEach(function(u){ map[u.usuario] = u; });
-            (res.data || []).forEach(function(u){ map[u.usuario] = Object.assign({}, map[u.usuario] || {}, u, { remoto: true }); });
-            setList(Object.keys(map).map(function(k){ return map[k]; }));
-          }, function(){ setRemote(false); });
+        cargar().then(function(ok){
+          if (!ok) return;
+          // Usuarios que solo estaban guardados en este navegador: se pasan al servidor una vez
+          var locales = lfLocalUsers();
+          if (!locales.length) return;
+          lfApiUsuarios({ accion: "migrar", token: token(), usuarios: locales }).then(function(d){
+            if (d._status !== 200 || !d.ok) return;
+            lfSaveLocalUsers([]);
+            var n = d["añadidos"] || [];
+            if (n.length) { setMsg("Se han pasado al servidor " + n.length + " usuario(s) que solo estaban en este navegador: " + n.join(", ") + ". Ya pueden entrar desde cualquier dispositivo."); cargar(); }
+          });
+        });
       }, []);
 
       async function crear() {
         var u = usuario.trim(), p = pass;
         if (!u || !p) { setMsg("Escribe un usuario y una contraseña."); return; }
         if (!/^[A-Za-z0-9._-]{3,30}$/.test(u)) { setMsg("El usuario solo puede tener letras, números, punto, guion o guion bajo (3-30)."); return; }
-        if (USERS[u] || list.some(function(x){ return x.usuario === u; })) { setMsg("Ese usuario ya existe."); return; }
         setBusy(true);
-        var h = await lfSha256(p);
-        var rec = { usuario: u, nombre: nombre.trim() || null, hash: h, creado_por: user, created_at: new Date().toISOString() };
-        var locals = lfLocalUsers(); locals.unshift(rec); lfSaveLocalUsers(locals);
-        var remotoOk = false;
-        if (supabaseClient) { try { var r = await supabaseClient.from('usuarios').insert(rec); remotoOk = !r.error; } catch(e) {} }
-        setList([Object.assign({}, rec, { remoto: remotoOk })].concat(list));
-        setCreated({ usuario: u, pass: p, remoto: remotoOk });
-        setNombre(""); setUsuario(""); setPass(lfGenPassword(12)); setMsg(""); setBusy(false);
+        try {
+          var d = await lfApiUsuarios({ accion: "crear", token: token(), usuario: u, nombre: nombre.trim(), password: p });
+          if (d._status === 200 && d.ok) {
+            setCreated({ usuario: u, pass: p });
+            setNombre(""); setUsuario(""); setPass(lfGenPassword(12)); setMsg("");
+            await cargar();
+          } else if (d._status === 401) { setEstado("sesion"); }
+          else setMsg(d.error || "No se pudo crear el usuario.");
+        } catch(e) { setMsg("Sin conexión con el servidor."); }
+        setBusy(false);
       }
-
       async function resetear(u) {
-        var p = lfGenPassword(12); var h = await lfSha256(p);
-        lfSaveLocalUsers(lfLocalUsers().map(function(x){ return x.usuario === u ? Object.assign({}, x, { hash: h }) : x; }));
-        var ok = false;
-        if (supabaseClient) { try { var r = await supabaseClient.from('usuarios').update({ hash: h }).eq('usuario', u); ok = !r.error; } catch(e) {} }
-        setCreated({ usuario: u, pass: p, remoto: ok, reset: true });
+        if (!confirm("¿Generar una contraseña nueva para " + u + "? La actual dejará de valer.")) return;
+        var p = lfGenPassword(12);
+        try {
+          var d = await lfApiUsuarios({ accion: "resetear", token: token(), usuario: u, password: p });
+          if (d._status === 200 && d.ok) { setCreated({ usuario: u, pass: p, reset: true }); setMsg(""); }
+          else if (d._status === 401) setEstado("sesion");
+          else setMsg(d.error || "No se pudo cambiar la contraseña.");
+        } catch(e) { setMsg("Sin conexión con el servidor."); }
       }
-
       async function borrar(u) {
         if (!confirm("¿Eliminar el usuario " + u + "? Dejará de poder entrar.")) return;
-        lfSaveLocalUsers(lfLocalUsers().filter(function(x){ return x.usuario !== u; }));
-        if (supabaseClient) { try { await supabaseClient.from('usuarios').delete().eq('usuario', u); } catch(e) {} }
-        setList(list.filter(function(x){ return x.usuario !== u; }));
-        if (created && created.usuario === u) setCreated(null);
+        try {
+          var d = await lfApiUsuarios({ accion: "borrar", token: token(), usuario: u });
+          if (d._status === 200 && d.ok) { if (created && created.usuario === u) setCreated(null); setMsg(""); await cargar(); }
+          else if (d._status === 401) setEstado("sesion");
+          else setMsg(d.error || "No se pudo eliminar el usuario.");
+        } catch(e) { setMsg("Sin conexión con el servidor."); }
       }
-
       function copiar(t) {
         try { navigator.clipboard.writeText(t).then(function(){ setMsg("Copiado al portapapeles."); }); } catch(e) {}
       }
 
-      var fixed = Object.keys(USERS);
       var credText = created ? ("La Fábrica 26/27\nhttps://lafabricarm.vercel.app\nUsuario: " + created.usuario + "\nContraseña: " + created.pass) : "";
       var card = { background:'var(--surface)', border:'1px solid var(--border-light)', borderRadius:'20px', padding:'24px', boxShadow:'0 1px 2px rgba(16,24,40,.04), 0 14px 34px -20px rgba(16,24,40,.2)' };
       var label = { fontSize:'10.5px', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', color:'var(--text-3)', marginBottom:'6px', display:'block' };
-      var input = { width:'100%', padding:'11px 14px', border:'1px solid var(--border)', borderRadius:'12px', fontSize:'14px', background:'var(--surface)', color:'var(--text)', outline:'none', fontFamily:'inherit' };
-      var ghost = { padding:'8px 14px', borderRadius:'999px', border:'1px solid var(--border)', background:'var(--surface)', color:'var(--accent)', fontSize:'12px', fontWeight:600, cursor:'pointer' };
+      var input = { width:'100%', padding:'11px 14px', border:'1px solid var(--border)', borderRadius:'12px', fontSize:'14px', background:'var(--surface)', color:'var(--text)', outline:'none', fontFamily:'inherit', boxSizing:'border-box' };
+      var ghost = { padding:'8px 14px', borderRadius:'999px', border:'1px solid var(--border)', background:'var(--surface)', color:'var(--accent)', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap' };
+      var chip = { fontSize:'10.5px', fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', padding:'3px 9px', borderRadius:'999px' };
 
       return (
         <div style={{padding:'22px 28px 40px', maxWidth:'1100px'}}>
           <div style={{fontSize:'11px', fontWeight:700, letterSpacing:'.28em', textTransform:'uppercase', color:'var(--pink)', marginBottom:'6px'}}>Solo administrador</div>
           <h2 style={{margin:'0 0 6px', fontSize:'30px', fontWeight:800, textTransform:'uppercase', letterSpacing:'-0.02em', color:'var(--accent)'}}>Gestión de usuarios</h2>
           <p style={{margin:'0 0 22px', fontSize:'13px', color:'var(--text-2)'}}>
-            {remote === null ? "Comprobando la base de datos…" : remote
-              ? "Sincronizado con la base de datos: los usuarios que crees funcionan en cualquier dispositivo."
-              : "La base de datos no está disponible ahora mismo: los usuarios que crees solo funcionarán en este navegador hasta que se active la tabla de usuarios."}
+            {estado === "cargando" ? "Cargando usuarios…"
+              : estado === "ok" ? "Los usuarios se guardan en el servidor con la contraseña cifrada y funcionan en cualquier dispositivo. Puedes crear, cambiar la clave o eliminar a cualquiera."
+              : estado === "sesion" ? "Tu sesión no sirve para gestionar usuarios (ha caducado o es anterior a este cambio). Cierra sesión y vuelve a entrar."
+              : "No se pudo conectar con el servidor de usuarios. Recarga la página en un momento."}
           </p>
 
+          {estado === "ok" && (
           <div style={{display:'grid', gridTemplateColumns:'minmax(0,1.1fr) minmax(0,1fr)', gap:'18px', alignItems:'start'}} className="admin-grid">
             <div style={card}>
               <div style={{fontSize:'16px', fontWeight:800, color:'var(--accent)', marginBottom:'16px', textTransform:'uppercase', letterSpacing:'.02em'}}>Generar usuario</div>
               <label style={label}>Nombre (opcional)</label>
-              <input style={input} value={nombre} placeholder="Ej. Juan Pérez" onChange={function(e){ var v = e.target.value; setNombre(v); if (!usuario || usuario === suggest(nombre)) setUsuario(suggest(v)); }} />
+              <input style={input} value={nombre} placeholder="Ej. Juan Pérez" onChange={function(e){ var v = e.target.value; if (!usuario || usuario === suggest(nombre)) setUsuario(suggest(v)); setNombre(v); }} />
               <div style={{height:'14px'}}></div>
               <label style={label}>Usuario</label>
               <input style={input} value={usuario} placeholder="Ej. JuanPerez" onChange={function(e){ setUsuario(e.target.value.replace(/\s/g, "")); }} />
@@ -5432,46 +5440,40 @@
 
               {created && (
                 <div style={{marginTop:'18px', padding:'16px', borderRadius:'14px', background:'var(--ivory)', border:'1px solid #ddd3bf'}}>
-                  <div style={{fontSize:'11px', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', color:'var(--accent)', marginBottom:'8px'}}>{created.reset ? "Contraseña restablecida" : "Usuario creado"}</div>
+                  <div style={{fontSize:'11px', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', color:'var(--accent)', marginBottom:'8px'}}>{created.reset ? "Contraseña nueva" : "Usuario creado"}</div>
                   <div style={{fontFamily:'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize:'14px', lineHeight:1.7, color:'var(--text)'}}>
                     Usuario: <strong>{created.usuario}</strong><br />Contraseña: <strong>{created.pass}</strong>
                   </div>
-                  <div style={{fontSize:'11.5px', color:'var(--text-2)', marginTop:'6px'}}>La contraseña solo se muestra ahora; guárdala o envíala antes de salir.{created.remoto ? "" : " (Guardado solo en este navegador.)"}</div>
+                  <div style={{fontSize:'11.5px', color:'var(--text-2)', marginTop:'6px'}}>La contraseña solo se muestra ahora; guárdala o envíala antes de salir.</div>
                   <button style={Object.assign({}, ghost, { marginTop:'10px' })} onClick={function(){ copiar(credText); }}>Copiar credenciales</button>
                 </div>
               )}
             </div>
 
             <div style={card}>
-              <div style={{fontSize:'16px', fontWeight:800, color:'var(--accent)', marginBottom:'14px', textTransform:'uppercase', letterSpacing:'.02em'}}>Usuarios ({fixed.length + list.length})</div>
+              <div style={{fontSize:'16px', fontWeight:800, color:'var(--accent)', marginBottom:'14px', textTransform:'uppercase', letterSpacing:'.02em'}}>Usuarios ({list.length})</div>
               {list.map(function(u){
+                var yo = u.usuario === user;
                 return (
-                  <div key={u.usuario} style={{display:'flex', alignItems:'center', gap:'10px', padding:'10px 0', borderBottom:'1px solid #f2eee6'}}>
+                  <div key={u.usuario} style={{display:'flex', alignItems:'center', gap:'10px', padding:'10px 0', borderBottom:'1px solid #f2eee6', flexWrap:'wrap'}}>
                     <div style={{width:'34px', height:'34px', borderRadius:'50%', background:'var(--accent)', color:'#ECE5D8', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', fontWeight:700, flexShrink:0}}>{u.usuario.charAt(0).toUpperCase()}</div>
-                    <div style={{flex:1, minWidth:0}}>
-                      <div style={{fontSize:'14px', fontWeight:700}}>{u.usuario}</div>
-                      <div style={{fontSize:'11.5px', color:'var(--text-3)'}}>{u.nombre ? u.nombre + " · " : ""}creado por {u.creado_por || "—"}{u.created_at ? " · " + new Date(u.created_at).toLocaleDateString('es-ES') : ""}</div>
+                    <div style={{flex:1, minWidth:'120px'}}>
+                      <div style={{fontSize:'14px', fontWeight:700, display:'flex', alignItems:'center', gap:'6px', flexWrap:'wrap'}}>
+                        {u.usuario}
+                        {isAdmin(u.usuario) && <span style={Object.assign({}, chip, { background:'var(--accent)', color:'#ECE5D8' })}>Admin</span>}
+                        {isRestricted(u.usuario) && <span style={Object.assign({}, chip, { background:'var(--pink-soft)', color:'var(--pink)' })}>Restringido</span>}
+                        {yo && <span style={Object.assign({}, chip, { background:'var(--ivory)', color:'var(--text-2)' })}>Tú</span>}
+                      </div>
+                      <div style={{fontSize:'11.5px', color:'var(--text-3)'}}>{u.nombre ? u.nombre + " · " : ""}{u.creado_por === "sistema" ? "usuario inicial" : "creado por " + (u.creado_por || "—")}{u.creado_por !== "sistema" && u.created_at ? " · " + new Date(u.created_at).toLocaleDateString("es-ES") : ""}</div>
                     </div>
                     <button style={ghost} onClick={function(){ resetear(u.usuario); }}>Nueva clave</button>
-                    <button style={Object.assign({}, ghost, { color:'var(--del)' })} onClick={function(){ borrar(u.usuario); }}>Eliminar</button>
-                  </div>
-                );
-              })}
-              {fixed.map(function(u){
-                return (
-                  <div key={u} style={{display:'flex', alignItems:'center', gap:'10px', padding:'10px 0', borderBottom:'1px solid #f2eee6'}}>
-                    <div style={{width:'34px', height:'34px', borderRadius:'50%', background:'var(--ivory)', color:'var(--accent)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', fontWeight:700, flexShrink:0}}>{u.charAt(0).toUpperCase()}</div>
-                    <div style={{flex:1, minWidth:0}}>
-                      <div style={{fontSize:'14px', fontWeight:700}}>{u}</div>
-                      <div style={{fontSize:'11.5px', color:'var(--text-3)'}}>Usuario fijo de la app</div>
-                    </div>
-                    {isAdmin(u) && <span style={{fontSize:'10.5px', fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', padding:'3px 9px', borderRadius:'999px', background:'var(--accent)', color:'#ECE5D8'}}>Admin</span>}
-                    {isRestricted(u) && <span style={{fontSize:'10.5px', fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', padding:'3px 9px', borderRadius:'999px', background:'var(--pink-soft)', color:'var(--pink)'}}>Restringido</span>}
+                    {!yo && <button style={Object.assign({}, ghost, { color:'var(--del)' })} onClick={function(){ borrar(u.usuario); }}>Eliminar</button>}
                   </div>
                 );
               })}
             </div>
           </div>
+          )}
         </div>
       );
     }
@@ -5479,6 +5481,12 @@
     /* ===== MAIN APP ===== */
     function App() {
       const [user, setUser] = useState(() => sessionStorage.getItem("lfUser") || null);
+      const [nombresUsuarios, setNombresUsuarios] = useState([]);
+      useEffect(function(){
+        if (!user) { setNombresUsuarios([]); return; }
+        var t = sessionStorage.getItem("lfToken"); if (!t) return;
+        lfApiUsuarios({ accion: "nombres", token: t }).then(function(d){ if (d._status === 200 && d.ok) setNombresUsuarios(d.nombres || []); }, function(){});
+      }, [user]);
       const [selectedTeam, setSelectedTeam] = useState(function() {
         try {
           var hash = decodeURIComponent(window.location.hash.substring(1));
@@ -6338,6 +6346,7 @@
 
       const handleLogout = useCallback(() => {
         sessionStorage.removeItem("lfUser");
+        sessionStorage.removeItem("lfToken");
         setUser(null);
       }, []);
 
@@ -6996,7 +7005,7 @@
                 <div className="cap-tabs">
                   <button className={`cap-tab ${capFilter === "Todas" ? "active" : ""}`} onClick={() => setCapFilter("Todas")}>Todas</button>
                   <button className={`cap-tab ${capFilter === "Mías" ? "active" : ""}`} onClick={() => setCapFilter("Mías")}>Mías</button>
-                  {!isRestricted(user) && Object.keys(USERS).filter(u => u !== user).map(u => (
+                  {!isRestricted(user) && nombresUsuarios.filter(u => u !== user).map(u => (
                     <button key={u} className={`cap-tab ${capFilter === u ? "active" : ""}`} onClick={() => setCapFilter(u)}>{u}</button>
                   ))}
                 </div>
