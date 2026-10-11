@@ -3001,7 +3001,7 @@
                   <div className="sidebar-category">{cat.name}</div>
                   {cat.teams.map(team => {
                     const data = canteraData[team];
-                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && !showCalendario && !showProcedencia && !showGeneraciones && !showRadar && selectedTeam === team;
+                    const isActive = !showHome && !showNews && !showCaptacion && !showPromociones && !showInternacionales && !showCalendario && !showProcedencia && !showGeneraciones && !showRadar && !showBajas && !showAdmin && selectedTeam === team;
                     return (
                       <div
                         key={team}
@@ -6067,6 +6067,11 @@
 
       const handleShowPromociones = useCallback(() => {
         setShowPromociones(true);
+        setShowInternacionales(false);
+        setShowCalendario(false);
+        setShowProcedencia(false);
+        setShowGeneraciones(false);
+        setShowRadar(false);
         setShowNews(false);
         setShowCaptacion(false);
         setShowHome(false);
@@ -6077,6 +6082,10 @@
 
       const handleGoHome = useCallback(() => {
         setShowHome(true);
+        setShowGeneraciones(false);
+        setShowRadar(false);
+        setShowBajas(false);
+        setShowAdmin(false);
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
@@ -6217,6 +6226,9 @@
 
       const handleShowCalendario = useCallback(() => {
         setShowCalendario(true);
+        setShowProcedencia(false);
+        setShowGeneraciones(false);
+        setShowRadar(false);
         setShowNews(false);
         setShowCaptacion(false);
         setShowPromociones(false);
