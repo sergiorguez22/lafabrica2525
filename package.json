@@ -2,6 +2,7 @@
   "name": "lafabrica2525",
   "version": "1.0.0",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12"
+    "cheerio": "^1.0.0-rc.12",
+    "@vercel/blob": "^1.1.1"
   }
 }

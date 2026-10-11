@@ -1251,6 +1251,10 @@
     .cal-match-loc.entreno { background:var(--ivory); color:var(--text-2); }
     .cal-entreno { opacity:.9; }
     .cal-entreno .cal-match-teams { font-weight:600; }
+    .cal-sync { display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--text-3); }
+    .cal-sync::before { content:''; width:7px; height:7px; border-radius:50%; background:currentColor; }
+    .cal-sync.ok { color:#2c7a52; }
+    .cal-sync.local { color:#b45309; }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
@@ -5495,6 +5499,42 @@
       const [calImport, setCalImport] = useState(function(){ try { return JSON.parse(localStorage.getItem("cal_import_2627") || "[]"); } catch(e) { return []; } });
       const [calImportMsg, setCalImportMsg] = useState("");
       const [calVerEntrenos, setCalVerEntrenos] = useState(function(){ try { return localStorage.getItem("cal_ver_entrenos") === "1"; } catch(e) { return false; } });
+      // --- Calendario compartido entre dispositivos (api/calendario -> Vercel Blob) ---
+      const [calSync, setCalSync] = useState("");            // "", "guardando", "ok", "local"
+      const calSyncRef = React.useRef({ ultimo: 0 });
+      const calSubir = function(items){
+        setCalSync("guardando");
+        return fetch("/api/calendario", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: items, por: sessionStorage.getItem("lfUser") || "" }) })
+          .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+          .then(function(){ setCalSync("ok"); return true; })
+          .catch(function(){ setCalSync("local"); return false; });
+      };
+      // Trae lo guardado en el servidor. Si el servidor aún no tiene nada y este dispositivo sí, lo sube (salvo migrar:false).
+      const calBajar = function(opts){
+        calSyncRef.current.ultimo = Date.now();
+        return fetch("/api/calendario?t=" + Date.now(), { cache: "no-store" })
+          .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+          .then(function(d){
+            if (!d || !Array.isArray(d.items)) throw new Error("formato");
+            if (d.actualizado == null) {
+              var locales = []; try { locales = JSON.parse(localStorage.getItem("cal_import_2627") || "[]"); } catch(e) {}
+              if (locales.length && !(opts && opts.migrar === false)) calSubir(locales); else setCalSync("ok");
+              return null;
+            }
+            setCalImport(d.items);
+            try { localStorage.setItem("cal_import_2627", JSON.stringify(d.items)); } catch(e) {}
+            setCalSync("ok");
+            return d.items;
+          })
+          .catch(function(){ setCalSync("local"); return null; });
+      };
+      useEffect(function(){ if (user) calBajar(); }, [user]);
+      useEffect(function(){ if (user && showCalendario) calBajar(); }, [showCalendario]);
+      useEffect(function(){
+        function alVolver(){ if (document.visibilityState === "visible" && sessionStorage.getItem("lfUser") && Date.now() - calSyncRef.current.ultimo > 15000) calBajar(); }
+        document.addEventListener("visibilitychange", alVolver);
+        return function(){ document.removeEventListener("visibilitychange", alVolver); };
+      }, []);
       function toggleCalEntrenos(){ setCalVerEntrenos(function(v){ var n = !v; try { localStorage.setItem("cal_ver_entrenos", n ? "1" : "0"); } catch(e) {} return n; }); }
       const [showProcedencia, setShowProcedencia] = useState(false);
       const [procedenciaTab, setProcedenciaTab] = useState("club");
@@ -6191,11 +6231,15 @@
         var r = LFPlan.aPartidos(res.celdas, res.semana);
         if (!r.partidos.length) { setCalImportMsg("Planificación leída, pero no trae partidos, torneos ni entrenamientos esa semana."); return; }
         var dias = {}; for (var i = 0; i < 7; i++) { var d = new Date(res.semana.fin.getTime()); d.setDate(d.getDate() - i); dias[calPad2(d.getDate()) + "/" + calPad2(d.getMonth()+1) + "/" + d.getFullYear()] = 1; }
-        var previos = (calImport || []).filter(function(m){ return !dias[m.fecha]; });
-        var out = previos.concat(r.partidos);
-        setCalImport(out);
-        try{ localStorage.setItem("cal_import_2627", JSON.stringify(out)); }catch(e){}
-        setCalImportMsg(r.cuenta.partidos + " partidos" + (r.cuenta.torneos ? ", " + r.cuenta.torneos + " días de torneo" : "") + " y " + r.cuenta.entrenos + " entrenamientos de la " + res.semana.etiqueta + ". Los entrenamientos se ven con «Ver entrenamientos»." + (r.cuenta.otros ? " No se añaden " + r.cuenta.otros + " actividades." : ""));
+        var texto = r.cuenta.partidos + " partidos" + (r.cuenta.torneos ? ", " + r.cuenta.torneos + " días de torneo" : "") + " y " + r.cuenta.entrenos + " entrenamientos de la " + res.semana.etiqueta + ". Los entrenamientos se ven con «Ver entrenamientos»." + (r.cuenta.otros ? " No se añaden " + r.cuenta.otros + " actividades." : "");
+        setCalImportMsg("Guardando…");
+        calBajar({ migrar: false }).then(function(remotos){
+          var base = remotos || calImport || [];
+          var out = base.filter(function(m){ return !dias[m.fecha]; }).concat(r.partidos);
+          setCalImport(out);
+          try{ localStorage.setItem("cal_import_2627", JSON.stringify(out)); }catch(e){}
+          calSubir(out).then(function(ok){ setCalImportMsg(texto + (ok ? " Guardado para todos tus dispositivos." : " OJO: no se pudo guardar en el servidor; de momento solo está en este dispositivo.")); });
+        });
       }
       function handleCalImportFile(e){
         var file = e.target.files && e.target.files[0]; if(!file) return;
@@ -6228,13 +6272,14 @@
             if(out.length===0){ setCalImportMsg("No se encontraron partidos. Vale la planificación semanal (PDF o Excel) o un Excel con columnas Equipo, Rival, Competición, Jornada, Fecha, Hora, Local."); return; }
             setCalImport(out);
             try{ localStorage.setItem("cal_import_2627", JSON.stringify(out)); }catch(e){}
-            setCalImportMsg(out.length + " partidos importados.");
+            setCalImportMsg("Guardando…");
+            calSubir(out).then(function(ok){ setCalImportMsg(out.length + " partidos importados." + (ok ? " Guardado para todos tus dispositivos." : " OJO: no se pudo guardar en el servidor; de momento solo está en este dispositivo.")); });
           }catch(err){ setCalImportMsg("Error leyendo el archivo: " + err.message); }
         };
         reader.readAsArrayBuffer(file);
         e.target.value = "";
       }
-      function clearCalImport(){ setCalImport([]); setCalImportMsg(""); try{ localStorage.removeItem("cal_import_2627"); }catch(e){} }
+      function clearCalImport(){ setCalImport([]); setCalImportMsg(""); try{ localStorage.removeItem("cal_import_2627"); }catch(e){} calSubir([]); }
 
       sectionRef.current = showProcedencia ? "Procedencia" : showInternacionales ? "Internacionales" : showPromociones ? "Promociones" : showGeneraciones ? "Generaciones" : null;
       returnPointRef.current = returnPoint;
@@ -6790,6 +6835,7 @@
                         </button>
                       )}
                       {calImport.length > 0 && <button onClick={clearCalImport} style={{fontSize:'12px',color:'var(--del)',background:'none',border:'1px solid var(--border)',borderRadius:'var(--radius-sm)',padding:'6px 12px',cursor:'pointer'}}>Borrar importados</button>}
+                      {calSync && <span className={"cal-sync " + calSync}>{calSync === "ok" ? "Sincronizado" : calSync === "guardando" ? "Guardando…" : "Sin conexión: solo en este dispositivo"}</span>}
                       {calImportMsg && <span style={{fontSize:'12px',color:'var(--text-2)'}}>{calImportMsg}</span>}
                     </div>
                     <div style={{fontSize:'11.5px',color:'var(--text-3)',marginTop:'8px'}}>Admite la planificación semanal del club tal cual, en PDF o en Excel (equipos en filas y días en columnas): se añaden los partidos y torneos de esa semana. También un Excel con columnas Equipo · Rival · Competición · Jornada · Fecha · Hora · Local.</div>
