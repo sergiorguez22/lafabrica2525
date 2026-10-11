@@ -3099,6 +3099,231 @@
       );
     }
 
+    /* ===== LECTOR DE LA PLANIFICACIÓN SEMANAL (cuadrícula equipos x días, en PDF o Excel) ===== */
+    const LFPlan = (function(){
+      var DIAS = ["lunes","martes","miercoles","jueves","viernes","sabado","domingo"];
+      var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+      function norm(s){ return (s||"").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").trim(); }
+      function pad2(n){ n = String(n); return n.length < 2 ? "0" + n : n; }
+      function fmt(d){ return pad2(d.getDate()) + "/" + pad2(d.getMonth()+1) + "/" + d.getFullYear(); }
+      function diaIdx(s){ var m = /^(lunes|martes|miercoles|jueves|viernes|sabado|domingo)\b\s*(\d{1,2})?$/.exec(norm(s)); return m ? { i: DIAS.indexOf(m[1]), n: m[2] ? parseInt(m[2],10) : null } : null; }
+      function semana(texto){
+        var m = /semana\s+del\s+(\d{1,2})(?:\s+de\s+([a-z]+))?(?:\s+de\s+(\d{4}))?\s+al\s+(\d{1,2})\s+de\s+([a-z]+)\s+de\s+(\d{4})/.exec(norm(texto));
+        if (!m) return null;
+        var mes = MESES.indexOf(m[5]); if (mes < 0) return null;
+        var fin = new Date(parseInt(m[6],10), mes, parseInt(m[4],10));
+        return { fin: fin, etiqueta: "semana del " + pad2(m[1]) + " al " + pad2(m[4]) + " de " + m[5] + " de " + m[6] };
+      }
+      function equipoNombre(s){
+        var t = (s||"").replace(/\s+/g," ").trim();
+        if (/^rmc$/i.test(t)) return "Real Madrid C";
+        return t.replace(/^prebenjamin\b/i,"Prebenjamín").replace(/^benjamin\b/i,"Benjamín").replace(/^alevin\b/i,"Alevín");
+      }
+
+      /* --- líneas de una casilla -> eventos --- */
+      function eventos(lineas){
+        var evs = [], cur = null;
+        function abre(tipo, titulo){ cur = { tipo: tipo, titulo: titulo || "", rival: "", jornada: "", hora: "", lugar: "", nota: "" }; evs.push(cur); }
+        lineas.forEach(function(raw){
+          var l = (raw||"").replace(/\s+/g," ").trim(); if (!l) return;
+          var n = norm(l), m;
+          if ((m = /^jornada\s+(\d+)/.exec(n))) { abre("partido"); cur.jornada = m[1]; return; }
+          if (/^amistoso/.test(n)) { abre("amistoso", l); return; }
+          if (/^entrenamiento/.test(n)) { abre("entrenamiento", l); return; }
+          if (/^salida\b/.test(n)) { abre("salida", l); return; }
+          // "Hora de salida: 10:15" -> nota del evento en curso
+          if ((m = /hora\s+de\s+salida:?\s*(\d{1,2})[:.](\d{2})/.exec(n)) && cur) { cur.nota = "Salida " + pad2(m[1]) + ":" + m[2]; return; }
+          var hm = /hora:?\s*(\d{1,2})[:.](\d{2})/.exec(n);
+          if (hm && cur) {
+            if (!cur.hora) cur.hora = pad2(hm[1]) + ":" + hm[2];
+            // "Campo 7 | Hora: 12:00", "ESB | Hora: 21:00", "Hora: 10:00 Campo 10"
+            var resto = l.replace(/hora:?\s*\d{1,2}[:.]\d{2}\.?(\s*-\s*\d{1,2}[:.]\d{2})?/i, "").replace(/\|/g," ").replace(/\s+/g," ").trim();
+            if (resto && !cur.lugar) cur.lugar = resto;
+            return;
+          }
+          if ((m = /^final\s*-\s*(\d{1,2})[:.](\d{2})/.exec(n)) && cur) { cur.nota = "Final " + pad2(m[1]) + ":" + m[2]; if (!cur.hora) cur.hora = pad2(m[1]) + ":" + m[2]; return; }
+          if (/^(campos?|aula)\b/.test(n) && cur) { if (!cur.lugar) cur.lugar = l; return; }
+          if (/^\(/.test(l) && cur) { cur.titulo = (cur.titulo + " " + l).trim(); return; }
+          if (cur && (cur.tipo === "partido" || cur.tipo === "amistoso") && !cur.rival && !cur.hora) { cur.rival = l; return; }
+          abre(/torneo|cup|copa|trofeo|memorial|sport\b/.test(n) ? "torneo" : "otro", l);
+        });
+        return evs;
+      }
+
+      /* --- casillas {equipo, dia, lineas} -> partidos del calendario --- */
+      function aPartidos(celdas, sem){
+        var out = [], cuenta = { partidos: 0, torneos: 0, entrenos: 0, otros: 0 };
+        celdas.forEach(function(c){
+          if (c.dia < 0 || c.dia > 6) return;
+          var f = new Date(sem.fin.getTime()); f.setDate(f.getDate() - (6 - c.dia));
+          var equipo = equipoNombre(c.equipo);
+          eventos(c.lineas).forEach(function(e){
+            if (e.tipo === "entrenamiento") { cuenta.entrenos++; return; }
+            if (e.tipo === "partido" || e.tipo === "amistoso") {
+              if (!e.rival) { cuenta.otros++; return; }
+              var enCasa = /campo|esb|bernab|di\s*st[eé]fano|ciudad real madrid/i.test(e.lugar) || (!e.lugar && e.rival === e.rival.toUpperCase() && /[A-ZÁÉÍÓÚÑ]/.test(e.rival));
+              var liga = (typeof clasificaciones !== "undefined" && clasificaciones[equipo]) ? clasificaciones[equipo].liga : "Liga";
+              out.push({ equipo: equipo, rival: e.rival, competicion: e.tipo === "amistoso" ? e.titulo : liga, jornada: e.jornada, fecha: fmt(f), hora: e.hora, local: enCasa, estadio: [e.lugar, e.nota].filter(Boolean).join(" · "), origen: "plan" });
+              cuenta.partidos++; return;
+            }
+            if (e.tipo === "torneo") {
+              out.push({ equipo: equipo, rival: e.titulo, competicion: "Torneo", jornada: "", fecha: fmt(f), hora: e.hora, local: false, estadio: [e.lugar, e.nota].filter(Boolean).join(" · "), origen: "plan", torneo: true });
+              cuenta.torneos++; return;
+            }
+            cuenta.otros++;
+          });
+        });
+        return { partidos: out, cuenta: cuenta };
+      }
+
+      /* --- Excel: matriz de celdas (con combinadas ya rellenadas) --- */
+      function desdeMatriz(aoa){
+        var hdr = -1, cols = null, sem = null;
+        for (var r = 0; r < aoa.length; r++) {
+          var fila = aoa[r] || [];
+          for (var c0 = 0; c0 < fila.length; c0++) { var s0 = semana(fila[c0]); if (s0) sem = sem || s0; }
+          var encontrados = {};
+          for (var c = 0; c < fila.length; c++) { var d = diaIdx(fila[c]); if (d) encontrados[c] = d.i; }
+          if (hdr < 0 && Object.keys(encontrados).length >= 5) { hdr = r; cols = encontrados; }
+        }
+        if (hdr < 0) return null;
+        var primera = Math.min.apply(null, Object.keys(cols).map(Number));
+        var celdas = [], equipo = "", mapa = {};
+        for (var r2 = hdr + 1; r2 < aoa.length; r2++) {
+          var f2 = aoa[r2] || [];
+          var esCab = 0; for (var k in cols) { if (diaIdx(f2[k])) esCab++; }
+          if (esCab >= 5) continue;                       // cabecera repetida en otra página
+          var et = ""; for (var c2 = 0; c2 < primera; c2++) { var v = String(f2[c2] == null ? "" : f2[c2]).trim(); if (v && !semana(v) && !/planificaci/i.test(v)) { et = v; break; } }
+          if (et) equipo = et;
+          if (!equipo) continue;
+          Object.keys(cols).forEach(function(ci){
+            var v2 = String(f2[ci] == null ? "" : f2[ci]).trim(); if (!v2) return;
+            var key = equipo + "|" + cols[ci];
+            if (!mapa[key]) { mapa[key] = { equipo: equipo, dia: cols[ci], lineas: [] }; celdas.push(mapa[key]); }
+            v2.split(/\r?\n/).forEach(function(l){ mapa[key].lineas.push(l); });
+          });
+        }
+        return { celdas: celdas, semana: sem };
+      }
+      function desdeExcel(wb){
+        for (var i = 0; i < wb.SheetNames.length; i++) {
+          var ws = wb.Sheets[wb.SheetNames[i]];
+          var aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "", raw: false });
+          // Las celdas combinadas solo traen valor en la primera: se copia a todo el rango de la columna de equipos
+          (ws["!merges"] || []).forEach(function(mg){
+            var v = (aoa[mg.s.r] || [])[mg.s.c]; if (v === "" || v == null) return;
+            for (var r = mg.s.r; r <= mg.e.r; r++) { aoa[r] = aoa[r] || []; if (r !== mg.s.r && mg.s.c === mg.e.c && mg.s.c < 2) aoa[r][mg.s.c] = v; }
+          });
+          var res = desdeMatriz(aoa);
+          if (res) return res;
+        }
+        return null;
+      }
+
+      /* --- PDF: texto con posiciones -> casillas --- */
+      function cargarPdfJs(){
+        return new Promise(function(ok, ko){
+          if (window.pdfjsLib) return ok(window.pdfjsLib);
+          var s = document.createElement("script");
+          s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+          s.onload = function(){ try { window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; ok(window.pdfjsLib); } catch(e) { ko(e); } };
+          s.onerror = function(){ ko(new Error("No se pudo cargar el lector de PDF")); };
+          document.head.appendChild(s);
+        });
+      }
+      // Une en una sola línea los trozos de texto que comparten renglón y están pegados
+      function unirRenglones(items){
+        var filas = [];
+        items.slice().sort(function(a,b){ return a.y - b.y || a.x - b.x; }).forEach(function(it){
+          var f = null;
+          for (var i = filas.length - 1; i >= 0 && i >= filas.length - 40; i--) {
+            var g = filas[i];
+            if (Math.abs(g.y - it.y) <= 1.6 && it.x - g.x2 <= Math.max(3.5, it.h * 0.7) && it.x - g.x2 >= -2) { f = g; break; }
+          }
+          if (f) { f.s += (it.x - f.x2 > 0.9 ? " " : "") + it.s; f.x2 = it.x + it.w; f.h = Math.max(f.h, it.h); }
+          else filas.push({ s: it.s, x: it.x, x2: it.x + it.w, y: it.y, h: it.h });
+        });
+        filas.forEach(function(f){ f.s = f.s.replace(/\s+/g," ").trim(); f.xc = (f.x + f.x2) / 2; f.top = f.y - f.h * 0.82; f.bot = f.y + f.h * 0.24; f.yc = (f.top + f.bot) / 2; });
+        return filas.filter(function(f){ return f.s; });
+      }
+      function seccionesDePagina(filas, pagina){
+        var cab = filas.filter(function(f){ return diaIdx(f.s); }).sort(function(a,b){ return a.y - b.y; });
+        var grupos = [];
+        cab.forEach(function(f){ var g = grupos[grupos.length-1]; if (g && Math.abs(g.y - f.y) <= 2.5) g.items.push(f); else grupos.push({ y: f.y, items: [f] }); });
+        grupos = grupos.filter(function(g){ return g.items.length >= 5; });
+        var titulos = filas.filter(function(f){ return /planificaci/i.test(f.s) || semana(f.s); });
+        var celdas = [];
+        grupos.forEach(function(g, gi){
+          var cols = g.items.slice().sort(function(a,b){ return a.xc - b.xc; });
+          var paso = (cols[cols.length-1].xc - cols[0].xc) / (cols.length - 1);
+          var izq = cols[0].xc - paso / 2;
+          var yIni = Math.max.apply(null, g.items.map(function(f){ return f.bot; }));
+          var yFin = Infinity;
+          if (grupos[gi+1]) { yFin = grupos[gi+1].y - 4; titulos.forEach(function(t){ if (t.y > g.y + 4 && t.y < grupos[gi+1].y) yFin = Math.min(yFin, t.top - 1); }); }
+          var dentro = filas.filter(function(f){ return f.top > yIni - 0.5 && f.bot < yFin && !diaIdx(f.s) && !/planificaci/i.test(f.s) && !semana(f.s); });
+          var etiquetas = [], contenido = [];
+          dentro.forEach(function(f){ (f.xc < izq ? etiquetas : contenido).push(f); });
+          if (!etiquetas.length) return;
+          // etiquetas de varias líneas -> una sola
+          etiquetas.sort(function(a,b){ return a.y - b.y; });
+          var eq = [];
+          etiquetas.forEach(function(f){ var u = eq[eq.length-1]; if (u && f.top - u.bot < f.h * 0.9) { u.s += " " + f.s; u.bot = f.bot; u.yc = (u.top + u.bot) / 2; } else eq.push({ s: f.s, top: f.top, bot: f.bot, yc: f.yc }); });
+          // huecos verticales sin texto en ninguna columna
+          var ocup = contenido.concat(etiquetas).map(function(f){ return [f.top, f.bot]; }).sort(function(a,b){ return a[0] - b[0]; });
+          var huecos = [], fin = yIni;
+          ocup.forEach(function(o){ if (o[0] > fin + 0.3) huecos.push([fin, o[0]]); fin = Math.max(fin, o[1]); });
+          huecos.push([fin, fin + 400]);
+          function ajusta(y){
+            var mejor = null, dist = Infinity;
+            huecos.forEach(function(h){ var lo = h[0] + 0.6, hi = h[1] - 0.6; if (hi < lo) { lo = hi = (h[0] + h[1]) / 2; } var p = Math.min(Math.max(y, lo), hi), d = Math.abs(p - y); if (d < dist) { dist = d; mejor = p; } });
+            return mejor == null ? y : mejor;
+          }
+          // La etiqueta va centrada en su franja: límite_i = 2·centro_i − límite_(i−1). Se prueba el arranque que deja más holgura.
+          var hCab = g.items[0].h, mejorLim = null, mejorPuntos = -Infinity;
+          for (var d0 = 0.2; d0 <= 2.2; d0 += 0.1) {
+            var b = yIni + hCab * d0, lim = [b], crudo = b, puntos = 0;
+            for (var i = 0; i < eq.length; i++) {
+              crudo = 2 * eq[i].yc - lim[i];
+              var a = ajusta(crudo);
+              puntos -= Math.abs(a - crudo);
+              if (a <= lim[i] + 2) puntos -= 50;
+              lim.push(a);
+            }
+            if (puntos > mejorPuntos) { mejorPuntos = puntos; mejorLim = lim; }
+          }
+          var mapa = {};
+          contenido.sort(function(a,b){ return a.y - b.y || a.x - b.x; }).forEach(function(f){
+            var fila = -1; for (var i = 0; i < eq.length; i++) { if (f.yc >= mejorLim[i] && f.yc < mejorLim[i+1]) { fila = i; break; } }
+            if (fila < 0) return;
+            var col = Math.min(cols.length - 1, Math.max(0, Math.floor((f.xc - izq) / paso)));
+            var dia = diaIdx(cols[col].s).i, key = fila + "|" + dia;
+            if (!mapa[key]) { mapa[key] = { equipo: eq[fila].s, dia: dia, lineas: [], pagina: pagina }; celdas.push(mapa[key]); }
+            mapa[key].lineas.push(f.s);
+          });
+        });
+        return celdas;
+      }
+      async function desdePdf(buf){
+        var pdfjs = await cargarPdfJs();
+        var doc = await pdfjs.getDocument({ data: buf }).promise;
+        var celdas = [], sem = null;
+        for (var p = 1; p <= doc.numPages; p++) {
+          var page = await doc.getPage(p), vp = page.getViewport({ scale: 1 });
+          var tc = await page.getTextContent();
+          var items = tc.items.filter(function(it){ return it.str && it.str.trim(); }).map(function(it){
+            var h = it.height || Math.abs(it.transform[3]) || 6;
+            return { s: it.str, x: it.transform[4], w: it.width || 0, y: vp.height - it.transform[5], h: h };
+          });
+          var filas = unirRenglones(items);
+          filas.forEach(function(f){ if (!sem) sem = semana(f.s); });
+          celdas = celdas.concat(seccionesDePagina(filas, p));
+        }
+        return { celdas: celdas, semana: sem };
+      }
+      return { desdePdf: desdePdf, desdeExcel: desdeExcel, desdeMatriz: desdeMatriz, aPartidos: aPartidos, eventos: eventos, semana: semana };
+    })();
+    window.LFPlan = LFPlan;
+
     /* ===== FIELD VIEW COMPONENT ===== */
     function FieldView({ players, teamName, onSelectPlayer }) {
       const isF5 = isF5Team(teamName);
@@ -5944,13 +6169,35 @@
         var s=String(v||"").trim(); var m=s.match(/(\d{1,2})[:.h](\d{2})/); if(m) return calPad2(m[1])+":"+m[2]; return s;
       }
       function calIsLocal(v){ var s=calNormKey(v); return s.indexOf("casa")>=0 || s.indexOf("local")>=0 || /^(si|s|1|true|l|x)$/.test(s); }
+      // Guarda una semana de planificación: sustituye lo importado de esos mismos días y conserva el resto
+      function calGuardarPlan(res){
+        if (!res || !res.celdas || !res.celdas.length) { setCalImportMsg("No se reconoció la cuadrícula de la planificación (fila de Lunes a Domingo y equipos a la izquierda)."); return; }
+        if (!res.semana) { setCalImportMsg("No se encontró el título de la semana (\"Semana del 05 al 11 de Octubre de 2026\"), hace falta para poner las fechas."); return; }
+        var r = LFPlan.aPartidos(res.celdas, res.semana);
+        if (!r.partidos.length) { setCalImportMsg("Planificación leída, pero no trae partidos ni torneos esa semana (" + r.cuenta.entrenos + " entrenamientos)."); return; }
+        var dias = {}; for (var i = 0; i < 7; i++) { var d = new Date(res.semana.fin.getTime()); d.setDate(d.getDate() - i); dias[calPad2(d.getDate()) + "/" + calPad2(d.getMonth()+1) + "/" + d.getFullYear()] = 1; }
+        var previos = (calImport || []).filter(function(m){ return !dias[m.fecha]; });
+        var out = previos.concat(r.partidos);
+        setCalImport(out);
+        try{ localStorage.setItem("cal_import_2627", JSON.stringify(out)); }catch(e){}
+        setCalImportMsg(r.cuenta.partidos + " partidos" + (r.cuenta.torneos ? " y " + r.cuenta.torneos + " días de torneo" : "") + " de la " + res.semana.etiqueta + ". No se añaden los " + r.cuenta.entrenos + " entrenamientos" + (r.cuenta.otros ? " ni " + r.cuenta.otros + " actividades" : "") + ".");
+      }
       function handleCalImportFile(e){
         var file = e.target.files && e.target.files[0]; if(!file) return;
-        if (typeof XLSX === "undefined"){ setCalImportMsg("No se pudo cargar el lector de Excel. Reintenta en unos segundos."); return; }
+        var esPdf = /\.pdf$/i.test(file.name) || file.type === "application/pdf";
+        if (!esPdf && typeof XLSX === "undefined"){ setCalImportMsg("No se pudo cargar el lector de Excel. Reintenta en unos segundos."); return; }
         var reader = new FileReader();
         reader.onload = function(ev){
           try{
+            if (esPdf) {
+              setCalImportMsg("Leyendo el PDF…");
+              LFPlan.desdePdf(new Uint8Array(ev.target.result)).then(calGuardarPlan).catch(function(err){ setCalImportMsg("Error leyendo el PDF: " + err.message); });
+              return;
+            }
             var wb = XLSX.read(new Uint8Array(ev.target.result), { type:"array", cellDates:true });
+            // ¿Es la cuadrícula de la planificación semanal (días en columnas)?
+            var plan = LFPlan.desdeExcel(wb);
+            if (plan && plan.celdas.length) { calGuardarPlan(plan); return; }
             var ws = wb.Sheets[wb.SheetNames[0]];
             var rows = XLSX.utils.sheet_to_json(ws, { defval:"" });
             var out = [];
@@ -5961,13 +6208,13 @@
               var rival = String(pick(["rival","oponente","contrario","contra"])).trim();
               var fecha = calToFecha(pick(["fecha","dia"]));
               if(!equipo && !rival && !fecha) return;
-              out.push({ equipo:equipo, rival:rival, competicion:String(pick(["competicion","competi","liga","torneo"])).trim(), jornada:String(pick(["jornada","jor","j"])).trim(), fecha:fecha, hora:calToHora(pick(["hora","h"])), local:calIsLocal(pick(["local","casa","localia","lugar","casa/fuera","localidad"])), importado:true });
+              out.push({ equipo:equipo, rival:rival, competicion:String(pick(["competicion","competi","liga","torneo"])).trim(), jornada:String(pick(["jornada","jor","j"])).trim(), fecha:fecha, hora:calToHora(pick(["hora","h"])), local:calIsLocal(pick(["local","casa","localia","lugar","casa/fuera","localidad"])) });
             });
-            if(out.length===0){ setCalImportMsg("No se encontraron partidos. Revisa las columnas: Equipo, Rival, Competición, Jornada, Fecha, Hora, Local."); return; }
+            if(out.length===0){ setCalImportMsg("No se encontraron partidos. Vale la planificación semanal (PDF o Excel) o un Excel con columnas Equipo, Rival, Competición, Jornada, Fecha, Hora, Local."); return; }
             setCalImport(out);
             try{ localStorage.setItem("cal_import_2627", JSON.stringify(out)); }catch(e){}
             setCalImportMsg(out.length + " partidos importados.");
-          }catch(err){ setCalImportMsg("Error leyendo el Excel: " + err.message); }
+          }catch(err){ setCalImportMsg("Error leyendo el archivo: " + err.message); }
         };
         reader.readAsArrayBuffer(file);
         e.target.value = "";
@@ -6515,14 +6762,14 @@
                   <div style={{padding:'16px 28px 0'}}>
                     <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
                       <label style={{display:'inline-flex',alignItems:'center',gap:'6px',padding:'8px 16px',background:'var(--accent-grad)',color:'#fff',borderRadius:'var(--radius-sm)',fontSize:'13px',fontWeight:600,cursor:'pointer',boxShadow:'0 2px 6px rgba(28,59,43,0.28)'}}>
-                        + Importar Excel
-                        <input type="file" accept=".xlsx,.xls,.csv" onChange={handleCalImportFile} style={{display:'none'}} />
+                        + Importar planificación
+                        <input type="file" accept=".pdf,.xlsx,.xls,.csv,application/pdf" onChange={handleCalImportFile} style={{display:'none'}} />
                       </label>
                       {calImport.length > 0 && <span style={{fontSize:'12px',color:'var(--accent)',background:'var(--accent-light)',padding:'4px 10px',borderRadius:'10px',fontWeight:600}}>{calImport.length} importados</span>}
                       {calImport.length > 0 && <button onClick={clearCalImport} style={{fontSize:'12px',color:'var(--del)',background:'none',border:'1px solid var(--border)',borderRadius:'var(--radius-sm)',padding:'6px 12px',cursor:'pointer'}}>Borrar importados</button>}
                       {calImportMsg && <span style={{fontSize:'12px',color:'var(--text-2)'}}>{calImportMsg}</span>}
                     </div>
-                    <div style={{fontSize:'11.5px',color:'var(--text-3)',marginTop:'8px'}}>Columnas: Equipo · Rival · Competición · Jornada · Fecha (dd/mm/aaaa) · Hora · Local (Casa/Fuera). Se lee la primera hoja con la cabecera en la primera fila.</div>
+                    <div style={{fontSize:'11.5px',color:'var(--text-3)',marginTop:'8px'}}>Admite la planificación semanal del club tal cual, en PDF o en Excel (equipos en filas y días en columnas): se añaden los partidos y torneos de esa semana. También un Excel con columnas Equipo · Rival · Competición · Jornada · Fecha · Hora · Local.</div>
                   </div>
                 );
                 return (
@@ -6550,16 +6797,20 @@
                               return (
                                 <div key={i} className="cal-match" onClick={function(){ if (canteraData[m.equipo]) handleSelectTeam(m.equipo); }}>
                                   <div className={m.hora ? "cal-match-time" : "cal-match-time tbd"}>{m.hora || "Por confirmar"}</div>
-                                  <div className={"cal-match-loc " + (m.local ? "home" : "away")}>{m.local ? 'Casa' : 'Fuera'}</div>
+                                  <div className={"cal-match-loc " + (m.local ? "home" : "away")}>{m.torneo ? 'Torneo' : m.local ? 'Casa' : 'Fuera'}</div>
                                   <div className="cal-match-info">
+                                    {m.torneo ? (
+                                      <div className="cal-match-teams"><span className="rm">{equipo}</span><span style={{color:'var(--text-3)',margin:'0 6px'}}>·</span><span>{rival}</span></div>
+                                    ) : (
                                     <div className="cal-match-teams">
                                       <span className={m.local ? 'rm' : ''}>{localName}</span>
                                       <span style={{color:'var(--text-3)',margin:'0 6px'}}>vs</span>
                                       <span className={!m.local ? 'rm' : ''}>{visitName}</span>
                                     </div>
+                                    )}
                                     <div className="cal-match-comp">{m.competicion}{m.estadio ? " · " + m.estadio : ""}</div>
                                   </div>
-                                  <div className="cal-match-jor">J{m.jornada}</div>
+                                  <div className="cal-match-jor">{m.torneo ? "Torneo" : m.jornada ? "J" + m.jornada : "Amist."}</div>
                                   <div className="cal-match-arrow">›</div>
                                 </div>
                               );
