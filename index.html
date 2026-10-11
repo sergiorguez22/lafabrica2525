@@ -1242,6 +1242,15 @@
       .field-dense .field-player-name { font-size:8.5px; max-width:56px; }
     }
     .promo-photo-club { object-position:center top; background:#fff; }
+
+    /* ===== Calendario: entrenamientos de la planificación ===== */
+    .cal-toggle { display:inline-flex; align-items:center; gap:8px; height:34px; padding:0 14px 0 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--accent); font:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:background .2s, color .2s, border-color .2s; }
+    .cal-toggle-dot { width:14px; height:14px; border-radius:50%; border:2px solid currentColor; box-sizing:border-box; transition:background .2s; }
+    .cal-toggle.on { background:var(--accent); border-color:var(--accent); color:#ECE5D8; }
+    .cal-toggle.on .cal-toggle-dot { background:#ECE5D8; }
+    .cal-match-loc.entreno { background:var(--ivory); color:var(--text-2); }
+    .cal-entreno { opacity:.9; }
+    .cal-entreno .cal-match-teams { font-weight:600; }
     .main-content { min-width:0; }
     .fh, .fh-hero, .fh-body { max-width:100%; }
     .fh { overflow-x:hidden; }
@@ -3158,7 +3167,11 @@
           var f = new Date(sem.fin.getTime()); f.setDate(f.getDate() - (6 - c.dia));
           var equipo = equipoNombre(c.equipo);
           eventos(c.lineas).forEach(function(e){
-            if (e.tipo === "entrenamiento") { cuenta.entrenos++; return; }
+            if (e.tipo === "entrenamiento") {
+              cuenta.entrenos++;
+              out.push({ equipo: equipo, rival: "", competicion: "Entrenamiento", jornada: "", fecha: fmt(f), hora: e.hora, local: true, estadio: e.lugar, origen: "plan", entreno: true });
+              return;
+            }
             if (e.tipo === "partido" || e.tipo === "amistoso") {
               if (!e.rival) { cuenta.otros++; return; }
               var enCasa = /campo|esb|bernab|di\s*st[eé]fano|ciudad real madrid/i.test(e.lugar) || (!e.lugar && e.rival === e.rival.toUpperCase() && /[A-ZÁÉÍÓÚÑ]/.test(e.rival));
@@ -5481,6 +5494,8 @@
       const [showCalendario, setShowCalendario] = useState(false);
       const [calImport, setCalImport] = useState(function(){ try { return JSON.parse(localStorage.getItem("cal_import_2627") || "[]"); } catch(e) { return []; } });
       const [calImportMsg, setCalImportMsg] = useState("");
+      const [calVerEntrenos, setCalVerEntrenos] = useState(function(){ try { return localStorage.getItem("cal_ver_entrenos") === "1"; } catch(e) { return false; } });
+      function toggleCalEntrenos(){ setCalVerEntrenos(function(v){ var n = !v; try { localStorage.setItem("cal_ver_entrenos", n ? "1" : "0"); } catch(e) {} return n; }); }
       const [showProcedencia, setShowProcedencia] = useState(false);
       const [procedenciaTab, setProcedenciaTab] = useState("club");
       const [expandedProcedencia, setExpandedProcedencia] = useState(null);
@@ -6174,13 +6189,13 @@
         if (!res || !res.celdas || !res.celdas.length) { setCalImportMsg("No se reconoció la cuadrícula de la planificación (fila de Lunes a Domingo y equipos a la izquierda)."); return; }
         if (!res.semana) { setCalImportMsg("No se encontró el título de la semana (\"Semana del 05 al 11 de Octubre de 2026\"), hace falta para poner las fechas."); return; }
         var r = LFPlan.aPartidos(res.celdas, res.semana);
-        if (!r.partidos.length) { setCalImportMsg("Planificación leída, pero no trae partidos ni torneos esa semana (" + r.cuenta.entrenos + " entrenamientos)."); return; }
+        if (!r.partidos.length) { setCalImportMsg("Planificación leída, pero no trae partidos, torneos ni entrenamientos esa semana."); return; }
         var dias = {}; for (var i = 0; i < 7; i++) { var d = new Date(res.semana.fin.getTime()); d.setDate(d.getDate() - i); dias[calPad2(d.getDate()) + "/" + calPad2(d.getMonth()+1) + "/" + d.getFullYear()] = 1; }
         var previos = (calImport || []).filter(function(m){ return !dias[m.fecha]; });
         var out = previos.concat(r.partidos);
         setCalImport(out);
         try{ localStorage.setItem("cal_import_2627", JSON.stringify(out)); }catch(e){}
-        setCalImportMsg(r.cuenta.partidos + " partidos" + (r.cuenta.torneos ? " y " + r.cuenta.torneos + " días de torneo" : "") + " de la " + res.semana.etiqueta + ". No se añaden los " + r.cuenta.entrenos + " entrenamientos" + (r.cuenta.otros ? " ni " + r.cuenta.otros + " actividades" : "") + ".");
+        setCalImportMsg(r.cuenta.partidos + " partidos" + (r.cuenta.torneos ? ", " + r.cuenta.torneos + " días de torneo" : "") + " y " + r.cuenta.entrenos + " entrenamientos de la " + res.semana.etiqueta + ". Los entrenamientos se ven con «Ver entrenamientos»." + (r.cuenta.otros ? " No se añaden " + r.cuenta.otros + " actividades." : ""));
       }
       function handleCalImportFile(e){
         var file = e.target.files && e.target.files[0]; if(!file) return;
@@ -6742,7 +6757,10 @@
                 }
                 // Agrupar por fecha (futuros o hoy)
                 var groups = {};
+                var calNEntrenos = (calImport || []).filter(function(m){ return m.entreno; }).length;
+                var calNPartidos = (calImport || []).length - calNEntrenos;
                 calendario.partidos.concat(calImport || []).forEach(function(m){
+                  if (m.entreno && !calVerEntrenos) return;
                   var d = parseDate(m.fecha);
                   if (d < today) return;
                   var key = m.fecha;
@@ -6765,7 +6783,12 @@
                         + Importar planificación
                         <input type="file" accept=".pdf,.xlsx,.xls,.csv,application/pdf" onChange={handleCalImportFile} style={{display:'none'}} />
                       </label>
-                      {calImport.length > 0 && <span style={{fontSize:'12px',color:'var(--accent)',background:'var(--accent-light)',padding:'4px 10px',borderRadius:'10px',fontWeight:600}}>{calImport.length} importados</span>}
+                      {calNPartidos > 0 && <span style={{fontSize:'12px',color:'var(--accent)',background:'var(--accent-light)',padding:'4px 10px',borderRadius:'10px',fontWeight:600}}>{calNPartidos} importados</span>}
+                      {calNEntrenos > 0 && (
+                        <button className={"cal-toggle" + (calVerEntrenos ? " on" : "")} onClick={toggleCalEntrenos} aria-pressed={calVerEntrenos}>
+                          <span className="cal-toggle-dot"></span>{calVerEntrenos ? "Ocultar entrenamientos" : "Ver entrenamientos"} ({calNEntrenos})
+                        </button>
+                      )}
                       {calImport.length > 0 && <button onClick={clearCalImport} style={{fontSize:'12px',color:'var(--del)',background:'none',border:'1px solid var(--border)',borderRadius:'var(--radius-sm)',padding:'6px 12px',cursor:'pointer'}}>Borrar importados</button>}
                       {calImportMsg && <span style={{fontSize:'12px',color:'var(--text-2)'}}>{calImportMsg}</span>}
                     </div>
@@ -6787,13 +6810,25 @@
                             <span className="cal-day-date">{dayLabel}, {dateLabel}</span>
                             {isToday && <span className="cal-day-tag">Hoy</span>}
                             {isTomorrow && <span className="cal-day-tag">Mañana</span>}
-                            <span className="cal-day-count">{g.matches.length} partido{g.matches.length === 1 ? '' : 's'}</span>
+                            <span className="cal-day-count">{(function(){ var ne = g.matches.filter(function(x){ return x.entreno; }).length, np = g.matches.length - ne; var t = []; if (np) t.push(np + " partido" + (np === 1 ? "" : "s")); if (ne) t.push(ne + " entrenamiento" + (ne === 1 ? "" : "s")); return t.join(" · "); })()}</span>
                           </div>
                           <div className="cal-matches">
                             {g.matches.map(function(m, i){
                               var rival = m.rival, equipo = m.equipo;
                               var localName = m.local ? equipo : rival;
                               var visitName = m.local ? rival : equipo;
+                              if (m.entreno) return (
+                                <div key={i} className="cal-match cal-entreno" onClick={function(){ if (canteraData[m.equipo]) handleSelectTeam(m.equipo); }}>
+                                  <div className={m.hora ? "cal-match-time" : "cal-match-time tbd"}>{m.hora || "Por confirmar"}</div>
+                                  <div className="cal-match-loc entreno">Entreno</div>
+                                  <div className="cal-match-info">
+                                    <div className="cal-match-teams"><span className="rm">{equipo}</span></div>
+                                    <div className="cal-match-comp">Entrenamiento{m.estadio ? " · " + m.estadio : ""}</div>
+                                  </div>
+                                  <div className="cal-match-jor"></div>
+                                  <div className="cal-match-arrow">›</div>
+                                </div>
+                              );
                               return (
                                 <div key={i} className="cal-match" onClick={function(){ if (canteraData[m.equipo]) handleSelectTeam(m.equipo); }}>
                                   <div className={m.hora ? "cal-match-time" : "cal-match-time tbd"}>{m.hora || "Por confirmar"}</div>
