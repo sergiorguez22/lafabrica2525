@@ -1261,6 +1261,12 @@
     .fh { overflow-x:hidden; }
     .fh-scroll { min-width:0; max-width:100%; }
     @media (max-width:860px){ .admin-grid{ grid-template-columns:1fr !important; } }
+    /* iOS no agranda el texto por su cuenta (p. ej. al girar el móvil) */
+    html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+    /* Solo iOS: con 16px o más Safari no amplía la página al escribir en un campo */
+    @supports (-webkit-touch-callout: none) {
+      input:not([type=color]):not([type=file]), select, textarea { font-size:16px !important; }
+    }
     </style>
 </head>
 <body>
@@ -2883,6 +2889,16 @@
       </svg>
     );
 
+    // Si Safari llegó a ampliar la página (p. ej. al escribir), la devuelve al tamaño normal
+    function restablecerZoomIOS() {
+      var m = document.querySelector('meta[name="viewport"]');
+      var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+      if (!m || !ios) return;
+      var original = m.getAttribute("content");
+      m.setAttribute("content", original + ", maximum-scale=1");
+      setTimeout(function(){ m.setAttribute("content", original); }, 400);
+    }
+
     /* ===== LOGIN COMPONENT ===== */
     function LoginScreen({ onLogin }) {
       const [username, setUsername] = useState("");
@@ -2899,6 +2915,8 @@
           if (d._status === 200 && d.ok) {
             sessionStorage.setItem("lfUser", d.usuario);
             sessionStorage.setItem("lfToken", d.token || "");
+            if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+            restablecerZoomIOS();
             onLogin(d.usuario);
             return;
           }
